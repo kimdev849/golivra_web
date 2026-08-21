@@ -41,7 +41,7 @@ export function MarketplacePage() {
   // ── Loading skeleton ──
   if (loadingEnt) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-4 animate-pulse">
+      <div className="w-full px-4 py-6 space-y-4 animate-pulse">
         <div className="h-4 bg-gray-200 rounded w-20" />
         <div className="w-full h-48 bg-gray-200 rounded-2xl" />
         <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
@@ -67,7 +67,7 @@ export function MarketplacePage() {
   // ── Error / not found ──
   if (entError || !ent) {
     return (
-      <div className="max-w-2xl mx-auto px-4 text-center py-20">
+      <div className="w-full px-4 text-center py-20">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-error/10 flex items-center justify-center">
           <AlertTriangle size={28} className="text-error" />
         </div>
@@ -83,7 +83,7 @@ export function MarketplacePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
+    <div className="w-full px-4 py-6 space-y-4">
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-txt-muted hover:text-txt transition">
         <ArrowLeft size={16} /> <span className="text-sm font-medium">Retour</span>
       </button>

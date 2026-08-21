@@ -129,7 +129,7 @@ export function NotificationsPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
+    <div className="w-full max-w-3xl mx-auto px-4 py-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-2 border-b border-line pb-3">
         <button onClick={() => navigate(-1)} className="w-11 h-11 rounded-full bg-brand-50 border border-line-strong flex items-center justify-center hover:bg-brand-100 transition">

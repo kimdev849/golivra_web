@@ -161,7 +161,7 @@ export function ProductPage() {
   // ── Loading skeleton ──
   if (isLoading) {
     return (
-      <div className="max-w-lg mx-auto animate-pulse">
+      <div className="max-w-4xl mx-auto animate-pulse">
         <div className="w-full aspect-[4/3] max-h-[340px] bg-gray-200" />
         <div className="p-4 space-y-4">
           <div className="h-6 bg-gray-200 rounded w-3/4" />
@@ -175,7 +175,7 @@ export function ProductPage() {
 
   if (!product) {
     return (
-      <div className="max-w-lg mx-auto text-center py-20 px-4">
+      <div className="max-w-4xl mx-auto text-center py-20 px-4">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-error/10 flex items-center justify-center"><AlertTriangle size={28} className="text-error" /></div>
         <h2 className="text-lg font-extrabold text-txt mb-1">Produit introuvable</h2>
         <p className="text-sm text-txt-muted mb-6">Ce produit n'existe pas ou n'est plus disponible.</p>
@@ -185,7 +185,7 @@ export function ProductPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto pb-24 lg:pb-8">
+    <div className="max-w-5xl mx-auto pb-24 lg:pb-8">
       {/* ── HERO IMAGE ── */}
       <div className="relative">
         <button onClick={() => galleryImages.length > 0 && setGalleryOpen(true)} className="block w-full">
@@ -346,7 +346,7 @@ export function ProductPage() {
       {/* Footer CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-[60] lg:z-50">
         <div className="bg-white/95 backdrop-blur-sm border-t border-line px-4 py-3" style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 0.75rem)" }}>
-          <div className="max-w-lg mx-auto">
+          <div className="max-w-4xl mx-auto">
             {cartLine ? (
               <div className="flex items-center gap-3">
                 <div className="flex items-center bg-surface-muted border border-line rounded-xl overflow-hidden">

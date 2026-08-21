@@ -19,7 +19,6 @@ export function CartPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showZonePicker, setShowZonePicker] = useState(false);
 
-  // ── Fetch pricing from API (like mobile) ──
   const { data: pricing } = useQuery<PublicPricing>({
     queryKey: ["pricing-config"],
     queryFn: fetchPublicPricing,
@@ -31,16 +30,12 @@ export function CartPage() {
   const arrondissements = pricingConfig?.zones?.arrondissements ?? [];
   const priceByArr = pricingConfig?.zones?.price_by_arrondissement ?? {};
 
-  // ── Group arrondissements by zone ──
   const zonesWithArrondissements = useMemo(() => {
     return zones.map((z) => ({
       ...z,
       quartiers: arrondissements
         .filter((a) => a.zone_id === z.id)
-        .map((a) => ({
-          name: a.name,
-          price: priceByArr[a.name] ?? z.price_base,
-        }))
+        .map((a) => ({ name: a.name, price: priceByArr[a.name] ?? z.price_base }))
         .sort((a, b) => a.price - b.price),
     })).sort((a, b) => a.price_base - b.price_base);
   }, [zones, arrondissements, priceByArr]);
@@ -64,7 +59,7 @@ export function CartPage() {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
-  const handleSelectZone = (quartier: string, price: number) => {
+  const handleSelectZone = (quartier: string) => {
     setAddress((prev) => ({ ...prev, quartier }));
     setShowZonePicker(false);
   };
@@ -124,96 +119,100 @@ export function CartPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-extrabold text-txt">Votre panier</h1>
-        <button onClick={() => { if (confirm("Voulez-vous vraiment vider votre panier ?")) { clearCart(); toast.success("Panier vidé."); } }} className="flex items-center gap-1 text-xs font-semibold text-error hover:text-error/80">
-          <Trash2 size={14} /> Vider
-        </button>
-      </div>
-
-      {cart && cart.segments.length > 1 && (
-        <div className="flex items-center gap-3 bg-brand-50 border border-brand-200 rounded-xl p-3">
-          <Truck size={22} className="text-brand" />
-          <div className="flex-1">
-            <p className="text-sm font-bold text-brand-deep">{cart.segments.length} livraisons séparées</p>
-            <p className="text-xs text-txt-muted">Chaque commerce est préparé et livré indépendamment.</p>
+    <div className="w-full pb-24 lg:pb-6">
+      <div className="lg:grid lg:grid-cols-5 lg:gap-10 lg:items-start">
+        {/* ── LEFT: Cart items ── */}
+        <div className="lg:col-span-3 space-y-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-extrabold text-txt">Votre panier</h1>
+            <button onClick={() => { if (confirm("Voulez-vous vraiment vider votre panier ?")) { clearCart(); toast.success("Panier vidé."); } }} className="flex items-center gap-1 text-xs font-semibold text-error hover:text-error/80">
+              <Trash2 size={14} /> Vider
+            </button>
           </div>
-        </div>
-      )}
 
-      {cart?.segments.map((seg) => (
-        <div key={seg.enterpriseId} className="bg-surface border border-line rounded-xl p-4 space-y-3">
-          <p className="text-sm font-bold text-txt">{seg.enterpriseNom}</p>
-          {seg.lines.map((line) => (
-            <div key={line.productId} className="flex items-center gap-3 py-2 border-b border-line last:border-0">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-txt truncate">{line.nom}</p>
-                <p className="text-xs text-txt-muted">{formatFcfa(line.prixUnitaire)} × {line.quantite}</p>
+          {cart && cart.segments.length > 1 && (
+            <div className="flex items-center gap-3 bg-brand-50 border border-brand-200 rounded-xl p-3">
+              <Truck size={22} className="text-brand" />
+              <div className="flex-1">
+                <p className="text-sm font-bold text-brand-deep">{cart.segments.length} livraisons séparées</p>
+                <p className="text-xs text-txt-muted">Chaque commerce est préparé et livré indépendamment.</p>
               </div>
-              <div className="flex items-center gap-1">
-                <button onClick={() => line.quantite <= 1 ? removeItem(seg.enterpriseId, line.productId) : updateQuantity(seg.enterpriseId, line.productId, line.quantite - 1)} className="w-8 h-8 rounded-lg border border-line flex items-center justify-center hover:bg-brand-50">
-                  <Minus size={14} className="text-brand" />
-                </button>
-                <span className="w-6 text-center text-sm font-bold">{line.quantite}</span>
-                <button onClick={() => updateQuantity(seg.enterpriseId, line.productId, line.quantite + 1)} className="w-8 h-8 rounded-lg border border-line flex items-center justify-center hover:bg-brand-50">
-                  <Plus size={14} className="text-brand" />
-                </button>
-              </div>
-              <span className="text-sm font-bold text-brand min-w-[80px] text-right">{formatFcfa(line.prixUnitaire * line.quantite)}</span>
+            </div>
+          )}
+
+          {cart?.segments.map((seg) => (
+            <div key={seg.enterpriseId} className="bg-surface border border-line rounded-xl p-4 space-y-3">
+              <p className="text-sm font-bold text-txt">{seg.enterpriseNom}</p>
+              {seg.lines.map((line) => (
+                <div key={line.productId} className="flex items-center gap-3 py-2 border-b border-line last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-txt truncate">{line.nom}</p>
+                    <p className="text-xs text-txt-muted">{formatFcfa(line.prixUnitaire)} × {line.quantite}</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => line.quantite <= 1 ? removeItem(seg.enterpriseId, line.productId) : updateQuantity(seg.enterpriseId, line.productId, line.quantite - 1)} className="w-8 h-8 rounded-lg border border-line flex items-center justify-center hover:bg-brand-50">
+                      <Minus size={14} className="text-brand" />
+                    </button>
+                    <span className="w-6 text-center text-sm font-bold">{line.quantite}</span>
+                    <button onClick={() => updateQuantity(seg.enterpriseId, line.productId, line.quantite + 1)} className="w-8 h-8 rounded-lg border border-line flex items-center justify-center hover:bg-brand-50">
+                      <Plus size={14} className="text-brand" />
+                    </button>
+                  </div>
+                  <span className="text-sm font-bold text-brand min-w-[80px] text-right">{formatFcfa(line.prixUnitaire * line.quantite)}</span>
+                </div>
+              ))}
             </div>
           ))}
         </div>
-      ))}
 
-      {/* ── Address + Zone picker (like mobile) ── */}
-      <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
-        <p className="text-sm font-bold text-txt flex items-center gap-2"><MapPin size={16} className="text-brand" /> Adresse de livraison</p>
+        {/* ── RIGHT: Address + Summary ── */}
+        <div className="lg:col-span-2 space-y-4 mt-4 lg:mt-0 lg:sticky lg:top-20">
+          {/* Address */}
+          <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
+            <p className="text-sm font-bold text-txt flex items-center gap-2"><MapPin size={16} className="text-brand" /> Adresse de livraison</p>
 
-        {/* Quartier / Zone picker */}
-        <div>
-          <label className="text-xs font-semibold text-txt-secondary mb-1 block">Quartier / Zone</label>
-          <button
-            type="button"
-            onClick={() => setShowZonePicker(true)}
-            className={`w-full flex items-center gap-3 border rounded-xl px-4 py-3 text-sm bg-surface transition hover:bg-brand-50 ${errors.quartier ? "border-error" : "border-line"}`}
-          >
-            <MapPin size={16} className="text-brand flex-shrink-0" />
-            <span className={`flex-1 text-left ${address.quartier ? "text-txt" : "text-txt-muted"}`}>
-              {address.quartier || "Sélectionnez votre quartier"}
-            </span>
-            <ChevronDown size={16} className="text-txt-muted" />
+            <div>
+              <label className="text-xs font-semibold text-txt-secondary mb-1 block">Quartier / Zone</label>
+              <button type="button" onClick={() => setShowZonePicker(true)} className={`w-full flex items-center gap-3 border rounded-xl px-4 py-3 text-sm bg-surface transition hover:bg-brand-50 ${errors.quartier ? "border-error" : "border-line"}`}>
+                <MapPin size={16} className="text-brand flex-shrink-0" />
+                <span className={`flex-1 text-left ${address.quartier ? "text-txt" : "text-txt-muted"}`}>
+                  {address.quartier || "Sélectionnez votre quartier"}
+                </span>
+                <ChevronDown size={16} className="text-txt-muted" />
+              </button>
+              {errors.quartier && <p className="text-xs text-error mt-1">{errors.quartier}</p>}
+              {address.quartier && (
+                <p className="text-[11px] text-brand font-semibold mt-1">
+                  Livraison : {formatFcfa(deliveryFeeForQuartier(address.quartier, pricingConfig))}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <input type="text" value={address.ligne1} onChange={(e) => handleInput("ligne1", e.target.value)} maxLength={200} placeholder="Adresse complète (rue, repère)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.ligne1 ? "border-error" : "border-line"}`} />
+              {errors.ligne1 && <p className="text-xs text-error mt-1">{errors.ligne1}</p>}
+            </div>
+            <div>
+              <input type="text" value={address.instructions} onChange={(e) => handleInput("instructions", e.target.value)} maxLength={200} placeholder="Instructions pour le livreur (optionnel)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.instructions ? "border-error" : "border-line"}`} />
+              {errors.instructions && <p className="text-xs text-error mt-1">{errors.instructions}</p>}
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="bg-surface border border-line rounded-xl p-4 space-y-2">
+            <div className="flex justify-between text-sm"><span className="text-txt-muted">Sous-total ({itemCount} articles)</span><span className="font-bold text-txt">{formatFcfa(subtotal)}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-txt-muted">Livraison</span><span className="font-bold text-txt">{formatFcfa(deliveryFee)}</span></div>
+            {address.quartier && <p className="text-[11px] text-txt-muted italic">Frais calculés pour {address.quartier}</p>}
+            <div className="flex justify-between text-base font-extrabold border-t border-line pt-2"><span className="text-txt">Total</span><span className="text-brand">{formatFcfa(grandTotal)}</span></div>
+          </div>
+
+          <button onClick={submitOrder} disabled={submitting} className="w-full bg-brand text-white py-4 rounded-xl font-extrabold text-base disabled:opacity-50 flex items-center justify-center gap-2 hover:bg-brand-700 transition">
+            {submitting ? "Commande en cours…" : "Passer la commande"}
           </button>
-          {errors.quartier && <p className="text-xs text-error mt-1">{errors.quartier}</p>}
-          {address.quartier && (
-            <p className="text-[11px] text-brand font-semibold mt-1">
-              Livraison : {formatFcfa(deliveryFeeForQuartier(address.quartier, pricingConfig))}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <input type="text" value={address.ligne1} onChange={(e) => handleInput("ligne1", e.target.value)} maxLength={200} placeholder="Adresse complète (rue, repère)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.ligne1 ? "border-error" : "border-line"}`} />
-          {errors.ligne1 && <p className="text-xs text-error mt-1">{errors.ligne1}</p>}
-        </div>
-        <div>
-          <input type="text" value={address.instructions} onChange={(e) => handleInput("instructions", e.target.value)} maxLength={200} placeholder="Instructions pour le livreur (optionnel)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.instructions ? "border-error" : "border-line"}`} />
-          {errors.instructions && <p className="text-xs text-error mt-1">{errors.instructions}</p>}
         </div>
       </div>
 
-      <div className="bg-surface border border-line rounded-xl p-4 space-y-2">
-        <div className="flex justify-between text-sm"><span className="text-txt-muted">Sous-total ({itemCount} articles)</span><span className="font-bold text-txt">{formatFcfa(subtotal)}</span></div>
-        <div className="flex justify-between text-sm"><span className="text-txt-muted">Livraison</span><span className="font-bold text-txt">{formatFcfa(deliveryFee)}</span></div>
-        {address.quartier && <p className="text-[11px] text-txt-muted italic">Frais calculés pour {address.quartier}</p>}
-        <div className="flex justify-between text-base font-extrabold border-t border-line pt-2"><span className="text-txt">Total</span><span className="text-brand">{formatFcfa(grandTotal)}</span></div>
-      </div>
-
-      <button onClick={submitOrder} disabled={submitting} className="w-full bg-brand text-white py-4 rounded-xl font-extrabold text-base disabled:opacity-50 flex items-center justify-center gap-2 hover:bg-brand-700 transition">
-        {submitting ? "Commande en cours…" : "Passer la commande"}
-      </button>
-
-      {/* ── Zone Picker Modal (like mobile) ── */}
+      {/* ── Zone Picker Modal ── */}
       {showZonePicker && (
         <div className="fixed inset-0 z-[100] bg-black/50 flex items-end lg:items-center justify-center" onClick={() => setShowZonePicker(false)}>
           <div className="bg-surface rounded-t-3xl lg:rounded-3xl w-full max-w-md max-h-[75vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -232,7 +231,7 @@ export function CartPage() {
                     {zone.quartiers.map((q) => (
                       <button
                         key={q.name}
-                        onClick={() => handleSelectZone(q.name, q.price)}
+                        onClick={() => handleSelectZone(q.name)}
                         className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition ${address.quartier === q.name ? "bg-brand-50 text-brand" : "hover:bg-gray-50"}`}
                       >
                         <span className="text-sm font-semibold text-txt">{q.name}</span>
@@ -245,14 +244,7 @@ export function CartPage() {
             ) : (
               <div className="flex-1 overflow-y-auto p-4">
                 <p className="text-sm text-txt-muted text-center mb-3">Saisissez votre quartier manuellement :</p>
-                <input
-                  type="text"
-                  value={address.quartier}
-                  onChange={(e) => setAddress((p) => ({ ...p, quartier: sanitizeText(e.target.value) }))}
-                  placeholder="Ex: Bacongo, Poto-Poto…"
-                  maxLength={80}
-                  className="w-full border border-line rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20"
-                />
+                <input type="text" value={address.quartier} onChange={(e) => setAddress((p) => ({ ...p, quartier: sanitizeText(e.target.value) }))} placeholder="Ex: Bacongo, Poto-Poto…" maxLength={80} className="w-full border border-line rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20" />
                 <button onClick={() => setShowZonePicker(false)} className="w-full mt-3 bg-brand text-white py-3 rounded-xl font-bold text-sm">Valider</button>
               </div>
             )}

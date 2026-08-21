@@ -32,10 +32,10 @@ export function Layout() {
     <div className="min-h-screen bg-surface-muted">
       {/* ── Header desktop — always shown except fullscreen ── */}
       {!noDesktopHeader && (
-      <header className="hidden lg:block sticky top-0 z-50 bg-white border-b border-line shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/assets/images/logo.png" alt="GoLivra" className="h-8 w-auto" />
+      <header className="hidden lg:block sticky top-0 z-50 border-b shadow-sm" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
+        <div className="w-full max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/assets/images/logo.png" alt="GoLivra" className="h-10 w-auto" />
           </Link>
 
           <nav className="flex items-center gap-1">
@@ -45,11 +45,12 @@ export function Layout() {
                 <Link
                   key={n.path}
                   to={n.path}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                    active ? "bg-brand text-white" : "text-txt-muted hover:bg-brand-50 hover:text-brand"
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition ${
+                    active ? "text-white" : "hover:text-brand"
                   }`}
+                  style={active ? { background: 'var(--brand)' } : { color: 'var(--txt-muted)' }}
                 >
-                  <n.icon className="w-3.5 h-3.5" />
+                  <n.icon className="w-4 h-4" />
                   {n.label}
                   {n.path === "/cart" && itemCount > 0 && (
                     <span className="ml-0.5 bg-accent text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -61,21 +62,21 @@ export function Layout() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {isAuthenticated && (
-              <Link to="/notifications" className="p-2 rounded-lg text-txt-muted hover:bg-brand-50 hover:text-brand transition relative">
-                <Bell className="w-4 h-4" />
+              <Link to="/notifications" className="p-2 rounded-xl transition relative" style={{ color: 'var(--txt-muted)' }}>
+                <Bell className="w-5 h-5" />
               </Link>
             )}
             {isAuthenticated && user ? (
-              <Link to="/profile" className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 transition" title="Mon profil">
-                <div className="w-6 h-6 rounded-full bg-brand flex items-center justify-center text-white text-xs font-bold">
+              <Link to="/profile" className="flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-full transition" style={{ background: 'var(--brand-50)' }} title="Mon profil">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold" style={{ background: 'var(--brand)' }}>
                   {user.nom?.[0] || "U"}
                 </div>
-                <span className="text-xs font-semibold text-brand">{user.nom}</span>
+                <span className="text-sm font-semibold" style={{ color: 'var(--brand)' }}>{user.nom}</span>
               </Link>
             ) : !isAuthenticated ? (
-              <Link to="/auth" className="px-3 py-1.5 bg-brand text-white rounded-full text-xs font-bold hover:bg-brand-700 transition">
+              <Link to="/auth" className="px-4 py-2 rounded-full text-sm font-bold transition" style={{ background: 'var(--brand)', color: '#fff' }}>
                 Connexion
               </Link>
             ) : null}
@@ -86,7 +87,7 @@ export function Layout() {
 
       {/* ── Mobile header — hidden on profile/settings/etc ── */}
       {!noMobileHeader && (
-      <header className="lg:hidden sticky top-0 z-50 bg-white border-b border-line px-4 h-12 flex items-center justify-between">
+      <header className="lg:hidden sticky top-0 z-50 border-b px-4 h-12 flex items-center justify-between" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
         <Link to="/" className="flex items-center gap-2">
           <img src="/assets/images/logo.png" alt="GoLivra" className="h-7 w-auto" />
         </Link>
@@ -104,12 +105,12 @@ export function Layout() {
       </header>
       )}
 
-      <main className="max-w-6xl mx-auto px-4 py-4 pb-24 lg:pb-6">
+      <main className="w-full max-w-[1400px] mx-auto px-4 lg:px-8 py-4 pb-24 lg:pb-6">
         <Outlet />
       </main>
 
       {/* ── Bottom nav mobile ──────────────────────────────── */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-line lg:hidden z-50 safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 border-t lg:hidden z-50 safe-area-bottom" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
         <div className="flex items-center justify-around h-16">
           {NAV_CLIENT.map((n) => {
             const active = location.pathname === n.path || (n.path !== "/" && location.pathname.startsWith(n.path));
