@@ -22,7 +22,7 @@ export function VendorAddProduct() {
     if (!token) return;
     setLoading(true);
     try {
-      await apiFetch("/api/vendor/products", { method: "POST", token, jsonBody: {
+      await apiFetch("/api/products/enterprise/0", { method: "POST", token, jsonBody: {
         nom: nom.trim(), description: description.trim() || null, prix: Number(prix),
         stock: stockIllimite ? null : (stock ? Number(stock) : null), stock_illimite: stockIllimite,
         est_disponible: true, kind,

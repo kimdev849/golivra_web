@@ -21,13 +21,13 @@ export function VendorHoraires() {
   const queryClient = useQueryClient();
   const { data: horaires = defaultHoraires() } = useQuery<Horaire[]>({
     queryKey: ["vendor-horaires"],
-    queryFn: () => apiFetch("/api/vendors/horaires"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   const [editHoraires, setEditHoraires] = useState<Horaire[]>(horaires);
 
   const saveMutation = useMutation({
-    mutationFn: (data: Horaire[]) => apiFetch("/api/vendors/horaires", { method: "PUT", body: JSON.stringify(data) }),
+    mutationFn: (data: Horaire[]) => apiFetch("/api/enterprises/mine", { method: "PUT", body: JSON.stringify(data) }),
     onSuccess: () => { toast.success("Horaires sauvegardés"); queryClient.invalidateQueries({ queryKey: ["vendor-horaires"] }); },
     onError: () => toast.error("Erreur lors de la sauvegarde"),
   });

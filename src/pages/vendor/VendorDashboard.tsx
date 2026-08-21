@@ -106,7 +106,7 @@ export function VendorDashboard() {
       const token = getSessionToken();
       if (!token) return;
       try {
-        const o = await apiFetch<any[]>("/api/vendor/orders", { token });
+        const o = await apiFetch<any[]>("/api/orders/vendor/mine", { token });
         if (Array.isArray(o)) setOrders(o);
       } catch {}
     }, 20000);

@@ -11,12 +11,12 @@ export function VendorDeliveryDetail() {
 
   const { data: order } = useQuery<any>({
     queryKey: ["vendor-order", orderId],
-    queryFn: () => apiFetch(`/api/vendors/orders/${orderId}`),
+    queryFn: () => apiFetch(`/api/orders/vendor/mine/${orderId}`),
     enabled: !!orderId,
   });
 
   const acceptMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/vendors/orders/${orderId}/accept`, { method: "PUT" }),
+    mutationFn: () => apiFetch(`/api/orders/vendor/mine/${orderId}/accept`, { method: "PUT" }),
     onSuccess: () => {
       toast.success("Commande acceptée");
       queryClient.invalidateQueries({ queryKey: ["vendor-order", orderId] });
@@ -25,7 +25,7 @@ export function VendorDeliveryDetail() {
   });
 
   const readyMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/vendors/orders/${orderId}/ready`, { method: "PUT" }),
+    mutationFn: () => apiFetch(`/api/orders/vendor/mine/${orderId}/ready`, { method: "PUT" }),
     onSuccess: () => {
       toast.success("Commande prête pour livraison");
       queryClient.invalidateQueries({ queryKey: ["vendor-order", orderId] });

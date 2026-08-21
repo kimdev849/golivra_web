@@ -34,7 +34,7 @@ export function VendorDeliveries() {
       const token = getSessionToken();
       if (!token) return;
       try {
-        const d = await apiFetch<any[]>("/api/vendor/deliveries", { token });
+        const d = await apiFetch<any[]>("/api/delivery/vendor/externe", { token });
         if (Array.isArray(d)) setDeliveries(d);
       } catch {} finally { setLoading(false); }
     };

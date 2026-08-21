@@ -10,11 +10,11 @@ export function VendorCreateExternalDelivery() {
 
   const { data: addresses = [] } = useQuery({
     queryKey: ["vendor-addresses"],
-    queryFn: () => apiFetch("/api/vendors/addresses"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => apiFetch("/api/vendors/deliveries/external", { method: "POST", body: JSON.stringify(data) }),
+    mutationFn: (data: any) => apiFetch("/api/delivery/vendor/externe", { method: "POST", body: JSON.stringify(data) }),
     onSuccess: () => {
       toast.success("Livraison créée");
       queryClient.invalidateQueries({ queryKey: ["vendor-deliveries"] });

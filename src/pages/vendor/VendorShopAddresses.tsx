@@ -17,7 +17,7 @@ export function VendorShopAddresses() {
   const queryClient = useQueryClient();
   const { data: addresses = [] } = useQuery<Address[]>({
     queryKey: ["vendor-addresses"],
-    queryFn: () => apiFetch("/api/vendors/addresses"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   const [newAddress, setNewAddress] = useState({ label: "", adresse: "" });
@@ -25,7 +25,7 @@ export function VendorShopAddresses() {
 
   const addMutation = useMutation({
     mutationFn: (data: { label: string; adresse: string }) =>
-      apiFetch("/api/vendors/addresses", { method: "POST", body: JSON.stringify(data) }),
+      apiFetch("/api/enterprises/mine", { method: "POST", body: JSON.stringify(data) }),
     onSuccess: () => {
       toast.success("Adresse ajoutée");
       queryClient.invalidateQueries({ queryKey: ["vendor-addresses"] });
@@ -36,7 +36,7 @@ export function VendorShopAddresses() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/vendors/addresses/${id}`, { method: "DELETE" }),
+    mutationFn: (id: string) => apiFetch(`/api/enterprises/mine/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       toast.success("Adresse supprimée");
       queryClient.invalidateQueries({ queryKey: ["vendor-addresses"] });

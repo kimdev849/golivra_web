@@ -1,88 +1,97 @@
 import { apiFetch } from './api';
 
-export type VendorOrder = {
+// ─── CORRECT API endpoints (matching golivra_mobile/lib/vendor-api.ts) ───────
+
+export type VendorShop = {
   id: string;
-  ref: string;
-  statut: string;
-  prixTotal: number;
-  fraisLivraison: number;
-  paiement_statut?: string;
-  livreur?: { nom: string; tel?: string } | null;
-  livraison_statut?: string;
-  livraison_id?: string;
-  acceptation_limite_at?: string;
-  sous_commande_id?: string;
-  clientNom: string;
-  clientTel: string;
-  adresse: string;
-  lignes: { id: string; nom: string; quantite: number; prixUnitaire: number; detail?: string }[];
-  creeLeLabel: string;
+  nom: string;
+  type?: string;
+  image_url?: string;
+  ouvert?: boolean;
+  statut_moderation?: string;
 };
 
-export async function fetchVendorOrders(token: string): Promise<VendorOrder[]> {
-  return apiFetch<VendorOrder[]>('/api/vendor/orders', { method: 'GET', token });
+/** GET /api/enterprises/mine — fetch vendor's own shops (mobile: enterprise.ts:93) */
+export async function fetchVendorShops(token: string): Promise<VendorShop[]> {
+  const data = await apiFetch<VendorShop[]>('/api/enterprises/mine', { method: 'GET', token });
+  return Array.isArray(data) ? data : [];
 }
 
-export async function fetchVendorOrder(token: string, orderId: string): Promise<VendorOrder> {
-  return apiFetch<VendorOrder>(`/api/vendor/orders/${orderId}`, { method: 'GET', token });
+/** GET /api/orders/vendor/mine — fetch vendor orders (mobile: vendor-api.ts:180) */
+export async function fetchVendorOrders(token: string): Promise<any[]> {
+  const data = await apiFetch<any[]>('/api/orders/vendor/mine', { method: 'GET', token });
+  return Array.isArray(data) ? data : [];
 }
 
-export async function updateVendorOrderStatus(token: string, orderId: string, statut: string, sousCommandeId: string, raisonRefus?: string): Promise<void> {
-  await apiFetch(`/api/vendor/orders/${orderId}/status`, {
+/** GET /api/orders/vendor/{orderId} — fetch single vendor order */
+export async function fetchVendorOrder(token: string, orderId: string): Promise<any> {
+  return apiFetch(`/api/orders/vendor/${orderId}`, { method: 'GET', token });
+}
+
+/** PATCH /api/orders/vendor/{orderId}/status — update order status */
+export async function updateVendorOrderStatus(
+  token: string,
+  orderId: string,
+  statut: string,
+  sousCommandeId: string,
+  raisonRefus?: string,
+): Promise<void> {
+  await apiFetch(`/api/orders/vendor/${orderId}/status`, {
     method: 'PATCH', token,
     jsonBody: { statut, sousCommandeId, raisonRefus },
   });
 }
 
-export async function fetchDeliveryStatus(token: string, orderId: string): Promise<{ delivery?: { statut: string } }> {
-  return apiFetch(`/api/vendor/orders/${orderId}/delivery-status`, { method: 'GET', token });
+/** GET /api/products/enterprise/{enterpriseId} — fetch vendor products (mobile: vendor-api.ts:99) */
+export async function fetchVendorProducts(token: string, enterpriseId: string): Promise<any[]> {
+  const data = await apiFetch<any[]>(`/api/products/enterprise/${enterpriseId}`, { method: 'GET', token });
+  return Array.isArray(data) ? data : [];
 }
 
-export async function fetchVendorStats(token: string): Promise<Record<string, unknown>> {
-  return apiFetch('/api/vendor/stats', { method: 'GET', token });
+/** POST /api/products/enterprise/{enterpriseId} — create product */
+export async function createVendorProduct(token: string, enterpriseId: string, body: Record<string, unknown>): Promise<any> {
+  return apiFetch(`/api/products/enterprise/${enterpriseId}`, { method: 'POST', token, jsonBody: body });
 }
 
-export async function fetchVendorCatalog(token: string): Promise<Record<string, unknown>[]> {
-  return apiFetch('/api/vendor/catalog', { method: 'GET', token });
+/** PATCH /api/products/enterprise/{enterpriseId}/{productId} — update product */
+export async function updateVendorProduct(token: string, enterpriseId: string, productId: string, body: Record<string, unknown>): Promise<any> {
+  return apiFetch(`/api/products/enterprise/${enterpriseId}/${productId}`, { method: 'PATCH', token, jsonBody: body });
 }
 
-export async function createVendorProduct(token: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return apiFetch('/api/vendor/products', { method: 'POST', token, jsonBody: data });
+/** DELETE /api/products/enterprise/{enterpriseId}/{productId} — delete product */
+export async function deleteVendorProduct(token: string, enterpriseId: string, productId: string): Promise<void> {
+  await apiFetch(`/api/products/enterprise/${enterpriseId}/${productId}`, { method: 'DELETE', token });
 }
 
-export async function updateVendorProduct(token: string, productId: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return apiFetch(`/api/vendor/products/${productId}`, { method: 'PATCH', token, jsonBody: data });
+/** GET /api/enterprises/{id}/stats — vendor stats */
+export async function fetchVendorStats(token: string, enterpriseId: string): Promise<Record<string, unknown>> {
+  return apiFetch(`/api/enterprises/${enterpriseId}/stats`, { method: 'GET', token });
 }
 
-export async function deleteVendorProduct(token: string, productId: string): Promise<void> {
-  await apiFetch(`/api/vendor/products/${productId}`, { method: 'DELETE', token });
+/** GET /api/enterprises/{id} — shop info */
+export async function fetchVendorShopInfo(token: string, enterpriseId: string): Promise<any> {
+  return apiFetch(`/api/enterprises/${enterpriseId}`, { method: 'GET', token });
 }
 
-export async function fetchVendorShopInfo(token: string): Promise<Record<string, unknown>> {
-  return apiFetch('/api/vendor/shop', { method: 'GET', token });
+/** PATCH /api/enterprises/{id} — update shop info */
+export async function updateVendorShopInfo(token: string, enterpriseId: string, data: Record<string, unknown>): Promise<any> {
+  return apiFetch(`/api/enterprises/${enterpriseId}`, { method: 'PATCH', token, jsonBody: data });
 }
 
-export async function updateVendorShopInfo(token: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return apiFetch('/api/vendor/shop', { method: 'PATCH', token, jsonBody: data });
+/** GET /api/enterprises/{id}/horaires — shop hours */
+export async function fetchVendorHoraires(token: string, enterpriseId: string): Promise<any[]> {
+  const data = await apiFetch(`/api/enterprises/${enterpriseId}/horaires`, { method: 'GET', token });
+  return Array.isArray(data) ? data : [];
 }
 
-export async function fetchVendorShopPayments(token: string): Promise<Record<string, unknown>[]> {
-  return apiFetch('/api/vendor/shop/payments', { method: 'GET', token });
+/** PATCH /api/enterprises/{id}/horaires — update shop hours */
+export async function updateVendorHoraires(token: string, enterpriseId: string, data: any[]): Promise<any> {
+  return apiFetch(`/api/enterprises/${enterpriseId}/horaires`, { method: 'PATCH', token, jsonBody: data });
 }
 
-export async function fetchVendorShopAddresses(token: string): Promise<Record<string, unknown>[]> {
-  return apiFetch('/api/vendor/shop/addresses', { method: 'GET', token });
-}
-
-export async function updateVendorShopAddresses(token: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return apiFetch('/api/vendor/shop/addresses', { method: 'PATCH', token, jsonBody: data });
-}
-
-export async function livraisonStatutLabel(statut: string | null | undefined): Promise<string> {
-  const map: Record<string, string> = {
-    en_attente: 'En attente d\'un livreur', attribuee: 'Livreur en route',
-    en_collecte: 'Le livreur arrive', collectee: 'Récupérée',
-    en_route: 'En livraison', livree: 'Livrée', echec: 'Échec', annulee: 'Annulée',
-  };
-  return map[statut ?? ''] ?? 'Suivi en cours';
+/** GET /api/delivery/vendor/externe — external deliveries */
+export async function fetchVendorExternalDeliveries(token: string, opts?: { active?: boolean }): Promise<any[]> {
+  const qs = opts?.active ? '?active=true' : '';
+  const data = await apiFetch<any[]>(`/api/delivery/vendor/externe${qs}`, { method: 'GET', token });
+  return Array.isArray(data) ? data : [];
 }

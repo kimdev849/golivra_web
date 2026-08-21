@@ -14,7 +14,7 @@ export function VendorCatalog() {
   useEffect(() => {
     const token = getSessionToken();
     if (!token) return;
-    apiFetch<Product[]>("/api/vendor/catalog", { token })
+    apiFetch<Product[]>("/api/enterprises/mine", { token })
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -24,7 +24,7 @@ export function VendorCatalog() {
     const token = getSessionToken();
     if (!token) return;
     try {
-      await apiFetch(`/api/vendor/products/${product.id}`, { method: "PATCH", token, jsonBody: { est_disponible: !product.est_disponible } });
+      await apiFetch(`/api/products/enterprise/0/${product.id}`, { method: "PATCH", token, jsonBody: { est_disponible: !product.est_disponible } });
       setProducts((prev) => prev.map((p) => p.id === product.id ? { ...p, est_disponible: !p.est_disponible } : p));
       toast.success(product.est_disponible ? "Produit masqué" : "Produit rendu visible");
     } catch (e) { toast.error(e instanceof Error ? e.message : "Erreur"); }
@@ -35,7 +35,7 @@ export function VendorCatalog() {
     const token = getSessionToken();
     if (!token) return;
     try {
-      await apiFetch(`/api/vendor/products/${product.id}`, { method: "DELETE", token });
+      await apiFetch(`/api/products/enterprise/0/${product.id}`, { method: "DELETE", token });
       setProducts((prev) => prev.filter((p) => p.id !== product.id));
       toast.success("Produit supprimé");
     } catch (e) { toast.error(e instanceof Error ? e.message : "Erreur"); }

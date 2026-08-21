@@ -1,10 +1,10 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Home, ClipboardList, UtensilsCrossed, Package, Truck, LayoutGrid, Bell } from "lucide-react";
+import { Home, ClipboardList, UtensilsCrossed, Truck, LayoutGrid, Bell } from "lucide-react";
 import { useAuthStore } from "../../store";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { apiFetch, getSessionToken } from "../../lib/api";
 
-/* ── Vendor theme palette (green for restaurants, teal for boutiques) ── */
+/* ── Vendor theme palette ── */
 const BRAND = "#4CAF50";
 
 type VendorShop = {
@@ -17,6 +17,27 @@ type VendorShop = {
   avatar?: string;
 };
 
+interface VendorCtx {
+  shop: VendorShop | null;
+  orders: any[];
+  setOrders: React.Dispatch<React.SetStateAction<any[]>>;
+  products: any[];
+  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const VendorContext = createContext<VendorCtx>({
+  shop: null,
+  orders: [],
+  setOrders: () => {},
+  products: [],
+  setProducts: () => {},
+});
+
+export function useVendorCtx() {
+  return useContext(VendorContext);
+}
+
+/* ── Fetch vendor data using CORRECT API endpoints (matching mobile) ── */
 function useVendorShop() {
   const navigate = useNavigate();
   const [shop, setShop] = useState<VendorShop | null>(null);
@@ -29,22 +50,39 @@ function useVendorShop() {
       const token = getSessionToken();
       if (!token) { navigate("/auth", { replace: true }); return; }
       try {
+        // 1. Verify role via /api/auth/me
         const me = await apiFetch<any>("/api/auth/me", { token });
         if (me?.role !== "restaurateur" && me?.role !== "commercant") {
           navigate("/", { replace: true });
           return;
         }
-        const shops = await apiFetch<any[]>("/api/vendor/shops", { token });
-        if (Array.isArray(shops) && shops.length > 0) {
-          setShop(shops[0]);
+
+        // 2. Fetch vendor shop via /api/enterprises/mine (like mobile enterprise.ts:93)
+        const shopsData = await apiFetch<any[]>("/api/enterprises/mine", { method: "GET", token }).catch(() => []);
+        const shopList = Array.isArray(shopsData) ? shopsData : [];
+        if (shopList.length > 0) {
+          const s = shopList[0];
+          setShop({
+            id: s.id,
+            nom: s.nom,
+            type: s.type,
+            statut_moderation: s.statut_moderation,
+            moderation_status: s.moderation_status,
+            enLigne: s.ouvert ?? s.enLigne ?? false,
+            avatar: s.image_url,
+          });
+
+          // 3. Fetch orders via /api/orders/vendor/mine (like mobile vendor-api.ts:180)
+          const o = await apiFetch<any[]>("/api/orders/vendor/mine", { method: "GET", token }).catch(() => []);
+          setOrders(Array.isArray(o) ? o : []);
+
+          // 4. Fetch products via /api/products/enterprise/{id} (like mobile vendor-api.ts:99)
+          const p = await apiFetch<any[]>(`/api/products/enterprise/${s.id}`, { method: "GET", token }).catch(() => []);
+          setProducts(Array.isArray(p) ? p : []);
+        } else {
+          // No shop found — still let them in, dashboard will show empty state
+          setShop(null);
         }
-        // Load orders + products for dashboard
-        const [o, p] = await Promise.all([
-          apiFetch<any[]>("/api/vendor/orders", { token }).catch(() => []),
-          apiFetch<any[]>("/api/vendor/products", { token }).catch(() => []),
-        ]);
-        setOrders(Array.isArray(o) ? o : []);
-        setProducts(Array.isArray(p) ? p : []);
       } catch {
         navigate("/auth", { replace: true });
       } finally {
@@ -55,13 +93,6 @@ function useVendorShop() {
   }, [navigate]);
 
   return { shop, orders, setOrders, products, setProducts, loading };
-}
-
-/* ── Exported context hook for child pages ── */
-export function useVendorContext() {
-  // This is a simple approach — children read from a React context or prop drilling.
-  // For now, child pages fetch their own data independently.
-  return {};
 }
 
 const VENDOR_TABS = [
@@ -78,10 +109,10 @@ export function VendorLayout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-muted">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--surface-muted)" }}>
         <div className="text-center">
-          <div className="w-10 h-10 border-[3px] border-brand border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm font-semibold text-txt-muted">Chargement de votre espace…</p>
+          <div className="w-10 h-10 border-[3px] border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: "var(--brand)", borderTopColor: "transparent" }} />
+          <p className="text-sm font-semibold" style={{ color: "var(--txt-muted)" }}>Chargement de votre espace…</p>
         </div>
       </div>
     );
@@ -91,14 +122,13 @@ export function VendorLayout() {
     !VENDOR_TABS.some(t => t.exact ? location.pathname === t.path : location.pathname.startsWith(t.path));
 
   return (
-    <div className="min-h-screen bg-surface-muted">
+    <div className="min-h-screen" style={{ background: "var(--surface-muted)" }}>
       {/* ── Green header bar ── */}
-      <header className="sticky top-0 z-50 bg-brand text-white px-4 h-12 flex items-center justify-between shadow-sm">
+      <header className="sticky top-0 z-50 text-white px-4 h-12 flex items-center justify-between shadow-sm" style={{ background: "var(--brand)" }}>
         <Link to="/vendor" className="flex items-center gap-2">
           <img src="/assets/images/logo.png" alt="GoLivra" className="h-7 w-auto brightness-0 invert" />
         </Link>
         <div className="flex items-center gap-2">
-          {/* Online/offline pill */}
           <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${shop?.enLigne ? "bg-white/20" : "bg-white/10"}`}>
             <span className={`w-2 h-2 rounded-full ${shop?.enLigne ? "bg-green-300 animate-pulse" : "bg-white/40"}`} />
             {shop?.enLigne ? "En ligne" : "Hors ligne"}
@@ -118,7 +148,7 @@ export function VendorLayout() {
       )}
 
       {/* ── Content with vendor shop context ── */}
-      <main className="max-w-2xl mx-auto px-4 py-4 pb-24 lg:pb-6">
+      <main className="w-full max-w-[1400px] mx-auto px-4 lg:px-8 py-4 pb-24 lg:pb-6">
         <VendorContext.Provider value={{ shop, orders, setOrders, products, setProducts }}>
           <Outlet />
         </VendorContext.Provider>
@@ -126,7 +156,7 @@ export function VendorLayout() {
 
       {/* ── Bottom tabs (mobile only) ── */}
       {!isSubPage && (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-line z-50 safe-area-bottom">
+        <nav className="fixed bottom-0 left-0 right-0 border-t z-50 safe-area-bottom" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
           <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
             {VENDOR_TABS.map((tab) => {
               const active = tab.exact
@@ -149,27 +179,4 @@ export function VendorLayout() {
       )}
     </div>
   );
-}
-
-/* ── React Context for vendor data ── */
-import { createContext, useContext } from "react";
-
-interface VendorCtx {
-  shop: VendorShop | null;
-  orders: any[];
-  setOrders: React.Dispatch<React.SetStateAction<any[]>>;
-  products: any[];
-  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
-}
-
-const VendorContext = createContext<VendorCtx>({
-  shop: null,
-  orders: [],
-  setOrders: () => {},
-  products: [],
-  setProducts: () => {},
-});
-
-export function useVendorCtx() {
-  return useContext(VendorContext);
 }

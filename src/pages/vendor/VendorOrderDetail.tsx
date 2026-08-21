@@ -25,7 +25,7 @@ export function VendorOrderDetail() {
   useEffect(() => {
     const token = getSessionToken();
     if (!token || !id) return;
-    apiFetch<VendorOrder>(`/api/vendor/orders/${id}`, { token })
+    apiFetch<VendorOrder>(`/api/orders/vendor/${id}`, { token })
       .then((data) => setOrder(data))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -37,7 +37,7 @@ export function VendorOrderDetail() {
     if (!token) return;
     setActing(actionKey);
     try {
-      await apiFetch(`/api/vendor/orders/${id}/status`, { method: "PATCH", token, jsonBody: { statut, sousCommandeId: order.sous_commande_id, raisonRefus } });
+      await apiFetch(`/api/orders/vendor/${id}/status`, { method: "PATCH", token, jsonBody: { statut, sousCommandeId: order.sous_commande_id, raisonRefus } });
       setOrder((prev) => prev ? { ...prev, statut } : prev);
       toast.success(msg);
       if (statut === "refusee") navigate("/vendor");

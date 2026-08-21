@@ -16,7 +16,7 @@ export function VendorShopPayments() {
   const queryClient = useQueryClient();
   const { data: methods = [] } = useQuery<PaymentMethod[]>({
     queryKey: ["vendor-payments"],
-    queryFn: () => apiFetch("/api/vendors/payments"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   return (

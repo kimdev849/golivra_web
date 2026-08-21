@@ -57,7 +57,7 @@ export function VendorProducts() {
       const token = getSessionToken();
       if (!token) return;
       try {
-        const p = await apiFetch<any[]>("/api/vendor/products", { token });
+        const p = await apiFetch<any[]>(shop?.id ? `/api/products/enterprise/${shop.id}` : "/api/products/enterprise/", { token });
         if (Array.isArray(p)) setProducts(p);
       } catch {} finally { setLoading(false); }
     };
@@ -86,7 +86,7 @@ export function VendorProducts() {
     try {
       const token = getSessionToken();
       if (!token) throw new Error("Session expirée");
-      await apiFetch(`/api/vendor/products/${id}`, {
+      await apiFetch(`/api/products/enterprise/0/${id}`, {
         method: "PATCH",
         token,
         body: JSON.stringify({ estDisponible: value }),
@@ -107,7 +107,7 @@ export function VendorProducts() {
     try {
       const token = getSessionToken();
       if (!token) throw new Error("Session expirée");
-      await apiFetch(`/api/vendor/products/${id}`, { method: "DELETE", token });
+      await apiFetch(`/api/products/enterprise/0/${id}`, { method: "DELETE", token });
     } catch {
       setProducts(prev);
     } finally { setBusyId(null); }

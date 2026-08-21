@@ -8,16 +8,16 @@ export function VendorNotifications() {
 
   const { data: notifications = [] } = useQuery<any[]>({
     queryKey: ["vendor-notifications"],
-    queryFn: () => apiFetch("/api/vendors/notifications"),
+    queryFn: () => apiFetch("/api/notifications"),
   });
 
   const markReadMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/vendors/notifications/${id}/read`, { method: "PUT" }),
+    mutationFn: (id: string) => apiFetch(`/api/notifications/${id}/read`, { method: "PUT" }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendor-notifications"] }),
   });
 
   const markAllMutation = useMutation({
-    mutationFn: () => apiFetch("/api/vendors/notifications/read-all", { method: "PUT" }),
+    mutationFn: () => apiFetch("/api/notifications/read-all", { method: "PUT" }),
     onSuccess: () => {
       toast.success("Toutes lues");
       queryClient.invalidateQueries({ queryKey: ["vendor-notifications"] });

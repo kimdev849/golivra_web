@@ -8,7 +8,7 @@ export function VendorShopInfo() {
   const queryClient = useQueryClient();
   const { data: shop } = useQuery<any>({
     queryKey: ["vendor-shop"],
-    queryFn: () => apiFetch("/api/vendors/shop"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   const [form, setForm] = useState({
@@ -20,7 +20,7 @@ export function VendorShopInfo() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (data: typeof form) => apiFetch("/api/vendors/shop", { method: "PUT", body: JSON.stringify(data) }),
+    mutationFn: (data: typeof form) => apiFetch("/api/enterprises/mine", { method: "PUT", body: JSON.stringify(data) }),
     onSuccess: () => { toast.success("Informations sauvegardées"); queryClient.invalidateQueries({ queryKey: ["vendor-shop"] }); },
     onError: () => toast.error("Erreur lors de la sauvegarde"),
   });

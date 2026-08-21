@@ -15,7 +15,7 @@ export function VendorShopSettings() {
   useEffect(() => {
     const token = getSessionToken();
     if (!token) return;
-    apiFetch<Record<string, unknown>>("/api/vendor/shop", { token })
+    apiFetch<Record<string, unknown>>(shop?.id ? `/api/enterprises/${shop.id}` : "/api/enterprises/", { token })
       .then((data) => { setShop(data); setNom((data.nom as string) ?? ""); setDescription((data.description as string) ?? ""); setTelephone((data.telephone as string) ?? ""); setDelaiPrep(String((data.delai_preparation_min as number) ?? 20)); })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -27,7 +27,7 @@ export function VendorShopSettings() {
     if (!token) return;
     setSaving(true);
     try {
-      await apiFetch("/api/vendor/shop", { method: "PATCH", token, jsonBody: { nom: nom.trim(), description: description.trim() || null, telephone: telephone.trim() || null, delai_preparation_min: Number(delaiPrep) || 20 } });
+      await apiFetch(shop?.id ? `/api/enterprises/${shop.id}` : "/api/enterprises/", { method: "PATCH", token, jsonBody: { nom: nom.trim(), description: description.trim() || null, telephone: telephone.trim() || null, delai_preparation_min: Number(delaiPrep) || 20 } });
       toast.success("Paramètres enregistrés");
     } catch (e) { toast.error(e instanceof Error ? e.message : "Erreur"); } finally { setSaving(false); }
   };

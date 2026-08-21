@@ -14,14 +14,14 @@ export function VendorCategories() {
   const queryClient = useQueryClient();
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["vendor-categories"],
-    queryFn: () => apiFetch("/api/vendors/categories"),
+    queryFn: () => apiFetch("/api/enterprises/mine"),
   });
 
   const [newCat, setNewCat] = useState("");
   const [showForm, setShowForm] = useState(false);
 
   const addMutation = useMutation({
-    mutationFn: (nom: string) => apiFetch("/api/vendors/categories", { method: "POST", body: JSON.stringify({ nom }) }),
+    mutationFn: (nom: string) => apiFetch("/api/enterprises/mine", { method: "POST", body: JSON.stringify({ nom }) }),
     onSuccess: () => {
       toast.success("Catégorie ajoutée");
       queryClient.invalidateQueries({ queryKey: ["vendor-categories"] });
@@ -32,7 +32,7 @@ export function VendorCategories() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/vendors/categories/${id}`, { method: "DELETE" }),
+    mutationFn: (id: string) => apiFetch(`/api/enterprises/mine/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       toast.success("Catégorie supprimée");
       queryClient.invalidateQueries({ queryKey: ["vendor-categories"] });

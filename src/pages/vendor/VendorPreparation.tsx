@@ -9,11 +9,11 @@ export function VendorPreparation() {
 
   const { data: orders = [] } = useQuery<any[]>({
     queryKey: ["vendor-orders-prep"],
-    queryFn: () => apiFetch("/api/vendors/orders?status=acceptee"),
+    queryFn: () => apiFetch("/api/orders/vendor/mine?status=acceptee"),
   });
 
   const readyMutation = useMutation({
-    mutationFn: (orderId: string) => apiFetch(`/api/vendors/orders/${orderId}/ready`, { method: "PUT" }),
+    mutationFn: (orderId: string) => apiFetch(`/api/orders/vendor/mine/${orderId}/ready`, { method: "PUT" }),
     onSuccess: () => {
       toast.success("Commande marquée prête");
       queryClient.invalidateQueries({ queryKey: ["vendor-orders-prep"] });
