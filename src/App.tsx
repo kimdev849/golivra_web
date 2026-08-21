@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuthStore } from "./store";
+import { useAuthStore, isMerchantRole, isCourierRole } from "./store";
 import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/Home";
 import { ExplorePage } from "./pages/Explore";
@@ -71,6 +71,40 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** Redirects vendor/courier away from client routes */
+function ClientOnlyRoute({ children }: { children: React.ReactNode }) {
+  const user = useAuthStore((s) => s.user);
+  if (isMerchantRole(user?.role)) return <Navigate to="/vendor" replace />;
+  if (isCourierRole(user?.role)) return <Navigate to="/courier" replace />;
+  return <>{children}</>;
+}
+
+/** Redirects client away from vendor routes */
+function VendorOnlyRoute({ children }: { children: React.ReactNode }) {
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  if (!isMerchantRole(user?.role)) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
+/** Redirects client away from courier routes */
+function CourierOnlyRoute({ children }: { children: React.ReactNode }) {
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  if (!isCourierRole(user?.role)) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
+/** Catches unknown routes and redirects to the correct home by role */
+function RoleBasedRedirect() {
+  const user = useAuthStore((s) => s.user);
+  if (isMerchantRole(user?.role)) return <Navigate to="/vendor" replace />;
+  if (isCourierRole(user?.role)) return <Navigate to="/courier" replace />;
+  return <Navigate to="/" replace />;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -84,8 +118,8 @@ export default function App() {
       <Route path="/signup/restaurant" element={<SignupRestaurant />} />
       <Route path="/signup/boutique" element={<SignupBoutique />} />
 
-      {/* ── WITH CLIENT LAYOUT (header + bottom nav) ──────────────────── */}
-      <Route element={<Layout />}>
+      {/* ── WITH CLIENT LAYOUT (header + bottom nav) — CLIENT ONLY ── */}
+      <Route element={<ClientOnlyRoute><Layout /></ClientOnlyRoute>}>
         <Route path="/" element={<HomePage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/explore/all" element={<DiscoverAllPage />} />
@@ -109,8 +143,8 @@ export default function App() {
         <Route path="/delivery/:id" element={<ProtectedRoute><DeliveryDetail /></ProtectedRoute>} />
       </Route>
 
-      {/* ── VENDOR (has its own layout) ───────────────────────────────── */}
-      <Route path="/vendor" element={<ProtectedRoute><VendorLayout /></ProtectedRoute>}>
+      {/* ── VENDOR (has its own layout) — VENDOR ONLY ────────────────── */}
+      <Route path="/vendor" element={<VendorOnlyRoute><VendorLayout /></VendorOnlyRoute>}>
         <Route index element={<VendorDashboard />} />
         <Route path="catalog" element={<VendorCatalog />} />
         <Route path="products" element={<VendorProducts />} />
@@ -136,8 +170,8 @@ export default function App() {
         <Route path="help-center" element={<VendorHelpCenter />} />
       </Route>
 
-      {/* ── COURIER (has its own layout) ──────────────────────────────── */}
-      <Route path="/courier" element={<ProtectedRoute><CourierLayout /></ProtectedRoute>}>
+      {/* ── COURIER (has its own layout) — COURIER ONLY ──────────────── */}
+      <Route path="/courier" element={<CourierOnlyRoute><CourierLayout /></CourierOnlyRoute>}>
         <Route index element={<CourierHome />} />
         <Route path="missions" element={<CourierMissions />} />
         <Route path="missions/:missionId" element={<CourierMissionDetail />} />
@@ -149,7 +183,7 @@ export default function App() {
         <Route path="help-center" element={<VendorHelpCenter />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<RoleBasedRedirect />} />
     </Routes>
   );
 }
