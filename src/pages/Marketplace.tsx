@@ -1,0 +1,219 @@
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../lib/api";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Star, Clock, Truck, MapPin, Package, AlertTriangle, Store, UtensilsCrossed, ShoppingBag } from "lucide-react";
+
+function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + " FCFA"; }
+
+const JOURS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
+function isEnterpriseOpen(ent: any): { ouvert: boolean; message: string } {
+  if (ent.ouvert === false) return { ouvert: false, message: ent.message_fermeture || "Fermé" };
+  if (ent.est_ouvert_maintenant === false) return { ouvert: false, message: ent.message_fermeture || "Fermé pour le moment" };
+  if (ent.accepte_commandes === false) return { ouvert: false, message: ent.message_fermeture || "Ne prend plus de commandes" };
+  if (ent.peut_commander_maintenant === false) return { ouvert: false, message: ent.message_commande || "Trop tard pour commander" };
+  return { ouvert: true, message: ent.prochaine_ouverture ? `Réouvre à ${ent.prochaine_ouverture}` : "" };
+}
+
+export function MarketplacePage() {
+  const { enterpriseId } = useParams();
+  const navigate = useNavigate();
+
+  const { data: enterprise, isLoading: loadingEnt, error: entError } = useQuery({
+    queryKey: ["enterprise", enterpriseId],
+    queryFn: () => apiFetch(`/api/enterprises/${enterpriseId}`),
+    enabled: !!enterpriseId,
+    staleTime: 60_000,
+    retry: 2,
+  });
+
+  const { data: products = [], isLoading: loadingProds } = useQuery({
+    queryKey: ["products", enterpriseId],
+    queryFn: () => apiFetch(`/api/products/enterprise/${enterpriseId}`),
+    enabled: !!enterpriseId,
+    staleTime: 60_000,
+  });
+
+  const ent = enterprise as any;
+  const productList = Array.isArray(products) ? products : [];
+  const openStatus = ent ? isEnterpriseOpen(ent) : null;
+
+  // ── Loading skeleton ──
+  if (loadingEnt) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-4 animate-pulse">
+        <div className="h-4 bg-gray-200 rounded w-20" />
+        <div className="w-full h-48 bg-gray-200 rounded-2xl" />
+        <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
+          <div className="h-5 bg-gray-200 rounded w-3/4" />
+          <div className="h-3 bg-gray-200 rounded w-1/2" />
+          <div className="h-3 bg-gray-200 rounded w-2/3" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200" />
+              <div className="p-2.5 space-y-2">
+                <div className="h-3 bg-gray-200 rounded w-3/4" />
+                <div className="h-3 bg-gray-200 rounded w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error / not found ──
+  if (entError || !ent) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 text-center py-20">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-error/10 flex items-center justify-center">
+          <AlertTriangle size={28} className="text-error" />
+        </div>
+        <h2 className="text-lg font-extrabold text-txt mb-1">Commerce introuvable</h2>
+        <p className="text-sm text-txt-muted mb-6">
+          {entError ? "Ce commerce n'existe pas ou n'est plus disponible." : "Commerce introuvable."}
+        </p>
+        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand text-white rounded-full text-sm font-bold hover:bg-brand-700 transition">
+          <ArrowLeft size={16} /> Retour
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-txt-muted hover:text-txt transition">
+        <ArrowLeft size={16} /> <span className="text-sm font-medium">Retour</span>
+      </button>
+
+      {/* Cover */}
+      <div className="w-full h-48 bg-brand-50 rounded-2xl overflow-hidden">
+        {ent.image_url || ent.banniere_url ? (
+          <img src={ent.banniere_url || ent.image_url} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-brand/20 text-6xl font-bold">
+            {(ent.nom || "?")[0]}
+          </div>
+        )}
+      </div>
+
+      {/* Info card */}
+      <div className="bg-surface border border-line rounded-xl p-4 space-y-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-extrabold text-txt">{ent.nom}</h1>
+            <div className="flex items-center gap-3 flex-wrap mt-1">
+              <span className="text-xs font-bold text-txt-muted bg-gray-100 px-2 py-0.5 rounded-full capitalize flex items-center gap-1">
+                {ent.type === "restaurant" ? <UtensilsCrossed size={10} /> : <ShoppingBag size={10} />}
+                {ent.type}
+              </span>
+              {ent.categorie_nom && <span className="text-xs text-txt-muted">{ent.categorie_nom}</span>}
+              {ent.note_moyenne != null && ent.note_moyenne > 0 && (
+                <span className="flex items-center gap-0.5 text-xs font-bold text-accent-600">
+                  <Star size={11} className="fill-accent-500 text-accent-500" /> {Number(ent.note_moyenne).toFixed(1)}
+                  {ent.nb_avis && <span className="text-txt-muted">({ent.nb_avis})</span>}
+                </span>
+              )}
+            </div>
+          </div>
+          {/* Open/Closed badge */}
+          {openStatus && (
+            <div className={`px-3 py-1.5 rounded-full text-xs font-extrabold flex-shrink-0 ${openStatus.ouvert ? "bg-brand/10 text-brand" : "bg-error/10 text-error"}`}>
+              {openStatus.ouvert ? "Ouvert" : "Fermé"}
+            </div>
+          )}
+        </div>
+
+        {/* Open message (when closed) */}
+        {openStatus && !openStatus.ouvert && openStatus.message && (
+          <p className="text-xs text-error/80 italic">{openStatus.message}</p>
+        )}
+
+        {ent.description && <p className="text-sm text-txt-secondary leading-relaxed">{ent.description}</p>}
+
+        {ent.adresse && (
+          <div className="flex items-center gap-2 text-xs text-txt-muted">
+            <MapPin size={14} className="text-brand flex-shrink-0" /> {ent.adresse}
+          </div>
+        )}
+
+        <div className="flex items-center gap-4 text-xs text-txt-muted">
+          <span className="flex items-center gap-1"><Truck size={14} className="text-brand" /> Livraison selon zone</span>
+          {ent.delai_preparation_min != null && (
+            <span className="flex items-center gap-1"><Clock size={14} className="text-brand" /> ~{ent.delai_preparation_min} min</span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Horaires ── */}
+      {ent.horaires && ent.horaires.length > 0 && (
+        <div className="bg-surface border border-line rounded-xl p-4">
+          <h3 className="text-sm font-bold text-txt mb-2 flex items-center gap-2">
+            <Clock size={16} className="text-brand" /> Horaires d'ouverture
+          </h3>
+          <div className="space-y-1.5">
+            {ent.horaires.map((h: any) => {
+              const jour = JOURS[h.jour] || `Jour ${h.jour}`;
+              const today = new Date().getDay() === h.jour;
+              return (
+                <div key={h.jour} className={`flex items-center justify-between text-xs py-1 ${today ? "font-bold text-brand" : "text-txt-muted"}`}>
+                  <span>{jour}</span>
+                  <span>{h.ouverture && h.fermeture ? `${h.ouverture} – ${h.fermeture}` : "Fermé"}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Products */}
+      <div>
+        <h2 className="text-lg font-extrabold text-txt mb-3">
+          {loadingProds ? (
+            <span className="text-txt-muted">Chargement…</span>
+          ) : `Produits (${productList.length})`}
+        </h2>
+        {productList.length === 0 && !loadingProds ? (
+          <div className="text-center py-12 text-txt-muted bg-surface border border-line rounded-2xl">
+            <Package size={32} className="mx-auto mb-2 opacity-30" />
+            <p className="text-sm">Aucun produit disponible</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {productList.map((p: any) => (
+              <Link
+                key={p.id}
+                to={`/product/${p.id}?enterprise=${enterpriseId}`}
+                className="bg-surface rounded-xl overflow-hidden border border-line hover:shadow-md transition"
+              >
+                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                  {p.image_url ? (
+                    <img src={p.image_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <Package size={24} className="text-brand/20" />
+                  )}
+                  {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
+                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+                      -{Math.round((1 - Number(p.prix_promo) / Number(p.prix)) * 100)}%
+                    </span>
+                  )}
+                </div>
+                <div className="p-2.5">
+                  <p className="text-[13px] font-bold text-txt truncate">{p.nom}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-sm font-extrabold text-brand">{formatFcfa(Number(p.prix_promo ?? p.prix))}</span>
+                    {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
+                      <span className="text-[11px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

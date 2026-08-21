@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   GoLivra Web Theme — Light + Dark
+   Matches golivra_mobile/constants/theme.ts
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Brand */
+  --brand: #0B6B45;
+  --brand-deep: #0C4F36;
+  --brand-50: #EAF4EE;
+  --brand-100: #D6E6DC;
+  /* Accent */
+  --accent: #F5A524;
+  --accent-deep: #D27A09;
+  /* Surfaces */
+  --bg: #FFFFFF;
+  --bg-alt: #F6FAF7;
+  --surface: #FFFFFF;
+  --surface-muted: #F4F6F5;
+  /* Text */
+  --txt: #11181C;
+  --txt-secondary: #355245;
+  --txt-muted: #6A8578;
+  /* Borders */
+  --border: #E8F2EC;
+  --border-strong: #D6E6DC;
+  /* Error */
+  --error: #B42318;
+  --error-soft: #FEF3F2;
+  /* Status */
+  --warning: #D97706;
+  --warning-soft: #FEF3C7;
+  --success: #0B6B45;
+  --success-soft: #ECFDF3;
+  --info: #2563EB;
+  --info-soft: #EFF6FF;
+  --splash-bg: #062A1B;
+}
+
+/* ── Dark mode ───────────────────────────────────────────────────────────── */
+.dark {
+  --brand: #6ECFA0;
+  --brand-deep: #5ABF8E;
+  --brand-50: #162E22;
+  --brand-100: #1A3829;
+  --accent: #FFB940;
+  --accent-deep: #E89A1C;
+  --bg: #121916;
+  --bg-alt: #161E1A;
+  --surface: #1A2420;
+  --surface-muted: #1F2C27;
+  --txt: #EAF2ED;
+  --txt-secondary: #B8D0C2;
+  --txt-muted: #7FA393;
+  --border: #2A3D33;
+  --border-strong: #354A3E;
+  --error: #FB7185;
+  --error-soft: #2A1518;
+  --warning: #FBBF24;
+  --warning-soft: #2E2510;
+  --success: #6ECFA0;
+  --success-soft: #122A1C;
+  --info: #60A5FA;
+  --info-soft: #111E36;
+  --splash-bg: #0A1210;
+}
+
+/* ── Base reset ──────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* ── Tailwind theme integration ──────────────────────────────────────────── */
+@layer base {
+  html { color-scheme: light; }
+  .dark html { color-scheme: dark; }
+}
+
+/* ── Safe area PWA ───────────────────────────────────────────────────────── */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb { background: #3A5040; }
+
+/* Hide scrollbar for horizontal filter chips */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Safe area bottom for fixed footers ──────────────────────────────────── */
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 4rem); }
+
+/* ── Toast overrides ─────────────────────────────────────────────────────── */
+[data-sonner-toaster] { font-family: 'Inter', system-ui, sans-serif !important; }
+
+/* ── Dark mode body ──────────────────────────────────────────────────────── */
+.dark body {
+  background-color: var(--bg);
+  color: var(--txt);
+}
+
+/* ── Dark mode Tailwind utility overrides ─────────────────────────────────── */
+/* Override Tailwind's static color classes to use CSS variables */
+@layer utilities {
+  .bg-surface { background-color: var(--surface) !important; }
+  .bg-surface-muted { background-color: var(--surface-muted) !important; }
+  .bg-surface-alt { background-color: var(--bg-alt) !important; }
+  .text-txt { color: var(--txt) !important; }
+  .text-txt-secondary { color: var(--txt-secondary) !important; }
+  .text-txt-muted { color: var(--txt-muted) !important; }
+  .border-line { border-color: var(--border) !important; }
+  .border-line-strong { border-color: var(--border-strong) !important; }
+  .text-error { color: var(--error) !important; }
+  .bg-error\/10 { background-color: color-mix(in srgb, var(--error) 10%, transparent) !important; }
+  .bg-error\/5 { background-color: color-mix(in srgb, var(--error) 5%, transparent) !important; }
+
+  /* Brand overrides for dark */
+  .text-brand-deep { color: var(--brand-deep) !important; }
+  .bg-brand-50 { background-color: var(--brand-50) !important; }
+  .text-brand { color: var(--brand) !important; }
+  .bg-brand { background-color: var(--brand) !important; }
+  .border-brand { border-color: var(--brand) !important; }
+
+  /* Accent overrides */
+  .text-accent-deep { color: var(--accent-deep) !important; }
+  .bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+}
+
+/* ── Generic dark mode overrides for hardcoded Tailwind classes ────────────── */
+.dark .bg-white { background-color: var(--surface) !important; }
+.dark .bg-gray-50 { background-color: #1A2420 !important; }
+.dark .bg-gray-100 { background-color: var(--surface-muted) !important; }
+.dark .bg-gray-200 { background-color: #253029 !important; }
+.dark .border-gray-200 { border-color: var(--border) !important; }
+.dark .text-gray-600 { color: var(--txt-muted) !important; }
+.dark .text-gray-500 { color: var(--txt-muted) !important; }
+.dark .text-gray-400 { color: var(--txt-muted) !important; }
+.dark .text-gray-300 { color: #5A7A6A !important; }
+.dark .text-gray-900 { color: var(--txt) !important; }
+.dark .bg-green-50 { background-color: var(--success-soft) !important; }
+.dark .bg-amber-50 { background-color: var(--warning-soft) !important; }
+.dark .bg-red-50 { background-color: var(--error-soft) !important; }
+.dark .bg-blue-50 { background-color: var(--info-soft) !important; }
+.dark .bg-purple-50 { background-color: #1E1530 !important; }
+.dark .text-green-700 { color: var(--success) !important; }
+.dark .text-green-600 { color: var(--success) !important; }
+.dark .text-amber-700 { color: var(--warning) !important; }
+.dark .text-amber-600 { color: var(--warning) !important; }
+.dark .text-red-600 { color: var(--error) !important; }
+.dark .text-red-500 { color: var(--error) !important; }
+.dark .text-blue-600 { color: var(--info) !important; }
+.dark .text-purple-600 { color: #B49CFF !important; }
+.dark .bg-brand-50 { background-color: var(--brand-50) !important; }
+.dark .border-brand-200\/60 { border-color: color-mix(in srgb, var(--brand) 15%, transparent) !important; }
+.dark .border-amber-200\/60 { border-color: color-mix(in srgb, var(--warning) 15%, transparent) !important; }
+.dark .border-red-200\/60 { border-color: color-mix(in srgb, var(--error) 15%, transparent) !important; }
+.dark .border-blue-200\/60 { border-color: color-mix(in srgb, var(--info) 15%, transparent) !important; }
+.dark .bg-splash-bg { background-color: var(--splash-bg) !important; }
+.dark img { filter: brightness(0.92); }
+.dark img[src*="logo"] { filter: brightness(1.1) saturate(1.1); }

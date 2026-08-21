@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/assets/images/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0B6B45" />
+    <meta name="description" content="GoLivra — Commandez facilement autour de vous" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>GoLivra</title>
+    <!-- Theme + text size initializer (runs BEFORE React to prevent flash) -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('golivra_theme') || 'light';
+        var textScale = localStorage.getItem('golivra_text_scale') || 'medium';
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+        var sizes = { small: '14px', medium: '16px', large: '18px' };
+        document.documentElement.style.fontSize = sizes[textScale] || '16px';
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      }
+    </script>
+  </body>
+</html>
