@@ -20,22 +20,42 @@ type SignupVariant = "default" | "restaurant" | "boutique";
 // ─── Phone helpers ───────────────────────────────────────────────────────────
 
 function formatPhoneDisplay(value: string): string {
-  const digits = value.replace(/\D/g, "");
-  if (digits.startsWith("242")) {
-    const n = digits.slice(3, 12);
+  const raw = value.replace(/\D/g, "");
+  // Strip leading zeros when +242 prefix detected
+  if (raw.startsWith("2420")) {
+    const n = raw.slice(4, 13);
     if (n.length <= 2) return `+242 ${n}`;
     if (n.length <= 5) return `+242 ${n.slice(0, 2)} ${n.slice(2)}`;
     if (n.length <= 7) return `+242 ${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5)}`;
     return `+242 ${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5, 7)} ${n.slice(7, 9)}`;
   }
-  if (digits.length <= 3) return `+${digits}`;
-  return `+${digits.slice(0, 3)} ${digits.slice(3)}`;
+  if (raw.startsWith("242")) {
+    const n = raw.slice(3, 12);
+    if (n.length <= 2) return `+242 ${n}`;
+    if (n.length <= 5) return `+242 ${n.slice(0, 2)} ${n.slice(2)}`;
+    if (n.length <= 7) return `+242 ${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5)}`;
+    return `+242 ${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5, 7)} ${n.slice(7, 9)}`;
+  }
+  if (raw.length <= 3) return `+${raw}`;
+  return `+${raw.slice(0, 3)} ${raw.slice(3)}`;
 }
 
 function toE164(value: string): string | null {
   const c = value.replace(/\D/g, "");
-  if (c.startsWith("242")) { const n = c.slice(3); return n.length === 9 ? `+242${n}` : null; }
-  if (c.length >= 8) return `+${c}`;
+  // +242 followed by 9 digits
+  if (c.startsWith("242") && c.length >= 12) return `+${c.slice(0, 12)}`;
+  if (c.startsWith("242")) {
+    const n = c.slice(3);
+    if (n.length >= 8) return `+242${n}`;
+  }
+  // Local format: starts with 0 + 9 digits
+  if (c.startsWith("0") && c.length >= 10) {
+    return `+242${c.slice(1, 10)}`;
+  }
+  // Already has +
+  if (value.startsWith("+") && c.length >= 9) return `+${c}`;
+  // Just digits
+  if (c.length >= 9) return `+${c}`;
   return null;
 }
 
@@ -56,9 +76,10 @@ function vName(v: string): VR {
 function vPhone(v: string): VR {
   const t = v.trim();
   if (!t) return { ok: false, m: 'Écrivez votre numéro de téléphone.' };
-  if (t.length > 15) return { ok: false, m: 'Le numéro est trop long (max 15 caractères).' };
+  if (t.length > 20) return { ok: false, m: 'Le numéro est trop long.' };
   if (!/\d/.test(t)) return { ok: false, m: 'Votre numéro doit contenir des chiffres.' };
-  if (!toE164(t)) return { ok: false, m: 'Ce numéro ne semble pas complet.' };
+  const digits = t.replace(/\s/g, '');
+  if (digits.length < 9) return { ok: false, m: 'Le numéro est trop court.' };
   return { ok: true };
 }
 function vPassword(v: string): VR {

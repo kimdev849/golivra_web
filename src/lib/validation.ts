@@ -11,16 +11,23 @@ export function sanitizeText(v: string): string {
   return v.replace(FORBIDDEN_RE, "").trim();
 }
 
-/** Validate a phone number (Congo format: +242 XX XXX XX XX). Max 15 chars. */
+/** Validate a phone number (Congo format: +242 XX XXX XX XX or local 0X XXX XX XX). */
 export function validatePhone(v: string): { ok: true } | { ok: false; m: string } {
-  const t = v.trim();
-  if (!t) return { ok: false, m: "Écrivez votre numéro de téléphone." };
-  if (t.length > 15) return { ok: false, m: "Le numéro est trop long (max 15 caractères)." };
-  // Must start with + and contain only digits after that
-  if (!/^\+\d{8,14}$/.test(t.replace(/\s/g, ""))) {
-    return { ok: false, m: "Numéro invalide. Ex: +242 06 123 4567." };
-  }
-  return { ok: true };
+  const raw = v.trim();
+  if (!raw) return { ok: false, m: "Écrivez votre numéro de téléphone." };
+  // Strip all spaces for validation
+  const digits = raw.replace(/\s/g, "");
+  if (digits.length > 20) return { ok: false, m: "Le numéro est trop long." };
+  if (digits.length < 9) return { ok: false, m: "Le numéro est trop court." };
+  // Congo international: +242 + 9 digits (e.g. +24267000000)
+  // Congo local: 0 + 9 digits (e.g. 0670000000)
+  // Or just 9-12 digits without +
+  if (/^\+?242\d{9}$/.test(digits)) return { ok: true };
+  if (/^0\d{8,9}$/.test(digits)) return { ok: true };
+  if (/^\d{9,12}$/.test(digits)) return { ok: true };
+  // International: +<country> + 7-15 digits
+  if (/^\+\d{7,15}$/.test(digits)) return { ok: true };
+  return { ok: false, m: "Numéro invalide. Ex: +242 67 000 0000" };
 }
 
 /** Validate a full name (2–80 chars, no special chars). */

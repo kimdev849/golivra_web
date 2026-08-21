@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock, Moon, Smartphone, Sun, UserPlus } from "lucide-react";
-import { useAuthStore } from "../store";
+import { useAuthStore, homePathForRole } from "../store";
 import { apiFetch, setSessionToken } from "../lib/api";
 import { toast } from "sonner";
 
@@ -42,7 +42,7 @@ export function AuthPage() {
       if (result?.token) {
         setSessionToken(result.token);
         setSession({ token: result.token, expireLe: result.expireLe || new Date(Date.now() + 86400000).toISOString(), user: result.user });
-        navigate("/", { replace: true });
+        navigate(homePathForRole(result.user?.role), { replace: true });
       } else {
         setError("Numéro ou mot de passe incorrect.");
       }
