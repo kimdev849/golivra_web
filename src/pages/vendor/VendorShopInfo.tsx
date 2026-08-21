@@ -20,7 +20,7 @@ export function VendorShopInfo() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (data: typeof form) => apiFetch("/api/enterprises/mine", { method: "PUT", body: JSON.stringify(data) }),
+    mutationFn: (data: typeof form) => apiFetch("/api/enterprises/mine", { method: "PATCH", jsonBody: data }),
     onSuccess: () => { toast.success("Informations sauvegardées"); queryClient.invalidateQueries({ queryKey: ["vendor-shop"] }); },
     onError: () => toast.error("Erreur lors de la sauvegarde"),
   });
