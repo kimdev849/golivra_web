@@ -89,7 +89,7 @@ export function VendorMore() {
           <MenuRow
             icon={<Package size={20} className="text-brand" />}
             title="Catalogue"
-            subtitle="Catégories produits"
+            subtitle="Voir mes produits"
             to="/vendor/catalog"
           />
           <div className="ml-[72px] h-px bg-line" />

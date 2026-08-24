@@ -85,8 +85,11 @@ export function VendorOrderDetail() {
         </div>
       )}
       {showPrep && paid && (
-        <button disabled={!!acting} onClick={() => runStatus("en_preparation", "Préparation démarrée", "prep")} className="w-full bg-brand text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-700 transition disabled:opacity-50">
-          {acting === "prep" ? "En cours…" : "Commencer la préparation"}
+        <button disabled={!!acting} onClick={() => order.statut === 'en_preparation'
+          ? runStatus('prete', 'Commande prête.', 'ready')
+          : runStatus('en_preparation', 'Préparation démarrée.', 'prep')} 
+          className="w-full bg-brand text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-700 transition disabled:opacity-50">
+          {(acting === 'prep' || acting === 'ready') ? 'En cours…' : order.statut === 'en_preparation' ? 'Marquer prête' : 'Commencer la préparation'}
         </button>
       )}
       {!paid && order.statut === "a_preparer" && (

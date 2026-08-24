@@ -102,11 +102,17 @@ export function CartPage() {
           clientTotal: grandTotal,
           clientSubtotal: subtotal,
           clientDeliveryFee: deliveryFee,
-          segments: cart.segments.map((seg) => ({
-            entrepriseId: seg.enterpriseId,
-            establishmentType: seg.enterpriseType || "restaurant",
-            articles: seg.lines.map((l) => ({ itemId: l.productId, quantite: l.quantite })),
-          })),
+          segments: cart.segments.map((seg) => {
+            const commerceFee = seg.fraisLivraison;
+            const zoneFee = deliveryFeeForQuartier(address.quartier || undefined, pricingConfig);
+            const segFee = (commerceFee && commerceFee > 0) ? Math.max(commerceFee, zoneFee) : zoneFee;
+            return {
+              entrepriseId: seg.enterpriseId,
+              establishmentType: seg.enterpriseType || "restaurant",
+              articles: seg.lines.map((l) => ({ itemId: l.productId, quantite: l.quantite })),
+              deliveryFee: segFee,
+            };
+          }),
         },
       });
       clearCart();
