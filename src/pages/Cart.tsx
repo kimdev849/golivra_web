@@ -3,8 +3,9 @@ import { apiFetch } from "../lib/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore, useAuthStore } from "../store";
 import { Minus, Plus, Trash2, PackageOpen, Truck, MapPin, ChevronDown, X } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { sanitizeText, validateAddress, validateTextField } from "../lib/validation";
 import { fetchPublicPricing, deliveryFeeForQuartier, type PublicPricing } from "../lib/pricing";
 
@@ -18,6 +19,8 @@ export function CartPage() {
   const [errors, setErrors] = useState<{ quartier?: string; ligne1?: string; instructions?: string }>({});
   const [submitting, setSubmitting] = useState(false);
   const [showZonePicker, setShowZonePicker] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: pricing } = useQuery<PublicPricing>({
     queryKey: ["pricing-config"],
@@ -77,7 +80,14 @@ export function CartPage() {
     }
     if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     if (!session?.token) { toast.error("Connectez-vous pour passer commande."); navigate("/auth"); return; }
+    // Afficher récapitulatif avant envoi (C2)
+    setShowConfirm(true);
+  };
 
+  const confirmAndSend = async () => {
+    if (!cart || !hasItems) return;
+    setShowConfirm(false);
+    if (!session?.token) { toast.error("Connectez-vous pour passer commande."); navigate("/auth"); return; }
     setSubmitting(true);
     try {
       const result = await apiFetch<{ id: string }>("/api/orders", {
@@ -88,6 +98,10 @@ export function CartPage() {
           adresseLivraison: `${address.quartier}, ${address.ligne1}`.trim(),
           adresse: { quartier: address.quartier, ligne1: address.ligne1, instructions: address.instructions, ville: "Brazzaville", pays: "Congo" },
           methodePaiement: "airtel_money",
+          // Envoyer le total côté client (C1)
+          clientTotal: grandTotal,
+          clientSubtotal: subtotal,
+          clientDeliveryFee: deliveryFee,
           segments: cart.segments.map((seg) => ({
             entrepriseId: seg.enterpriseId,
             establishmentType: seg.enterpriseType || "restaurant",
@@ -96,6 +110,9 @@ export function CartPage() {
         },
       });
       clearCart();
+      // Invalider le cache des commandes (I1)
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["active-orders"] });
       toast.success("Commande envoyée !");
       navigate(`/orders/${result.id}`, { replace: true });
     } catch (e) {
@@ -211,6 +228,34 @@ export function CartPage() {
           </button>
         </div>
       </div>
+
+      {/* ── Confirmation Modal (C2) ── */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-[100] bg-black/50 flex items-end lg:items-center justify-center" onClick={() => setShowConfirm(false)}>
+          <div className="bg-surface rounded-t-3xl lg:rounded-3xl w-full max-w-md p-5 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-extrabold text-txt text-center">Récapitulatif</h3>
+            {cart?.segments.map((seg) => (
+              <div key={seg.enterpriseId} className="border-b border-line pb-2">
+                <p className="text-sm font-bold text-txt mb-1">{seg.enterpriseNom}</p>
+                {seg.lines.map((l) => (
+                  <p key={l.productId} className="text-xs text-txt-muted ml-2">{l.quantite}× {l.nom}</p>
+                ))}
+              </div>
+            ))}
+            <div className="flex justify-between text-sm"><span className="text-txt-muted">Articles</span><span className="text-txt">{formatFcfa(subtotal)}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-txt-muted">Livraison</span><span className="text-txt">{formatFcfa(deliveryFee)}</span></div>
+            <div className="flex justify-between text-base font-extrabold border-t border-line pt-2"><span className="text-txt">Total</span><span className="text-brand">{formatFcfa(grandTotal)}</span></div>
+            <div className="text-xs text-txt-muted">📍 {address.quartier}, {address.ligne1}</div>
+            <p className="text-xs text-txt-muted italic text-center">Paiement par Mobile Money après acceptation.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowConfirm(false)} className="flex-1 py-3 rounded-xl border border-line text-sm font-bold text-txt hover:bg-gray-50 transition">Annuler</button>
+              <button onClick={() => void confirmAndSend()} disabled={submitting} className="flex-1 py-3 rounded-xl bg-brand text-white text-sm font-extrabold hover:bg-brand-700 transition disabled:opacity-50">
+                {submitting ? "Envoi…" : "Envoyer la commande"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Zone Picker Modal ── */}
       {showZonePicker && (
