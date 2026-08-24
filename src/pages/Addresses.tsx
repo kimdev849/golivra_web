@@ -279,7 +279,7 @@ export function AddressesPage() {
 
             {/* ── Create / Edit form ── */}
             {showForm && (
-              <div className="rounded-2xl p-5 space-y-4" style={{ backgroundColor: bg, border: `1px solid ${border}` }}>
+              <div className="rounded-2xl p-5 space-y-4 max-h-[80vh] overflow-y-auto" style={{ backgroundColor: bg, border: `1px solid ${border}` }}>
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-base" style={{ color: textPrimary }}>
                     {editingId ? "Modifier l'adresse" : "Nouvelle adresse"}
