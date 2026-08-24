@@ -7,11 +7,58 @@ function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + 
 
 const JOURS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
+/** Heure courante en timezone Brazzaville (UTC+1). Les horaires des
+ *  commerces sont en heure locale Brazzaville, pas en UTC. */
+function nowBrazza(): Date {
+  const now = new Date();
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60_000;
+  return new Date(utcMs + 1 * 60_000); // UTC+1
+}
+
 function isEnterpriseOpen(ent: any): { ouvert: boolean; message: string } {
+  // Priorité aux flags serveur si déjà calculés.
   if (ent.ouvert === false) return { ouvert: false, message: ent.message_fermeture || "Fermé" };
-  if (ent.est_ouvert_maintenant === false) return { ouvert: false, message: ent.message_fermeture || "Fermé pour le moment" };
   if (ent.accepte_commandes === false) return { ouvert: false, message: ent.message_fermeture || "Ne prend plus de commandes" };
   if (ent.peut_commander_maintenant === false) return { ouvert: false, message: ent.message_commande || "Trop tard pour commander" };
+  // Recalcul local si horaires disponibles (évite le cache figé côté serveur).
+  if (ent.horaires && ent.horaires.length > 0) {
+    const now = nowBrazza();
+    const todayIdx = now.getDay();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const todayPlages = ent.horaires.filter((h: any) => Number(h.jour) === todayIdx);
+    const open = todayPlages.some((p: any) => {
+      const [sh, sm] = (p.ouverture || '').split(':').map(Number);
+      const [eh, em] = (p.fermeture || '').split(':').map(Number);
+      if (isNaN(sh) || isNaN(eh)) return false;
+      const start = sh * 60 + sm;
+      const end = eh * 60 + em;
+      return end > start ? nowMin >= start && nowMin < end : nowMin >= start || nowMin < end;
+    });
+    if (!open) {
+      // Chercher la prochaine ouverture
+      for (let off = 0; off <= 7; off++) {
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + off);
+        const plages = ent.horaires
+          .filter((h: any) => Number(h.jour) === d.getDay())
+          .map((p: any) => { const [h, m] = (p.ouverture || '').split(':').map(Number); return h * 60 + m; })
+          .filter((m: number) => !isNaN(m))
+          .filter((m: number) => off === 0 ? m > nowMin : true)
+          .sort((a: number, b: number) => a - b);
+        if (plages.length > 0) {
+          const h = Math.floor(plages[0] / 60);
+          const m = plages[0] % 60;
+          const label = off === 0 ? `aujourd'hui à ${h}h${m > 0 ? String(m).padStart(2, '0') : ''}`
+            : off === 1 ? `demain à ${h}h${m > 0 ? String(m).padStart(2, '0') : ''}`
+            : `${JOURS[d.getDay()]} à ${h}h${m > 0 ? String(m).padStart(2, '0') : ''}`;
+          return { ouvert: false, message: `Fermé · rouvre ${label}` };
+        }
+      }
+      return { ouvert: false, message: "Fermé" };
+    }
+    return { ouvert: true, message: ent.prochaine_ouverture ? `Réouvre à ${ent.prochaine_ouverture}` : "" };
+  }
+  // Fallback : flags serveur.
+  if (ent.est_ouvert_maintenant === false) return { ouvert: false, message: ent.message_fermeture || "Fermé pour le moment" };
   return { ouvert: true, message: ent.prochaine_ouverture ? `Réouvre à ${ent.prochaine_ouverture}` : "" };
 }
 

@@ -137,8 +137,10 @@ export function HomePage() {
   });
   const showProductGrid = category !== "restaurant" && category !== "boutique";
 
-  // ── Discover section (top 3 popular) ──
+  // ── Discover section (top 3 popular, with at least 1 product in feed) ──
+  const enterpriseIdsWithProducts = new Set((Array.isArray(products) ? products : []).map((p: any) => p.entreprise_id));
   const discoverEnterprises = [...restaurants, ...boutiques]
+    .filter((e) => enterpriseIdsWithProducts.has(e.id))
     .sort((a, b) => (b.note_moyenne || 0) - (a.note_moyenne || 0))
     .slice(0, 3);
 
@@ -488,7 +490,6 @@ function ActiveOrderWidget() {
 
 // ─── Splash Overlay ────────────────────────────────────────────────────────
 
-const SLOGAN = "On vous apporte ce dont vous avez besoin ..";
 const GOLIVRA_ORANGE = "#F58A07";
 
 function SplashOverlay({ onAuth }: { onAuth: () => void }) {
@@ -496,7 +497,7 @@ function SplashOverlay({ onAuth }: { onAuth: () => void }) {
     <div className="min-h-screen w-full relative bg-black overflow-hidden">
       <img
         src="/assets/images/home2.jpg"
-        alt=""
+        alt="GoLivra - Livraison à Brazzaville"
         className="absolute inset-0 w-full h-full object-cover"
         draggable={false}
       />
@@ -513,38 +514,53 @@ function SplashOverlay({ onAuth }: { onAuth: () => void }) {
           draggable={false}
         />
       </div>
-      <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-[18px] px-4 pb-8">
+      <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-4 px-4 pb-8">
         <h1
-          className="text-white text-center font-semibold leading-snug max-w-sm"
-          style={{ fontSize: "clamp(1.25rem, 4vw, 1.5rem)", textShadow: "0 1px 6px rgba(0,0,0,0.55)" }}
+          className="text-white text-center font-bold leading-snug max-w-sm"
+          style={{ fontSize: "clamp(1.35rem, 4vw, 1.65rem)", textShadow: "0 1px 6px rgba(0,0,0,0.55)" }}
         >
-          {SLOGAN}
+          Commandez des plats et produits à Brazzaville, livrés chez vous
         </h1>
-        <button
-          onClick={onAuth}
-          className="text-white font-bold tracking-wide transition-opacity hover:opacity-90 active:opacity-80"
-          style={{
-            backgroundColor: GOLIVRA_ORANGE,
-            minHeight: 58,
-            borderRadius: 999,
-            paddingLeft: 48,
-            paddingRight: 48,
-            fontSize: "clamp(1rem, 3vw, 1.25rem)",
-            boxShadow: "0 8px 22px rgba(245, 138, 7, 0.42)",
-            width: "100%",
-            maxWidth: 480,
-          }}
-        >
-          Se connecter
-        </button>
-        <div className="flex items-center gap-1.5 opacity-90">
-          <span
-            className="text-white font-semibold tracking-wide"
-            style={{ fontSize: 12.5, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
+        <p className="text-white/80 text-center text-sm max-w-xs leading-relaxed">
+          Restaurants, boutiques, livraison rapide. Payez par Mobile Money.
+        </p>
+        <div className="flex gap-3 w-full max-w-md mt-1">
+          <button
+            onClick={onAuth}
+            className="flex-1 text-white font-bold tracking-wide transition-opacity hover:opacity-90 active:opacity-80"
+            style={{
+              backgroundColor: GOLIVRA_ORANGE,
+              minHeight: 54,
+              borderRadius: 999,
+              fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
+              boxShadow: "0 8px 22px rgba(245, 138, 7, 0.42)",
+            }}
           >
-            GoLivra · Version bêta
-          </span>
+            Se connecter
+          </button>
+          <button
+            onClick={onAuth}
+            className="flex-1 text-white font-bold tracking-wide border-2 border-white/30 transition-opacity hover:bg-white/10 active:opacity-80"
+            style={{
+              minHeight: 54,
+              borderRadius: 999,
+              fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
+            }}
+          >
+            Découvrir
+          </button>
         </div>
+        <div className="flex items-center gap-4 mt-1 opacity-80">
+          <span className="flex items-center gap-1 text-white text-xs"><span className="text-green-400">✓</span> Livraison rapide</span>
+          <span className="flex items-center gap-1 text-white text-xs"><span className="text-green-400">✓</span> Mobile Money</span>
+          <span className="flex items-center gap-1 text-white text-xs"><span className="text-green-400">✓</span> Brazzaville</span>
+        </div>
+        <span
+          className="text-white/60 font-semibold tracking-wide mt-1"
+          style={{ fontSize: 11 }}
+        >
+          GoLivra · Version bêta
+        </span>
       </div>
     </div>
   );
