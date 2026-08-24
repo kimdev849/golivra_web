@@ -297,7 +297,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("libelle", e.target.value)}
                     maxLength={50}
                     placeholder="Maison, Travail…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                     style={{
                       backgroundColor: bgMuted,
                       border: `1px solid ${errors.libelle ? "#e05555" : border}`,
@@ -335,7 +335,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("ligne1", e.target.value)}
                     maxLength={200}
                     placeholder="Avenue de la Paix, immeuble bleu"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                     style={{
                       backgroundColor: bgMuted,
                       border: `1px solid ${errors.ligne1 ? "#e05555" : border}`,
@@ -353,7 +353,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("ligne2", e.target.value)}
                     maxLength={200}
                     placeholder="Appartement 3B, bâtiment C, étage 2…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                     style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                   />
                 </div>
@@ -366,7 +366,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("point_reperes", e.target.value)}
                     maxLength={200}
                     placeholder="Face à la pharmacie, à côté du carrefour…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                     style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                   />
                 </div>
@@ -392,7 +392,7 @@ export function AddressesPage() {
                       value={form.ville}
                       onChange={(e) => handleInput("ville", e.target.value)}
                       maxLength={50}
-                      className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                      className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                       style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                     />
                   </div>
@@ -402,7 +402,7 @@ export function AddressesPage() {
                       value={form.pays}
                       onChange={(e) => handleInput("pays", e.target.value)}
                       maxLength={50}
-                      className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                      className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
                       style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                     />
                   </div>

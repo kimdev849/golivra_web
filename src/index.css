@@ -96,6 +96,16 @@ body {
   }
 }
 
+/* ── Input / textarea base — stabilise le focus pour éviter le "rétrécissement" visuel ── */
+input, textarea, select {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent);
+  border-color: var(--brand) !important;
+}
+
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
