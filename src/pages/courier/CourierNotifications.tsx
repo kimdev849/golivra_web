@@ -17,16 +17,16 @@ export function CourierNotifications() {
 
   const { data: notifications = [] } = useQuery<CourierNotif[]>({
     queryKey: ["courier-notifications"],
-    queryFn: () => apiFetch("/api/couriers/notifications"),
+    queryFn: () => apiFetch("/api/notifications"),
   });
 
   const markReadMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/couriers/notifications/${id}/read`, { method: "PUT" }),
+    mutationFn: (id: string) => apiFetch(`/api/notifications/${id}/read`, { method: "PATCH" }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["courier-notifications"] }),
   });
 
   const markAllMutation = useMutation({
-    mutationFn: () => apiFetch("/api/couriers/notifications/read-all", { method: "PUT" }),
+    mutationFn: () => apiFetch("/api/notifications/read-all", { method: "PATCH" }),
     onSuccess: () => {
       toast.success("Toutes lues");
       queryClient.invalidateQueries({ queryKey: ["courier-notifications"] });

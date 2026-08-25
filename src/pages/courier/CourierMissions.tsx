@@ -28,7 +28,7 @@ export function CourierMissions() {
 
   const { data: missions = [] } = useQuery<Mission[]>({
     queryKey: ["courier-missions", tab],
-    queryFn: () => apiFetch(`/api/couriers/missions?${scopeParam}${statusParam}`),
+    queryFn: () => apiFetch(`/api/delivery/courier/missions?${scopeParam}${statusParam}`),
   });
 
   return (

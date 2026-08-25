@@ -24,12 +24,12 @@ export function CourierMissionDetail() {
 
   const { data: mission } = useQuery<Mission>({
     queryKey: ["courier-mission", missionId],
-    queryFn: () => apiFetch(`/api/couriers/missions/${missionId}`),
+    queryFn: () => apiFetch(`/api/delivery/courier/missions/${missionId}`),
     enabled: !!missionId,
   });
 
   const acceptMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/couriers/missions/${missionId}/accept`, { method: "PUT" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/accept/${missionId}`, { method: "POST" }),
     onSuccess: () => {
       toast.success("Mission acceptée");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });
@@ -38,7 +38,7 @@ export function CourierMissionDetail() {
   });
 
   const pickupMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/couriers/missions/${missionId}/pickup`, { method: "PUT" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/advance/${missionId}`, { method: "POST" }),
     onSuccess: () => {
       toast.success("Colis récupéré");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });
@@ -47,7 +47,7 @@ export function CourierMissionDetail() {
   });
 
   const deliverMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/couriers/missions/${missionId}/deliver`, { method: "PUT" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/complete/${missionId}`, { method: "POST" }),
     onSuccess: () => {
       toast.success("Livraison effectuée");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });

@@ -5,11 +5,13 @@ import { Truck, Navigation, Package, Wallet, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../lib/format";
 
-interface CourierStats {
-  livraisons_today: number;
-  en_cours: number;
-  gains_today: number;
-  gains_mois: number;
+interface CourierProfile {
+  livreur?: { est_disponible?: boolean };
+  resume?: {
+    missions_actives: number;
+    missions_aujourdhui: number;
+    total_historique: number;
+  };
 }
 
 interface Mission {
@@ -21,14 +23,14 @@ interface Mission {
 export function CourierHome() {
   const { user } = useAuthStore();
 
-  const { data: stats } = useQuery<CourierStats>({
+  const { data: stats } = useQuery<CourierProfile>({
     queryKey: ["courier-stats"],
-    queryFn: () => apiFetch("/api/couriers/stats"),
+    queryFn: () => apiFetch("/api/delivery/courier/me"),
   });
 
   const { data: missions = [] } = useQuery<Mission[]>({
     queryKey: ["courier-missions"],
-    queryFn: () => apiFetch("/api/couriers/missions?status=disponible"),
+    queryFn: () => apiFetch("/api/delivery/courier/missions?scope=open"),
   });
 
   return (
@@ -41,10 +43,9 @@ export function CourierHome() {
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard icon={Truck} label="Livraisons aujourd'hui" value={stats?.livraisons_today || 0} color="text-brand" />
-        <StatCard icon={Package} label="En cours" value={stats?.en_cours || 0} color="text-blue-600" />
-        <StatCard icon={Wallet} label="Gains du jour" value={`${formatPrice(stats?.gains_today || 0)}`} color="text-green-600" />
-        <StatCard icon={TrendingUp} label="Total ce mois" value={`${formatPrice(stats?.gains_mois || 0)}`} color="text-purple-600" />
+        <StatCard icon={Truck} label="Livraisons aujourd'hui" value={stats?.resume?.missions_aujourdhui || 0} color="text-brand" />
+        <StatCard icon={Package} label="En cours" value={stats?.resume?.missions_actives || 0} color="text-blue-600" />
+        <StatCard icon={Wallet} label="Total historique" value={String(stats?.resume?.total_historique || 0)} color="text-green-600" />
       </div>
 
       {/* Missions disponibles */}
