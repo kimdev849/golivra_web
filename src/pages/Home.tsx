@@ -184,7 +184,7 @@ export function HomePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un plat, un produit, un restaurant…"
-            className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted"
+            className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted"
           />
           {search.length > 0 && (
             <button onClick={() => setSearch("")}>

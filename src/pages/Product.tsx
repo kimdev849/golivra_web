@@ -334,7 +334,7 @@ export function ProductPage() {
         {/* Note */}
         <div>
           <p className="text-sm font-bold text-txt mb-1">Note pour le vendeur (optionnel)</p>
-          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ex. sans piment, appelez à l'arrivée…" rows={3} className="w-full border border-line rounded-xl p-3 text-sm text-txt bg-surface outline-none focus:ring-2 focus:ring-brand/20 resize-none" />
+          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ex. sans piment, appelez à l'arrivée…" rows={3} className="w-full border border-line rounded-xl p-3 text-sm text-txt bg-surface resize-none" />
         </div>
       </div>
 

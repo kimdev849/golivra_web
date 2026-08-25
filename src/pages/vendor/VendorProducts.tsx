@@ -142,7 +142,7 @@ export function VendorProducts() {
           placeholder={`Rechercher un ${itemLabel}…`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-8 py-2.5 bg-surface-muted border border-line rounded-xl text-sm text-txt focus:outline-none focus:border-brand transition"
+          className="w-full pl-10 pr-8 py-2.5 bg-surface-muted border border-line rounded-xl text-sm text-txt focus:border-brand transition"
         />
         {query && (
           <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-txt-muted hover:text-txt">

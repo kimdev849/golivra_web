@@ -98,7 +98,7 @@ export function AuthPage() {
                   placeholder="+242 06 XXX XX XX"
                   value={phone}
                   onChange={(e) => { setPhone(e.target.value); setFieldErrors((p) => ({ ...p, phone: undefined })); }}
-                  className="flex-1 bg-transparent text-sm outline-none"
+                  className="flex-1 bg-transparent text-sm"
                   style={{ color: "var(--txt)" }}
                 />
               </div>
@@ -116,7 +116,7 @@ export function AuthPage() {
                   placeholder="Votre mot de passe"
                   value={password}
                   onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: undefined })); }}
-                  className="flex-1 bg-transparent text-sm outline-none"
+                  className="flex-1 bg-transparent text-sm"
                   style={{ color: "var(--txt)" }}
                 />
                 <button onClick={() => setPasswordVisible((v) => !v)} className="p-1">

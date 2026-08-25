@@ -47,14 +47,14 @@ export function VendorAddProduct() {
             ))}
           </div>
         </div>
-        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Nom *</label><input value={nom} onChange={(e) => setNom(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" required /></div>
-        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Description</label><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" /></div>
-        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Prix (FCFA) *</label><input type="number" value={prix} onChange={(e) => setPrix(e.target.value)} min="10" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" required /></div>
+        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Nom *</label><input value={nom} onChange={(e) => setNom(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" required /></div>
+        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Description</label><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" /></div>
+        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Prix (FCFA) *</label><input type="number" value={prix} onChange={(e) => setPrix(e.target.value)} min="10" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" required /></div>
         <div className="flex items-center gap-2">
           <input type="checkbox" id="stockIllimite" checked={stockIllimite} onChange={(e) => setStockIllimite(e.target.checked)} className="rounded" />
           <label htmlFor="stockIllimite" className="text-sm text-gray-700">Stock illimité</label>
         </div>
-        {!stockIllimite && <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Stock</label><input type="number" value={stock} onChange={(e) => setStock(e.target.value)} min="0" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" /></div>}
+        {!stockIllimite && <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Stock</label><input type="number" value={stock} onChange={(e) => setStock(e.target.value)} min="0" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm" /></div>}
         <button type="submit" disabled={loading} className="w-full bg-brand text-white py-2.5 rounded-lg text-sm font-bold hover:bg-brand-700 transition disabled:opacity-50 flex items-center justify-center gap-2">
           <Save className="w-4 h-4" /> {loading ? "Enregistrement…" : "Enregistrer"}
         </button>

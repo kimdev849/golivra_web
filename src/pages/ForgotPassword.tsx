@@ -122,7 +122,7 @@ export function ForgotPasswordPage() {
                   placeholder="+242 06 XXX XX XX"
                   value={phone}
                   onChange={(e) => { setPhone(e.target.value); setFieldErrors({}); }}
-                  className="flex-1 bg-transparent text-sm outline-none"
+                  className="flex-1 bg-transparent text-sm"
                   style={{ color: "var(--txt)" }}
                 />
               </div>
@@ -158,7 +158,7 @@ export function ForgotPasswordPage() {
                   maxLength={6}
                   value={otpCode}
                   onChange={(e) => { setOtpCode(e.target.value.replace(/\D/g, "")); setFieldErrors((p) => ({ ...p, otp: undefined })); }}
-                  className="flex-1 bg-transparent text-sm outline-none tracking-widest"
+                  className="flex-1 bg-transparent text-sm tracking-widest"
                   style={{ color: "var(--txt)" }}
                 />
               </div>
@@ -172,7 +172,7 @@ export function ForgotPasswordPage() {
                   placeholder="6 caractères minimum"
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setFieldErrors((p) => ({ ...p, newPassword: undefined })); }}
-                  className="flex-1 bg-transparent text-sm outline-none"
+                  className="flex-1 bg-transparent text-sm"
                   style={{ color: "var(--txt)" }}
                 />
               </div>
@@ -186,7 +186,7 @@ export function ForgotPasswordPage() {
                   placeholder="Répétez le mot de passe"
                   value={confirmPassword}
                   onChange={(e) => { setConfirmPassword(e.target.value); setFieldErrors((p) => ({ ...p, confirmPassword: undefined })); }}
-                  className="flex-1 bg-transparent text-sm outline-none"
+                  className="flex-1 bg-transparent text-sm"
                   style={{ color: "var(--txt)" }}
                 />
               </div>

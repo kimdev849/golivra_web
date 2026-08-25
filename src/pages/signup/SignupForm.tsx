@@ -307,7 +307,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
               <label className="text-[13px] font-bold text-txt-secondary">Nom complet</label>
               <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("fullName")}`}>
                 <User size={20} className="text-brand" strokeWidth={2.2} />
-                <input type="text" value={fullName} onChange={(e) => { const s = sanitize(e.target.value); setFullName(s); if (fieldErrors.fullName) setFieldErrors((p) => ({ ...p, fullName: null })); }} onBlur={() => { const r = vName(fullName); if (!r.ok) setFieldErrors((p) => ({ ...p, fullName: r.m })); }} placeholder="Ex. : Jean Claude" disabled={otpSent} maxLength={80} className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted disabled:opacity-50" />
+                <input type="text" value={fullName} onChange={(e) => { const s = sanitize(e.target.value); setFullName(s); if (fieldErrors.fullName) setFieldErrors((p) => ({ ...p, fullName: null })); }} onBlur={() => { const r = vName(fullName); if (!r.ok) setFieldErrors((p) => ({ ...p, fullName: r.m })); }} placeholder="Ex. : Jean Claude" disabled={otpSent} maxLength={80} className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted disabled:opacity-50" />
               </div>
               <p className="text-xs text-txt-muted">Votre prénom et votre nom.</p>
               {fieldErrors.fullName && <p className="text-xs text-error font-medium">{fieldErrors.fullName}</p>}
@@ -319,7 +319,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
             <label className="text-[13px] font-bold text-txt-secondary">Numéro de téléphone</label>
             <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("phone")}`}>
               <Smartphone size={20} className="text-brand" strokeWidth={2.2} />
-              <input type="tel" value={phone} onChange={(e) => { setPhone(formatPhoneDisplay(e.target.value)); if (fieldErrors.phone) setFieldErrors((p) => ({ ...p, phone: null })); }} onBlur={() => { const r = vPhone(phone); if (!r.ok) setFieldErrors((p) => ({ ...p, phone: r.m })); }} placeholder="+242 06 XXX XX XX" disabled={otpSent} className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted disabled:opacity-50" />
+              <input type="tel" value={phone} onChange={(e) => { setPhone(formatPhoneDisplay(e.target.value)); if (fieldErrors.phone) setFieldErrors((p) => ({ ...p, phone: null })); }} onBlur={() => { const r = vPhone(phone); if (!r.ok) setFieldErrors((p) => ({ ...p, phone: r.m })); }} placeholder="+242 06 XXX XX XX" disabled={otpSent} className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted disabled:opacity-50" />
             </div>
             <p className="text-xs text-txt-muted">Un code de vérification sera envoyé par SMS.</p>
             {fieldErrors.phone && <p className="text-xs text-error font-medium">{fieldErrors.phone}</p>}
@@ -330,7 +330,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
             <label className="text-[13px] font-bold text-txt-secondary">Mot de passe</label>
             <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("password")}`}>
               <Lock size={20} className="text-brand" strokeWidth={2.2} />
-              <input type={pwVisible ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); if (fieldErrors.password) setFieldErrors((p) => ({ ...p, password: null })); }} onBlur={() => { const r = vPassword(password); if (!r.ok) setFieldErrors((p) => ({ ...p, password: r.m })); }} placeholder="Minimum 8 caractères" disabled={otpSent} className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted disabled:opacity-50" />
+              <input type={pwVisible ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); if (fieldErrors.password) setFieldErrors((p) => ({ ...p, password: null })); }} onBlur={() => { const r = vPassword(password); if (!r.ok) setFieldErrors((p) => ({ ...p, password: r.m })); }} placeholder="Minimum 8 caractères" disabled={otpSent} className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted disabled:opacity-50" />
               <button type="button" onClick={() => setPwVisible(!pwVisible)} disabled={otpSent} className="text-txt-muted hover:text-txt disabled:opacity-50">
                 {pwVisible ? <EyeOff size={20} strokeWidth={2.2} /> : <Eye size={20} strokeWidth={2.2} />}
               </button>
@@ -373,7 +373,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
                 <label className="text-[13px] font-bold text-txt-secondary">{commerceKind === "restaurant" ? "Nom du restaurant" : "Nom de la boutique"}</label>
                 <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("businessName")}`}>
                   {commerceKind === "restaurant" ? <UtensilsCrossed size={20} className="text-brand" strokeWidth={2.2} /> : <Store size={20} className="text-brand" strokeWidth={2.2} />}
-                  <input type="text" value={businessName} onChange={(e) => { const s = sanitize(e.target.value); setBusinessName(s); if (fieldErrors.businessName) setFieldErrors((p) => ({ ...p, businessName: null })); }} onBlur={() => { const r = vCommerce(businessName); if (!r.ok) setFieldErrors((p) => ({ ...p, businessName: r.m })); }} placeholder={commerceKind === "restaurant" ? "Ex. : Le Palmier" : "Ex. : Mode & Co"} disabled={otpSent} maxLength={100} className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted disabled:opacity-50" />
+                  <input type="text" value={businessName} onChange={(e) => { const s = sanitize(e.target.value); setBusinessName(s); if (fieldErrors.businessName) setFieldErrors((p) => ({ ...p, businessName: null })); }} onBlur={() => { const r = vCommerce(businessName); if (!r.ok) setFieldErrors((p) => ({ ...p, businessName: r.m })); }} placeholder={commerceKind === "restaurant" ? "Ex. : Le Palmier" : "Ex. : Mode & Co"} disabled={otpSent} maxLength={100} className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted disabled:opacity-50" />
                 </div>
                 <p className="text-xs text-txt-muted">Un nom clair que vos clients reconnaîtront.</p>
                 {fieldErrors.businessName && <p className="text-xs text-error font-medium">{fieldErrors.businessName}</p>}
@@ -396,7 +396,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
                 {fieldErrors.businessAddress && <p className="text-xs text-error font-medium">{fieldErrors.businessAddress}</p>}
                 <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("businessAddress")}`}>
                   <MapPin size={20} className="text-brand" strokeWidth={2.2} />
-                  <input type="text" value={businessAddress} onChange={(e) => { const s = sanitize(e.target.value); setBusinessAddress(s); if (fieldErrors.businessAddress) setFieldErrors((p) => ({ ...p, businessAddress: null })); }} onBlur={() => { if (businessAddress.trim()) { const r = vAddress(businessAddress); if (!r.ok) setFieldErrors((p) => ({ ...p, businessAddress: r.m })); } }} placeholder={commerceKind === "restaurant" ? "Quartier, rue, point de repère…" : "Laissez vide pour une boutique en ligne"} disabled={otpSent} maxLength={200} className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted disabled:opacity-50" />
+                  <input type="text" value={businessAddress} onChange={(e) => { const s = sanitize(e.target.value); setBusinessAddress(s); if (fieldErrors.businessAddress) setFieldErrors((p) => ({ ...p, businessAddress: null })); }} onBlur={() => { if (businessAddress.trim()) { const r = vAddress(businessAddress); if (!r.ok) setFieldErrors((p) => ({ ...p, businessAddress: r.m })); } }} placeholder={commerceKind === "restaurant" ? "Quartier, rue, point de repère…" : "Laissez vide pour une boutique en ligne"} disabled={otpSent} maxLength={200} className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted disabled:opacity-50" />
                 </div>
               </div>
             </>
@@ -411,7 +411,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
                 <label className="text-[13px] font-bold text-txt-secondary">Code SMS</label>
                 <div className={`flex items-center gap-3 border rounded-2xl px-4 py-3 bg-surface ${fe("otp")}`}>
                   <MessageCircle size={20} className="text-brand" strokeWidth={2.2} />
-                  <input type="text" inputMode="numeric" value={otp} onChange={(e) => { setOtp(e.target.value); setFieldErrors((p) => ({ ...p, otp: null })); }} placeholder="Ex. : 123456" className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted" />
+                  <input type="text" inputMode="numeric" value={otp} onChange={(e) => { setOtp(e.target.value); setFieldErrors((p) => ({ ...p, otp: null })); }} placeholder="Ex. : 123456" className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted" />
                 </div>
                 {fieldErrors.otp && <p className="text-xs text-error font-medium">{fieldErrors.otp}</p>}
               </div>
@@ -448,7 +448,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
               <p className="font-bold text-txt">Choisissez votre pays</p>
               <button onClick={() => setShowCountryPicker(false)} className="p-1"><X className="w-5 h-5 text-txt-muted" /></button>
             </div>
-            <div className="p-3"><input type="text" value={countrySearch} onChange={(e) => setCountrySearch(e.target.value)} placeholder="Rechercher…" className="w-full border border-line rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand/20" /></div>
+            <div className="p-3"><input type="text" value={countrySearch} onChange={(e) => setCountrySearch(e.target.value)} placeholder="Rechercher…" className="w-full border border-line rounded-xl px-4 py-2.5 text-sm" /></div>
             <div className="flex-1 overflow-y-auto p-2">
               {filteredCountries.map((c) => (
                 <button key={c.id} onClick={() => { setLocation((p) => ({ pays: c, ville: null })); setShowCountryPicker(false); setCountrySearch(""); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${location.pays?.id === c.id ? "bg-brand-50 text-brand" : "hover:bg-gray-50"}`}>
@@ -471,7 +471,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
               <p className="font-bold text-txt">Choisissez votre ville</p>
               <button onClick={() => setShowCityPicker(false)} className="p-1"><X className="w-5 h-5 text-txt-muted" /></button>
             </div>
-            <div className="p-3"><input type="text" value={citySearch} onChange={(e) => setCitySearch(e.target.value)} placeholder="Rechercher…" className="w-full border border-line rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand/20" /></div>
+            <div className="p-3"><input type="text" value={citySearch} onChange={(e) => setCitySearch(e.target.value)} placeholder="Rechercher…" className="w-full border border-line rounded-xl px-4 py-2.5 text-sm" /></div>
             <div className="flex-1 overflow-y-auto p-2">
               {filteredCities.map((v) => (
                 <button key={v.id} onClick={() => { setLocation((p) => ({ ...p, ville: v })); setShowCityPicker(false); setCitySearch(""); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${location.ville?.id === v.id ? "bg-brand-50 text-brand" : "hover:bg-gray-50"}`}>

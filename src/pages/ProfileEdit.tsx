@@ -31,8 +31,8 @@ export function ProfileEditPage() {
       <Link to="/profile" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"><ArrowLeft className="w-4 h-4" /> Profil</Link>
       <h1 className="text-xl font-bold text-gray-900 mb-6">Modifier le profil</h1>
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
-        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Nom</label><input value={nom} onChange={(e) => setNom(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" /></div>
-        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Téléphone</label><input value={telephone} onChange={(e) => setTelephone(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30" /></div>
+        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Nom</label><input value={nom} onChange={(e) => setNom(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm" /></div>
+        <div><label className="text-xs font-semibold text-gray-700 mb-1 block">Téléphone</label><input value={telephone} onChange={(e) => setTelephone(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm" /></div>
         <button type="submit" disabled={loading} className="w-full bg-brand text-white py-2.5 rounded-lg text-sm font-bold hover:bg-brand-700 transition disabled:opacity-50">{loading ? "Enregistrement…" : "Enregistrer"}</button>
       </form>
     </div>

@@ -297,7 +297,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("libelle", e.target.value)}
                     maxLength={50}
                     placeholder="Maison, Travail…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border"
                     style={{
                       backgroundColor: bgMuted,
                       border: `1px solid ${errors.libelle ? "#e05555" : border}`,
@@ -335,7 +335,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("ligne1", e.target.value)}
                     maxLength={200}
                     placeholder="Avenue de la Paix, immeuble bleu"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border"
                     style={{
                       backgroundColor: bgMuted,
                       border: `1px solid ${errors.ligne1 ? "#e05555" : border}`,
@@ -353,7 +353,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("ligne2", e.target.value)}
                     maxLength={200}
                     placeholder="Appartement 3B, bâtiment C, étage 2…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border"
                     style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                   />
                 </div>
@@ -366,7 +366,7 @@ export function AddressesPage() {
                     onChange={(e) => handleInput("point_reperes", e.target.value)}
                     maxLength={200}
                     placeholder="Face à la pharmacie, à côté du carrefour…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm border"
                     style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                   />
                 </div>
@@ -380,7 +380,7 @@ export function AddressesPage() {
                     maxLength={500}
                     rows={2}
                     placeholder="Sonner au portail, laisser chez le gardien…"
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none resize-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                    className="w-full px-3 py-2.5 rounded-xl text-sm resize-none"
                     style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                   />
                 </div>
@@ -392,7 +392,7 @@ export function AddressesPage() {
                       value={form.ville}
                       onChange={(e) => handleInput("ville", e.target.value)}
                       maxLength={50}
-                      className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                      className="w-full px-3 py-2.5 rounded-xl text-sm border"
                       style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                     />
                   </div>
@@ -402,7 +402,7 @@ export function AddressesPage() {
                       value={form.pays}
                       onChange={(e) => handleInput("pays", e.target.value)}
                       maxLength={50}
-                      className="w-full px-3 py-2.5 rounded-xl text-sm border focus:ring-0"
+                      className="w-full px-3 py-2.5 rounded-xl text-sm border"
                       style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                     />
                   </div>
@@ -468,7 +468,7 @@ export function AddressesPage() {
                       value={quartierSearch}
                       onChange={(e) => setQuartierSearch(e.target.value)}
                       placeholder="Rechercher un quartier…"
-                      className="flex-1 bg-transparent text-sm outline-none"
+                      className="flex-1 bg-transparent text-sm"
                       style={{ color: textPrimary }}
                     />
                   </div>
@@ -512,7 +512,7 @@ export function AddressesPage() {
                   onChange={(e) => setForm((p) => ({ ...p, quartier: e.target.value }))}
                   placeholder="Ex: Bacongo, Poto-Poto…"
                   maxLength={80}
-                  className="w-full rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#3aa86f]/30"
+                  className="w-full rounded-xl px-3 py-2.5 text-sm"
                   style={{ backgroundColor: bgMuted, border: `1px solid ${border}`, color: textPrimary }}
                 />
                 <button

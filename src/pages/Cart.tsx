@@ -212,11 +212,11 @@ export function CartPage() {
             </div>
 
             <div>
-              <input type="text" value={address.ligne1} onChange={(e) => handleInput("ligne1", e.target.value)} maxLength={200} placeholder="Adresse complète (rue, repère)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.ligne1 ? "border-error" : "border-line"}`} />
+              <input type="text" value={address.ligne1} onChange={(e) => handleInput("ligne1", e.target.value)} maxLength={200} placeholder="Adresse complète (rue, repère)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface ${errors.ligne1 ? "border-error" : "border-line"}`} />
               {errors.ligne1 && <p className="text-xs text-error mt-1">{errors.ligne1}</p>}
             </div>
             <div>
-              <input type="text" value={address.instructions} onChange={(e) => handleInput("instructions", e.target.value)} maxLength={200} placeholder="Instructions pour le livreur (optionnel)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20 ${errors.instructions ? "border-error" : "border-line"}`} />
+              <input type="text" value={address.instructions} onChange={(e) => handleInput("instructions", e.target.value)} maxLength={200} placeholder="Instructions pour le livreur (optionnel)" className={`w-full border rounded-xl px-4 py-3 text-sm bg-surface ${errors.instructions ? "border-error" : "border-line"}`} />
               {errors.instructions && <p className="text-xs text-error mt-1">{errors.instructions}</p>}
             </div>
           </div>
@@ -295,7 +295,7 @@ export function CartPage() {
             ) : (
               <div className="flex-1 overflow-y-auto p-4">
                 <p className="text-sm text-txt-muted text-center mb-3">Saisissez votre quartier manuellement :</p>
-                <input type="text" value={address.quartier} onChange={(e) => setAddress((p) => ({ ...p, quartier: sanitizeText(e.target.value) }))} placeholder="Ex: Bacongo, Poto-Poto…" maxLength={80} className="w-full border border-line rounded-xl px-4 py-3 text-sm bg-surface outline-none focus:ring-2 focus:ring-brand/20" />
+                <input type="text" value={address.quartier} onChange={(e) => setAddress((p) => ({ ...p, quartier: sanitizeText(e.target.value) }))} placeholder="Ex: Bacongo, Poto-Poto…" maxLength={80} className="w-full border border-line rounded-xl px-4 py-3 text-sm bg-surface" />
                 <button onClick={() => setShowZonePicker(false)} className="w-full mt-3 bg-brand text-white py-3 rounded-xl font-bold text-sm">Valider</button>
               </div>
             )}

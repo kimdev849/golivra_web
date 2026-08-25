@@ -96,14 +96,18 @@ body {
   }
 }
 
-/* ── Input / textarea base — stabilise le focus pour éviter le "rétrécissement" visuel ── */
+/* ── Input / textarea base — border stable + focus via outline (pas box-shadow, 
+     pour ne PAS entrer en conflit avec les classes Tailwind focus:ring-*) ── */
 input, textarea, select {
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--txt);
+  transition: border-color 0.15s ease, outline-color 0.15s ease;
 }
 input:focus, textarea:focus, select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 25%, transparent);
-  border-color: var(--brand) !important;
+  outline: 2px solid var(--brand);
+  outline-offset: -1px;
+  border-color: var(--brand);
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */

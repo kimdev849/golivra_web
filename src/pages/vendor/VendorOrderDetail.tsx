@@ -84,7 +84,7 @@ export function VendorOrderDetail() {
           </button>
         </div>
       )}
-      {showPrep && paid && (
+      {showPrep && (
         <button disabled={!!acting} onClick={() => order.statut === 'en_preparation'
           ? runStatus('prete', 'Commande prête.', 'ready')
           : runStatus('en_preparation', 'Préparation démarrée.', 'prep')} 

@@ -45,7 +45,7 @@ export function ExplorePage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Rechercher un commerce…"
-          className="flex-1 bg-transparent text-sm text-txt outline-none placeholder-txt-muted"
+          className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted"
         />
         {search && (
           <button onClick={() => setSearch("")}>
