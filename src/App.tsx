@@ -66,6 +66,11 @@ import { CourierSettings } from "./pages/courier/CourierSettings";
 import { CourierAccountSettings } from "./pages/courier/CourierAccountSettings";
 import { CourierNotifications } from "./pages/courier/CourierNotifications";
 
+// Logistics
+import { LogisticsLayout } from "./pages/logistics/LogisticsLayout";
+import { LogisticsHome } from "./pages/logistics/LogisticsHome";
+import { LogisticsIncidents } from "./pages/logistics/LogisticsIncidents";
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
@@ -95,6 +100,15 @@ function CourierOnlyRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   if (!isAuthenticated) return <Navigate to="/auth" replace />;
   if (!isCourierRole(user?.role)) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
+/** Redirects non-logistics away from logistics routes */
+function LogisticsOnlyRoute({ children }: { children: React.ReactNode }) {
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/auth" replace />;
+  if (user?.role !== "gestionnaire_logistique" && user?.role !== "admin") return <Navigate to="/" replace />;
   return <>{children}</>;
 }
 
@@ -183,6 +197,12 @@ export default function App() {
         <Route path="account-settings" element={<CourierAccountSettings />} />
         <Route path="notifications" element={<CourierNotifications />} />
         <Route path="help-center" element={<VendorHelpCenter />} />
+      </Route>
+
+      {/* ── LOGISTICS (has its own layout) — LOGISTICS MANAGER ONLY ── */}
+      <Route path="/logistics" element={<LogisticsOnlyRoute><LogisticsLayout /></LogisticsOnlyRoute>}>
+        <Route index element={<LogisticsHome />} />
+        <Route path="incidents" element={<LogisticsIncidents />} />
       </Route>
 
       <Route path="*" element={<RoleBasedRedirect />} />

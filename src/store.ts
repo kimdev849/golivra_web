@@ -20,7 +20,12 @@ export function isCourierRole(role: string | null | undefined): boolean {
   return role === "livreur";
 }
 
+export function isLogisticsRole(role: string | null | undefined): boolean {
+  return role === "gestionnaire_logistique";
+}
+
 export function homePathForRole(role: string | null | undefined): string {
+  if (isLogisticsRole(role)) return "/logistics";
   if (isMerchantRole(role)) return "/vendor";
   if (isCourierRole(role)) return "/courier";
   return "/";
