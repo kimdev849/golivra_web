@@ -15,6 +15,7 @@ interface Mission {
   delivery_name?: string;
   delivery_phone?: string;
   frais_livraison: number;
+  montant_total?: number;
 }
 
 export function CourierMissionDetail() {
@@ -65,7 +66,7 @@ export function CourierMissionDetail() {
   const actions = statusActions[mission.statut] || [];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 min-w-0 max-w-xl">
       <Link to="/courier/missions" className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
         <ArrowLeft className="w-4 h-4" /> Retour
       </Link>
@@ -114,9 +115,21 @@ export function CourierMissionDetail() {
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t flex items-center justify-between">
-          <span className="text-sm font-bold text-gray-900">Gains</span>
-          <span className="text-lg font-bold text-brand">{formatPrice(mission.frais_livraison || 0)}</span>
+        <div className="mt-4 pt-4 border-t space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500">Frais de livraison</span>
+            <span className="text-sm font-semibold text-gray-900">{formatPrice(mission.frais_livraison || 0)}</span>
+          </div>
+          {mission.montant_total ? (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">Montant payé par le commerce</span>
+              <span className="text-sm font-semibold text-gray-900">{formatPrice(mission.montant_total)}</span>
+            </div>
+          ) : null}
+          <div className="flex items-center justify-between pt-2 border-t">
+            <span className="text-sm font-bold text-gray-900">Vos gains</span>
+            <span className="text-lg font-bold text-brand">{formatPrice(mission.frais_livraison || 0)}</span>
+          </div>
         </div>
       </div>
 
