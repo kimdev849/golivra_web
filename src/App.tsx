@@ -23,6 +23,7 @@ import { PaymentMethodsPage } from "./pages/PaymentMethods";
 import { OrderDeliveriesSummaryPage } from "./pages/OrderDeliveriesSummary";
 import { HowMultiDelivery } from "./pages/HowMultiDelivery";
 import { DeliveryDetail } from "./pages/DeliveryDetail";
+import { PublicDeliveryTrack } from "./pages/PublicDeliveryTrack";
 
 // Signup (WITHOUT layout — full screen, no header/nav)
 import { SignupChoosePage as SignupChoose } from "./pages/signup/SignupChoose";
@@ -140,6 +141,7 @@ export default function App() {
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/payment-methods" element={<ProtectedRoute><PaymentMethodsPage /></ProtectedRoute>} />
         <Route path="/help-center" element={<ProtectedRoute><HelpCenterPage /></ProtectedRoute>} />
+        <Route path="/delivery/track/:id" element={<PublicDeliveryTrack />} />
         <Route path="/delivery/:id" element={<ProtectedRoute><DeliveryDetail /></ProtectedRoute>} />
       </Route>
 

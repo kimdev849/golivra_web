@@ -16,16 +16,19 @@ interface Mission {
   delivery_phone?: string;
   frais_livraison: number;
   montant_total?: number;
+  created_at?: string;
 }
 
 export function CourierMissionDetail() {
   const { missionId } = useParams();
   const queryClient = useQueryClient();
 
-  const { data: mission } = useQuery<Mission>({
+  const { data: mission, isLoading, isError } = useQuery<Mission>({
     queryKey: ["courier-mission", missionId],
     queryFn: () => apiFetch(`/api/delivery/courier/missions/${missionId}`),
     enabled: !!missionId,
+    retry: 2,
+    refetchOnWindowFocus: true,
   });
 
   const acceptMutation = useMutation({
@@ -55,7 +58,8 @@ export function CourierMissionDetail() {
     onError: () => toast.error("Erreur"),
   });
 
-  if (!mission) return <div className="text-center py-12 text-gray-400">Chargement...</div>;
+  if (isLoading) return <div className="text-center py-12"><div className="animate-spin w-6 h-6 border-2 border-brand border-t-transparent rounded-full mx-auto mb-3" /><p className="text-sm text-gray-400">Chargement de la mission…</p></div>;
+  if (isError || !mission) return <div className="text-center py-12"><p className="text-sm text-red-500 mb-2">Mission introuvable</p><Link to="/courier/missions" className="text-sm text-brand underline">Retour aux missions</Link></div>;
 
   const statusActions: Record<string, { mutation: any; label: string; icon: any; color: string }[]> = {
     en_attente: [{ mutation: acceptMutation, label: "Accepter la mission", icon: CheckCircle, color: "bg-green-500" }],
@@ -68,14 +72,17 @@ export function CourierMissionDetail() {
   const actions = statusActions[mission.statut] || [];
 
   return (
-    <div className="space-y-4 min-w-0 max-w-xl">
+    <div className="space-y-4 max-w-lg">
       <Link to="/courier/missions" className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
         <ArrowLeft className="w-4 h-4" /> Retour
       </Link>
 
       <div className="bg-white rounded-xl border p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">Mission #{mission.id.slice(0, 8)}</h2>
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Mission #{mission.id.slice(0, 8)}</h2>
+            {mission.created_at && <p className="text-xs text-gray-400 mt-0.5">Créée le {new Date(mission.created_at).toLocaleString('fr-FR')}</p>}
+          </div>
           <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor(mission.statut)}`}>
             {mission.statut}
           </span>
