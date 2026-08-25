@@ -23,14 +23,19 @@ interface Mission {
 export function CourierHome() {
   const { user } = useAuthStore();
 
+  const { session } = useAuthStore();
+  const token = session?.token;
+
   const { data: stats } = useQuery<CourierProfile>({
     queryKey: ["courier-stats"],
-    queryFn: () => apiFetch("/api/delivery/courier/me"),
+    queryFn: () => apiFetch("/api/delivery/courier/me", { token }),
+    enabled: !!token,
   });
 
   const { data: missions = [] } = useQuery<Mission[]>({
     queryKey: ["courier-missions"],
-    queryFn: () => apiFetch("/api/delivery/courier/missions?scope=open"),
+    queryFn: () => apiFetch("/api/delivery/courier/missions?scope=open", { token }),
+    enabled: !!token,
   });
 
   return (

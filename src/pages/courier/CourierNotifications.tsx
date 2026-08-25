@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../lib/api";
+import { useAuthStore } from "../../store";
 import { Bell, Truck, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
@@ -15,18 +16,22 @@ interface CourierNotif {
 export function CourierNotifications() {
   const queryClient = useQueryClient();
 
+  const { session } = useAuthStore();
+  const token = session?.token;
+
   const { data: notifications = [] } = useQuery<CourierNotif[]>({
     queryKey: ["courier-notifications"],
-    queryFn: () => apiFetch("/api/notifications"),
+    queryFn: () => apiFetch("/api/notifications", { token }),
+    enabled: !!token,
   });
 
   const markReadMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/notifications/${id}/read`, { method: "PATCH" }),
+    mutationFn: (id: string) => apiFetch(`/api/notifications/${id}/read`, { method: "PATCH", token }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["courier-notifications"] }),
   });
 
   const markAllMutation = useMutation({
-    mutationFn: () => apiFetch("/api/notifications/read-all", { method: "PATCH" }),
+    mutationFn: () => apiFetch("/api/notifications/read-all", { method: "PATCH", token }),
     onSuccess: () => {
       toast.success("Toutes lues");
       queryClient.invalidateQueries({ queryKey: ["courier-notifications"] });

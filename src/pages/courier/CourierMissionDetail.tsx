@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../lib/api";
-import { useParams, Link } from "react-router-dom";
+import { useAuthStore } from "../../store";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, MapPin, Phone, Package, CheckCircle, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { formatPrice } from "../../lib/format";
@@ -21,18 +22,21 @@ interface Mission {
 
 export function CourierMissionDetail() {
   const { missionId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { session } = useAuthStore();
+  const token = session?.token;
 
   const { data: mission, isLoading, isError } = useQuery<Mission>({
     queryKey: ["courier-mission", missionId],
-    queryFn: () => apiFetch(`/api/delivery/courier/missions/${missionId}`),
-    enabled: !!missionId,
+    queryFn: () => apiFetch(`/api/delivery/courier/missions/${missionId}`, { token }),
+    enabled: !!missionId && !!token,
     retry: 2,
     refetchOnWindowFocus: true,
   });
 
   const acceptMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/delivery/courier/accept/${missionId}`, { method: "POST" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/accept/${missionId}`, { method: "POST", token }),
     onSuccess: () => {
       toast.success("Mission acceptée");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });
@@ -41,7 +45,7 @@ export function CourierMissionDetail() {
   });
 
   const pickupMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/delivery/courier/advance/${missionId}`, { method: "POST" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/advance/${missionId}`, { method: "POST", token }),
     onSuccess: () => {
       toast.success("Colis récupéré");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });
@@ -50,7 +54,7 @@ export function CourierMissionDetail() {
   });
 
   const deliverMutation = useMutation({
-    mutationFn: () => apiFetch(`/api/delivery/courier/complete/${missionId}`, { method: "POST" }),
+    mutationFn: () => apiFetch(`/api/delivery/courier/complete/${missionId}`, { method: "POST", token }),
     onSuccess: () => {
       toast.success("Livraison effectuée");
       queryClient.invalidateQueries({ queryKey: ["courier-mission", missionId] });
@@ -58,8 +62,15 @@ export function CourierMissionDetail() {
     onError: () => toast.error("Erreur"),
   });
 
+  if (!token) return <div className="text-center py-12"><p className="text-sm text-gray-400">Connexion requise…</p></div>;
   if (isLoading) return <div className="text-center py-12"><div className="animate-spin w-6 h-6 border-2 border-brand border-t-transparent rounded-full mx-auto mb-3" /><p className="text-sm text-gray-400">Chargement de la mission…</p></div>;
-  if (isError || !mission) return <div className="text-center py-12"><p className="text-sm text-red-500 mb-2">Mission introuvable</p><Link to="/courier/missions" className="text-sm text-brand underline">Retour aux missions</Link></div>;
+  if (isError || !mission) return (
+    <div className="text-center py-12">
+      <p className="text-sm text-red-500 mb-3">Mission introuvable ou accès refusé.</p>
+      <p className="text-xs text-gray-400 mb-4">Vérifiez que vous êtes connecté en tant que livreur.</p>
+      <Link to="/courier/missions" className="inline-flex items-center gap-2 text-sm text-brand underline"><ArrowLeft className="w-4 h-4" /> Retour aux missions</Link>
+    </div>
+  );
 
   const statusActions: Record<string, { mutation: any; label: string; icon: any; color: string }[]> = {
     en_attente: [{ mutation: acceptMutation, label: "Accepter la mission", icon: CheckCircle, color: "bg-green-500" }],
@@ -73,9 +84,9 @@ export function CourierMissionDetail() {
 
   return (
     <div className="space-y-4 max-w-lg">
-      <Link to="/courier/missions" className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-500 hover:text-gray-700 cursor-pointer">
         <ArrowLeft className="w-4 h-4" /> Retour
-      </Link>
+      </button>
 
       <div className="bg-white rounded-xl border p-4">
         <div className="flex items-center justify-between mb-4">

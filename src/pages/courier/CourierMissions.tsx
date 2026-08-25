@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../lib/api";
+import { useAuthStore } from "../../store";
 import { Navigation, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../lib/format";
@@ -21,6 +22,8 @@ const TABS = [
 
 export function CourierMissions() {
   const [tab, setTab] = useState("open");
+  const { session } = useAuthStore();
+  const token = session?.token;
 
   const selectedTab = TABS.find((t) => t.key === tab);
   const statusParam = selectedTab?.status ? `&status=${selectedTab.status}` : '';
@@ -28,7 +31,8 @@ export function CourierMissions() {
 
   const { data: missions = [] } = useQuery<Mission[]>({
     queryKey: ["courier-missions", tab],
-    queryFn: () => apiFetch(`/api/delivery/courier/missions?${scopeParam}${statusParam}`),
+    queryFn: () => apiFetch(`/api/delivery/courier/missions?${scopeParam}${statusParam}`, { token }),
+    enabled: !!token,
   });
 
   return (
