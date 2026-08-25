@@ -3,6 +3,7 @@ import { Home, Truck, Users, AlertTriangle, BarChart3, Bell, Settings } from "lu
 import { useAuthStore } from "../../store";
 import { useEffect, useState, createContext, useContext } from "react";
 import { apiFetch, getSessionToken } from "../../lib/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type LogisticsCompany = {
   id: string;
@@ -43,9 +44,117 @@ function useLogisticsCompany() {
   return { company, loading };
 }
 
+function LogisticsNotifBell() {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
+  const countQuery = useQuery({
+    queryKey: ["logistics-notif-count"],
+    queryFn: async () => {
+      const token = getSessionToken();
+      if (!token) return 0;
+      const data = await apiFetch<{ unread_count?: number; count?: number }>(
+        "/api/notifications/unread-count",
+        { method: "GET", token }
+      );
+      return Number(data?.unread_count ?? data?.count ?? 0) || 0;
+    },
+    refetchInterval: 30_000,
+  });
+
+  const listQuery = useQuery({
+    queryKey: ["logistics-notif-list"],
+    queryFn: async () => {
+      const token = getSessionToken();
+      if (!token) return [];
+      const data = await apiFetch<{ items?: any[]; unread_count?: number } | any[]>(
+        "/api/notifications?limit=12",
+        { method: "GET", token }
+      );
+      if (Array.isArray(data)) return data;
+      return Array.isArray(data?.items) ? data.items : [];
+    },
+    refetchInterval: 30_000,
+    enabled: open,
+  });
+
+  const unread = countQuery.data ?? 0;
+  const items = listQuery.data ?? [];
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next) void listQuery.refetch();
+  };
+
+  const markRead = async (id: string) => {
+    const token = getSessionToken();
+    if (!token) return;
+    await apiFetch(`/api/notifications/${id}/read`, { method: "PATCH", token, jsonBody: {} });
+    await queryClient.invalidateQueries({ queryKey: ["logistics-notif-count"] });
+    await queryClient.invalidateQueries({ queryKey: ["logistics-notif-list"] });
+  };
+
+  const markAll = async () => {
+    const token = getSessionToken();
+    if (!token) return;
+    await apiFetch("/api/notifications/read-all", { method: "PATCH", token, jsonBody: {} });
+    await queryClient.invalidateQueries({ queryKey: ["logistics-notif-count"] });
+    await queryClient.invalidateQueries({ queryKey: ["logistics-notif-list"] });
+  };
+
+  return (
+    <div className="relative">
+      <button onClick={toggle} className="relative p-2 hover:bg-white/10 rounded-full transition" aria-label="Notifications">
+        <Bell size={18} />
+        {unread > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+            {unread > 9 ? "9+" : unread}
+          </span>
+        )}
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full mt-2 z-50 w-80 max-h-[400px] overflow-auto bg-white border border-gray-200 rounded-xl shadow-lg">
+            <div className="flex items-center justify-between px-3 py-2 border-b">
+              <span className="text-sm font-bold">Notifications</span>
+              {unread > 0 && (
+                <button type="button" className="text-xs font-medium text-blue-600" onClick={() => void markAll()}>
+                  Tout lire
+                </button>
+              )}
+            </div>
+            {items.length === 0 ? (
+              <p className="px-3 py-4 text-sm text-gray-400">Aucune notification.</p>
+            ) : (
+              items.slice(0, 10).map((n: any) => (
+                <div
+                  key={n.id}
+                  className="cursor-pointer px-3 py-2 hover:bg-gray-50 border-b last:border-b-0"
+                  onClick={() => { if (!n.est_lue) void markRead(n.id); }}
+                >
+                  <span className={`text-sm block ${n.est_lue ? "text-gray-500" : "font-bold text-gray-900"}`}>
+                    {n.titre}
+                  </span>
+                  {n.corps && <span className="text-xs text-gray-500 line-clamp-2 block">{n.corps}</span>}
+                  <span className="text-[10px] text-gray-400 block mt-0.5">
+                    {new Date(n.created_at).toLocaleString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 const LOGISTICS_TABS = [
   { path: "/logistics", icon: Home, label: "Accueil", exact: true },
   { path: "/logistics/incidents", icon: AlertTriangle, label: "Incidents" },
+  { path: "/logistics/notifications", icon: Bell, label: "Alertes" },
   { path: "/logistics/deliveries", icon: Truck, label: "Courses" },
   { path: "/logistics/couriers", icon: Users, label: "Livreurs" },
   { path: "/logistics/stats", icon: BarChart3, label: "Stats" },
@@ -85,6 +194,7 @@ export function LogisticsLayout() {
               {company.nom}
             </span>
           )}
+          <LogisticsNotifBell />
           <Link to="/logistics/settings" className="p-2 hover:bg-white/10 rounded-full transition">
             <Settings size={18} />
           </Link>

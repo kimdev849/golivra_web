@@ -70,6 +70,7 @@ import { CourierNotifications } from "./pages/courier/CourierNotifications";
 import { LogisticsLayout } from "./pages/logistics/LogisticsLayout";
 import { LogisticsHome } from "./pages/logistics/LogisticsHome";
 import { LogisticsIncidents } from "./pages/logistics/LogisticsIncidents";
+import { LogisticsNotifications } from "./pages/logistics/LogisticsNotifications";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -203,6 +204,7 @@ export default function App() {
       <Route path="/logistics" element={<LogisticsOnlyRoute><LogisticsLayout /></LogisticsOnlyRoute>}>
         <Route index element={<LogisticsHome />} />
         <Route path="incidents" element={<LogisticsIncidents />} />
+        <Route path="notifications" element={<LogisticsNotifications />} />
       </Route>
 
       <Route path="*" element={<RoleBasedRedirect />} />
