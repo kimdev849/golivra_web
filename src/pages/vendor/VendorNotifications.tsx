@@ -9,6 +9,7 @@ export function VendorNotifications() {
   const { data: notifications = [] } = useQuery<any[]>({
     queryKey: ["vendor-notifications"],
     queryFn: () => apiFetch("/api/notifications"),
+    refetchInterval: 15_000,
   });
 
   const markReadMutation = useMutation({

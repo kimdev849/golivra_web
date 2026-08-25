@@ -1,17 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3, Bell, Building2, ChevronRight, Clock, CreditCard,
   HelpCircle, MapPin, Package, Settings, Truck, User, Wallet,
 } from "lucide-react";
 import { useVendorCtx } from "./VendorLayout";
 import { useAuthStore } from "../../store";
+import { apiFetch } from "../../lib/api";
 
-function MenuRow({ icon, title, subtitle, to, danger }: {
+function MenuRow({ icon, title, subtitle, to, danger, badge }: {
   icon: React.ReactNode;
   title: string;
   subtitle: string;
   to: string;
   danger?: boolean;
+  badge?: number;
 }) {
   return (
     <Link
@@ -25,7 +28,13 @@ function MenuRow({ icon, title, subtitle, to, danger }: {
         <p className={`text-[15px] font-semibold ${danger ? "text-red-500" : "text-txt"}`}>{title}</p>
         <p className="text-xs text-txt-muted leading-tight mt-0.5">{subtitle}</p>
       </div>
-      <ChevronRight size={18} className="text-txt-muted flex-shrink-0" />
+      {badge != null && badge > 0 ? (
+        <span className="min-w-[20px] h-5 rounded-full bg-red-500 text-white text-[11px] font-bold flex items-center justify-center px-1.5">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : (
+        <ChevronRight size={18} className="text-txt-muted flex-shrink-0" />
+      )}
     </Link>
   );
 }
@@ -34,6 +43,13 @@ export function VendorMore() {
   const navigate = useNavigate();
   const { shop } = useVendorCtx();
   const logout = useAuthStore((s) => s.logout);
+
+  const { data: notifData } = useQuery<{ unread_count: number }>({
+    queryKey: ["vendor-notif-unread"],
+    queryFn: () => apiFetch("/api/notifications/unread-count"),
+    refetchInterval: 20_000,
+  });
+  const unreadCount = notifData?.unread_count ?? 0;
   const isOnline = shop?.enLigne === true;
   const commerceType = shop?.type === "restaurant" ? "restaurant" : "boutique";
 
@@ -105,6 +121,7 @@ export function VendorMore() {
             title="Notifications"
             subtitle="Activité boutique"
             to="/vendor/notifications"
+            badge={unreadCount}
           />
         </div>
       </section>
