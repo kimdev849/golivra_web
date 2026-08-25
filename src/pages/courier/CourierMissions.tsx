@@ -14,17 +14,21 @@ interface Mission {
 }
 
 const TABS = [
-  { key: "disponible", label: "Disponibles" },
-  { key: "en_cours", label: "En cours" },
-  { key: "terminee", label: "Terminées" },
+  { key: "open", label: "Disponibles", status: "" },
+  { key: "mine", label: "En cours", status: "" },
+  { key: "livree", label: "Terminées", status: "livree" },
 ];
 
 export function CourierMissions() {
-  const [tab, setTab] = useState("disponible");
+  const [tab, setTab] = useState("open");
+
+  const selectedTab = TABS.find((t) => t.key === tab);
+  const statusParam = selectedTab?.status ? `&status=${selectedTab.status}` : '';
+  const scopeParam = tab === 'open' ? '&scope=open' : tab === 'mine' ? '&scope=mine' : '';
 
   const { data: missions = [] } = useQuery<Mission[]>({
     queryKey: ["courier-missions", tab],
-    queryFn: () => apiFetch(`/api/couriers/missions?status=${tab}`),
+    queryFn: () => apiFetch(`/api/couriers/missions?${scopeParam}${statusParam}`),
   });
 
   return (

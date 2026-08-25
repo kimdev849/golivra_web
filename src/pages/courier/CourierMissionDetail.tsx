@@ -58,9 +58,11 @@ export function CourierMissionDetail() {
   if (!mission) return <div className="text-center py-12 text-gray-400">Chargement...</div>;
 
   const statusActions: Record<string, { mutation: any; label: string; icon: any; color: string }[]> = {
-    disponible: [{ mutation: acceptMutation, label: "Accepter la mission", icon: CheckCircle, color: "bg-green-500" }],
-    acceptee: [{ mutation: pickupMutation, label: "Colis récupéré", icon: Package, color: "bg-brand" }],
-    en_cours: [{ mutation: deliverMutation, label: "Livraison effectuée", icon: Truck, color: "bg-blue-500" }],
+    en_attente: [{ mutation: acceptMutation, label: "Accepter la mission", icon: CheckCircle, color: "bg-green-500" }],
+    attribuee: [{ mutation: pickupMutation, label: "Colis récupéré", icon: Package, color: "bg-brand" }],
+    en_collecte: [{ mutation: pickupMutation, label: "Confirmer récupération", icon: Package, color: "bg-brand" }],
+    collectee: [{ mutation: deliverMutation, label: "Livraison effectuée", icon: Truck, color: "bg-blue-500" }],
+    en_route: [{ mutation: deliverMutation, label: "Confirmer livraison", icon: Truck, color: "bg-blue-500" }],
   };
 
   const actions = statusActions[mission.statut] || [];
@@ -153,10 +155,13 @@ export function CourierMissionDetail() {
 
 function getStatusColor(status: string) {
   switch (status) {
-    case "disponible": return "bg-green-100 text-green-700";
-    case "acceptee": return "bg-blue-100 text-blue-700";
-    case "en_cours": return "bg-orange-100 text-orange-700";
-    case "terminee": return "bg-gray-100 text-gray-600";
+    case "en_attente": return "bg-yellow-100 text-yellow-700";
+    case "attribuee": return "bg-blue-100 text-blue-700";
+    case "en_collecte": return "bg-blue-100 text-blue-700";
+    case "collectee": return "bg-orange-100 text-orange-700";
+    case "en_route": return "bg-orange-100 text-orange-700";
+    case "livree": return "bg-green-100 text-green-700";
+    case "annulee": return "bg-red-100 text-red-700";
     default: return "bg-gray-100 text-gray-600";
   }
 }
