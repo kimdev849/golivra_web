@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "../../lib/api";
+import { apiFetch, getSessionToken } from "../../lib/api";
 import { Bell, Check, Package, Truck, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,17 +8,28 @@ export function VendorNotifications() {
 
   const { data: notifications = [] } = useQuery<any[]>({
     queryKey: ["vendor-notifications"],
-    queryFn: () => apiFetch("/api/notifications"),
+    queryFn: async () => {
+      const token = getSessionToken();
+      const d = await apiFetch<{ items?: any[]; unread_count?: number } | any[]>("/api/notifications?limit=50", { method: "GET", token });
+      if (Array.isArray(d)) return d;
+      return Array.isArray(d?.items) ? d.items : [];
+    },
     refetchInterval: 15_000,
   });
 
   const markReadMutation = useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/notifications/${id}/read`, { method: "PUT" }),
+    mutationFn: (id: string) => {
+      const token = getSessionToken();
+      return apiFetch(`/api/notifications/${id}/read`, { method: "PATCH", token, jsonBody: {} });
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendor-notifications"] }),
   });
 
   const markAllMutation = useMutation({
-    mutationFn: () => apiFetch("/api/notifications/read-all", { method: "PUT" }),
+    mutationFn: () => {
+      const token = getSessionToken();
+      return apiFetch("/api/notifications/read-all", { method: "PATCH", token, jsonBody: {} });
+    },
     onSuccess: () => {
       toast.success("Toutes lues");
       queryClient.invalidateQueries({ queryKey: ["vendor-notifications"] });
@@ -56,18 +67,18 @@ export function VendorNotifications() {
           {notifications.map((n: any) => (
             <div
               key={n.id}
-              onClick={() => !n.lue && markReadMutation.mutate(n.id)}
-              className={`bg-white rounded-xl border p-4 flex items-start gap-3 transition cursor-pointer ${!n.lue ? "border-brand/30 bg-brand/5" : "hover:bg-gray-50"}`}
+              onClick={() => !n.est_lue && markReadMutation.mutate(n.id)}
+              className={`bg-white rounded-xl border p-4 flex items-start gap-3 transition cursor-pointer ${!n.est_lue ? "border-brand/30 bg-brand/5" : "hover:bg-gray-50"}`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!n.lue ? "bg-brand/10 text-brand" : "bg-gray-100 text-gray-400"}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!n.est_lue ? "bg-brand/10 text-brand" : "bg-gray-100 text-gray-400"}`}>
                 {getIcon(n.type)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900">{n.titre}</p>
-                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.corps}</p>
                 <p className="text-xs text-gray-400 mt-1">{new Date(n.created_at).toLocaleString("fr-FR")}</p>
               </div>
-              {!n.lue && <div className="w-2 h-2 rounded-full bg-brand flex-shrink-0 mt-2" />}
+              {!n.est_lue && <div className="w-2 h-2 rounded-full bg-brand flex-shrink-0 mt-2" />}
             </div>
           ))}
         </div>

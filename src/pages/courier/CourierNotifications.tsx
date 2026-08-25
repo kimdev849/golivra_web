@@ -8,8 +8,8 @@ interface CourierNotif {
   id: string;
   type: string;
   titre: string;
-  message: string;
-  lue: boolean;
+  corps: string;
+  est_lue: boolean;
   created_at: string;
 }
 
@@ -21,7 +21,11 @@ export function CourierNotifications() {
 
   const { data: notifications = [] } = useQuery<CourierNotif[]>({
     queryKey: ["courier-notifications"],
-    queryFn: () => apiFetch("/api/notifications", { token }),
+    queryFn: async () => {
+      const d = await apiFetch<{ items?: CourierNotif[]; unread_count?: number } | CourierNotif[]>("/api/notifications?limit=50", { token });
+      if (Array.isArray(d)) return d;
+      return Array.isArray(d?.items) ? d.items : [];
+    },
     enabled: !!token,
   });
 
@@ -68,18 +72,18 @@ export function CourierNotifications() {
           {notifications.map((n) => (
             <div
               key={n.id}
-              onClick={() => !n.lue && markReadMutation.mutate(n.id)}
-              className={`bg-white rounded-xl border p-4 flex items-start gap-3 transition cursor-pointer ${!n.lue ? "border-brand/30 bg-brand/5" : "hover:bg-gray-50"}`}
+              onClick={() => !n.est_lue && markReadMutation.mutate(n.id)}
+              className={`bg-white rounded-xl border p-4 flex items-start gap-3 transition cursor-pointer ${!n.est_lue ? "border-brand/30 bg-brand/5" : "hover:bg-gray-50"}`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!n.lue ? "bg-brand/10 text-brand" : "bg-gray-100 text-gray-400"}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!n.est_lue ? "bg-brand/10 text-brand" : "bg-gray-100 text-gray-400"}`}>
                 {getIcon(n.type)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900">{n.titre}</p>
-                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.corps}</p>
                 <p className="text-xs text-gray-400 mt-1">{new Date(n.created_at).toLocaleString("fr-FR")}</p>
               </div>
-              {!n.lue && <div className="w-2 h-2 rounded-full bg-brand flex-shrink-0 mt-2" />}
+              {!n.est_lue && <div className="w-2 h-2 rounded-full bg-brand flex-shrink-0 mt-2" />}
             </div>
           ))}
         </div>
