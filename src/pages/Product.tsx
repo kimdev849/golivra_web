@@ -83,12 +83,14 @@ export function ProductPage() {
     retry: 1,
   });
 
-  // Fetch enterprise for hours/open status
+  // Fetch enterprise for hours/open status — refetch toutes les 2 min pour
+  // que le statut ouvert/fermé se mette à jour quand le commerce ouvre/ferme.
   const { data: enterprise } = useQuery({
     queryKey: ["enterprise", product?.entreprise_id],
     queryFn: () => apiFetch(`/api/enterprises/${product!.entreprise_id}`),
     enabled: !!product?.entreprise_id,
-    staleTime: 120_000,
+    staleTime: 60_000,
+    refetchInterval: 120_000,
   });
 
   const ent = enterprise as any;
@@ -115,8 +117,9 @@ export function ProductPage() {
   const unitPrice = basePrice + optionSupplement;
   const totalPrice = unitPrice;
 
-  // Enterprise open status
-  const isClosed = ent && (ent.ouvert === false || ent.est_ouvert_maintenant === false || ent.accepte_commandes === false);
+  // Enterprise open status — utilise le statut live calculé côté serveur
+  // (est_ouvert_maintenant / peut_commander_maintenant) ET le snapshot (ouvert)
+  const isClosed = ent && (ent.est_ouvert_maintenant === false || ent.ouvert === false || ent.accepte_commandes === false);
   const tropTard = ent && ent.peut_commander_maintenant === false;
   const orderable = !isClosed && !tropTard;
 
