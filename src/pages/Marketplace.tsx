@@ -71,6 +71,7 @@ export function MarketplacePage() {
     queryFn: () => apiFetch(`/api/enterprises/${enterpriseId}`),
     enabled: !!enterpriseId,
     staleTime: 60_000,
+    refetchInterval: 120_000, // recalcul ouvert/fermé toutes les 2 min
     retry: 2,
   });
 

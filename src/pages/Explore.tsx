@@ -21,6 +21,7 @@ export function ExplorePage() {
       return apiFetch(`/api/enterprises?${params.toString()}`);
     },
     staleTime: 60_000,
+    refetchInterval: 120_000, // recalcul ouvert/fermé toutes les 2 min
   });
 
   const list = Array.isArray(enterprises) ? enterprises : [];
@@ -119,7 +120,7 @@ export function ExplorePage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-txt truncate">{e.nom}</p>
-                  {e.ouvert === false && (
+                  {(e.est_ouvert_maintenant === false || (e.est_ouvert_maintenant == null && e.ouvert === false)) && (
                     <span className="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded">Fermé</span>
                   )}
                 </div>
