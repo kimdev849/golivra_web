@@ -181,7 +181,8 @@ export function SettingsPage() {
         </button>
       </div>
 
-      {/* ── Notifications ── */}
+      {/* ── Notifications (connecté uniquement) ── */}
+      {token && <>
       <p className="text-[11px] font-extrabold uppercase tracking-widest mb-2 ml-1" style={{ color: "var(--brand-deep)" }}>Notifications</p>
       <div className="rounded-2xl overflow-hidden mb-3 border" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
         <button onClick={() => navigate("/notifications")} className="w-full flex items-center gap-3 px-3.5 py-3.5 transition hover:opacity-80">
@@ -229,7 +230,10 @@ export function SettingsPage() {
         </div>
       </div>
 
-      {/* ── Sécurité ── */}
+      </>}
+
+      {/* ── Sécurité (connecté uniquement) ── */}
+      {token && <>
       <p className="text-[11px] font-extrabold uppercase tracking-widest mb-2 ml-1" style={{ color: "var(--brand-deep)" }}>Sécurité</p>
       <div className="rounded-2xl overflow-hidden mb-3 border" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
         <div className="flex items-center gap-3 px-3.5 py-3.5">
@@ -245,8 +249,10 @@ export function SettingsPage() {
           </div>
         </div>
       </div>
+      </>}
 
-      {/* ── Compte ── */}
+      {/* ── Compte (connecté uniquement) ── */}
+      {token && <>
       <p className="text-[11px] font-extrabold uppercase tracking-widest mb-2 ml-1" style={{ color: "var(--brand-deep)" }}>Compte</p>
       <div className="rounded-2xl overflow-hidden mb-3 border" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
         <Link to="/account-settings" className="flex items-center gap-3 px-3.5 py-3.5 transition hover:opacity-80">
@@ -265,6 +271,8 @@ export function SettingsPage() {
           <ChevronRight size={18} style={{ color: "var(--txt-muted)" }} />
         </Link>
       </div>
+
+      </>}
 
       {/* ── À propos ── */}
       <p className="text-[11px] font-extrabold uppercase tracking-widest mb-2 ml-1" style={{ color: "var(--brand-deep)" }}>À propos</p>

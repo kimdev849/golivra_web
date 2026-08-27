@@ -80,6 +80,29 @@ export function ProfilePage() {
     navigate("/auth", { replace: true });
   };
 
+  // ── Guest view: not connected ──
+  if (!token) {
+    return (
+      <div className="max-w-lg mx-auto px-4 py-10 space-y-6 text-center">
+        <div className="w-20 h-20 rounded-full bg-brand-50 flex items-center justify-center mx-auto">
+          <User size={36} className="text-brand" />
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-txt">Bienvenue sur GoLivra</h1>
+          <p className="text-sm text-txt-muted mt-1">Connectez-vous pour gérer vos commandes, favoris et profil.</p>
+        </div>
+        <div className="space-y-3">
+          <Link to="/auth" className="block w-full py-3.5 rounded-xl bg-brand text-white font-bold text-center hover:bg-brand-deep transition">Se connecter</Link>
+          <Link to="/signup" className="block w-full py-3.5 rounded-xl border border-line bg-surface text-brand font-bold text-center hover:bg-brand-50 transition">Créer un compte</Link>
+        </div>
+        <div className="pt-4 space-y-2.5 border-t border-line">
+          <MenuRow icon={Settings} title="Paramètres" to="/settings" />
+          <MenuRow icon={HelpCircle} title="Centre d'aide" to="/help-center" />
+        </div>
+      </div>
+    );
+  }
+
   if (loadingProfile && !m) {
     return (
       <div className="max-w-lg mx-auto px-4 py-6 space-y-4 animate-pulse">
