@@ -68,7 +68,8 @@ function useVendorShop() {
             type: s.type,
             statut_moderation: s.statut_moderation,
             moderation_status: s.moderation_status,
-            enLigne: s.ouvert ?? s.enLigne ?? false,
+            // Only online if shop is verified AND marked as open
+            enLigne: (s.statut_moderation === "active" || s.moderation_status === "verified") && (s.ouvert ?? s.enLigne ?? false),
             avatar: s.image_url,
           });
 
