@@ -123,7 +123,7 @@ export function ExplorePage() {
         </div>
       )}
 
-      {/* ── Enterprise list (larger cards than Home, more detail) ── */}
+      {/* ── Enterprise list ── */}
       {!isLoading && list.length === 0 ? (
         <div className="text-center py-16 text-txt-muted">
           <Store size={40} className="mx-auto mb-3 opacity-30" />
@@ -131,52 +131,50 @@ export function ExplorePage() {
           <p className="text-sm mt-1">Essayez un autre terme de recherche.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {list.map((e: any) => (
             <Link
               key={e.id}
               to={`/marketplace/${e.id}`}
-              className="flex gap-3 bg-surface border border-line rounded-2xl p-4 hover:shadow-md transition"
+              className="group flex gap-3 bg-surface border border-line rounded-2xl p-3.5 hover:shadow-lg hover:border-brand/30 transition-all duration-200"
             >
               {/* Image */}
-              <div className="w-16 h-16 rounded-2xl bg-brand-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
+              <div className="w-[72px] h-[72px] rounded-xl bg-brand-50 flex-shrink-0 overflow-hidden">
                 {e.image_url ? (
-                  <img src={e.image_url} alt="" className="w-full h-full object-cover" />
+                  <img src={e.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : e.type === "restaurant" ? (
-                  <UtensilsCrossed size={22} className="text-brand/30" />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <UtensilsCrossed size={22} className="text-brand/30" />
+                  </div>
                 ) : (
-                  <ShoppingBag size={22} className="text-brand/30" />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <ShoppingBag size={22} className="text-brand/30" />
+                  </div>
                 )}
               </div>
 
               {/* Info */}
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-bold text-txt truncate">{e.nom}</p>
+                  <p className="text-sm font-bold text-txt truncate leading-tight">{e.nom}</p>
                   {(e.est_ouvert_maintenant === false || (e.est_ouvert_maintenant == null && e.ouvert === false)) && (
-                    <span className="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded">Fermé</span>
+                    <span className="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded-full flex-shrink-0">Fermé</span>
                   )}
                 </div>
-                <p className="text-xs text-txt-muted truncate">
+                <p className="text-xs text-txt-muted truncate mt-0.5">
                   {[e.categorie_nom, e.description].filter(Boolean).join(" · ")}
                 </p>
-                <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                <div className="flex items-center gap-2.5 mt-1.5">
                   {e.note_moyenne != null && e.note_moyenne > 0 && (
-                    <span className="flex items-center gap-0.5 text-xs font-bold text-accent-600">
-                      <Star size={11} className="fill-accent-500 text-accent-500" />
-                      {Number(e.note_moyenne).toFixed(1)}
+                    <span className="flex items-center gap-0.5 text-xs font-bold">
+                      <Star size={11} className="fill-[var(--accent)] text-[var(--accent)]" />
+                      <span className="text-txt">{Number(e.note_moyenne).toFixed(1)}</span>
                       {e.nb_avis && <span className="text-txt-muted font-normal">({e.nb_avis})</span>}
                     </span>
                   )}
                   {e.adresse && (
                     <span className="flex items-center gap-0.5 text-[11px] text-txt-muted">
-                      <MapPin size={11} /> {e.adresse.length > 25 ? e.adresse.slice(0, 25) + "…" : e.adresse}
-                    </span>
-                  )}
-
-                  {e.delai_preparation_min != null && (
-                    <span className="flex items-center gap-0.5 text-[11px] text-txt-muted">
-                      <Clock size={11} /> ~{e.delai_preparation_min} min
+                      <MapPin size={11} className="flex-shrink-0" /> <span className="truncate">{e.adresse.length > 22 ? e.adresse.slice(0, 22) + "…" : e.adresse}</span>
                     </span>
                   )}
                 </div>

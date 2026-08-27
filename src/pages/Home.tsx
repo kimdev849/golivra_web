@@ -385,22 +385,22 @@ export function HomePage() {
               <Link
                 key={p.id}
                 to={`/product/${p.id}?from=${p.enterprise_type === 'restaurant' ? 'resto' : 'boutique'}`}
-                className="bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-line/50 transition"
+                className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/30 transition-all duration-200"
               >
-                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   {p.image_url || p.images_urls?.[0] ? (
-                    <img src={p.image_url || p.images_urls?.[0]} alt="" className="w-full h-full object-cover" />
+                    <img src={p.image_url || p.images_urls?.[0]} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <Package size={28} className="text-brand/20" />
                   )}
                   {pct != null && (
-                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-md">
+                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
                       -{pct}%
                     </span>
                   )}
                 </div>
                 <div className="p-2.5 space-y-0.5">
-                  <p className="text-[13px] font-bold text-txt truncate">{p.nom || "Produit"}</p>
+                  <p className="text-[13px] font-bold text-txt truncate leading-tight">{p.nom || "Produit"}</p>
                   {p.enterprise_nom && <p className="text-[11px] text-txt-muted truncate">{p.enterprise_nom}</p>}
                   <div className="flex items-center gap-1.5 mt-1">
                     <span className="text-sm font-extrabold text-brand">

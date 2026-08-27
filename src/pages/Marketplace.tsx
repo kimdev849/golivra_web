@@ -234,22 +234,22 @@ export function MarketplacePage() {
               <Link
                 key={p.id}
                 to={`/product/${p.id}?enterprise=${enterpriseId}`}
-                className="bg-surface rounded-xl overflow-hidden border border-line hover:shadow-md transition"
+                className="group bg-surface rounded-xl overflow-hidden border border-line hover:shadow-lg hover:border-brand/30 transition-all duration-200"
               >
-                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   {p.image_url ? (
-                    <img src={p.image_url} alt="" className="w-full h-full object-cover" />
+                    <img src={p.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <Package size={24} className="text-brand/20" />
                   )}
                   {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
-                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
                       -{Math.round((1 - Number(p.prix_promo) / Number(p.prix)) * 100)}%
                     </span>
                   )}
                 </div>
                 <div className="p-2.5">
-                  <p className="text-[13px] font-bold text-txt truncate">{p.nom}</p>
+                  <p className="text-[13px] font-bold text-txt truncate leading-tight">{p.nom}</p>
                   <div className="flex items-center gap-1.5 mt-1">
                     <span className="text-sm font-extrabold text-brand">{formatFcfa(Number(p.prix_promo ?? p.prix))}</span>
                     {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
