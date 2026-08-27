@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { ArrowUp } from "lucide-react";
+import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -274,8 +275,8 @@ export function HomePage() {
               className="relative rounded-2xl overflow-hidden bg-brand text-white"
               style={{ minHeight: 80 }}
             >
-              {c.image_url ? (
-                <img src={c.image_url} alt={c.nom} className="absolute inset-0 w-full h-full object-cover" />
+              {resolveEnterpriseImage(c) ? (
+                <img src={resolveEnterpriseImage(c)!} alt={c.nom} className="absolute inset-0 w-full h-full object-cover" />
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-r from-brand/90 to-brand/60" />
               <div className="relative px-5 py-4">
@@ -313,8 +314,8 @@ export function HomePage() {
                 className="snap-start flex-shrink-0 w-[130px] bg-surface rounded-2xl overflow-hidden shadow-sm border border-line hover:shadow-md transition"
               >
                 <div className="w-full h-[90px] bg-brand-50 flex items-center justify-center overflow-hidden">
-                  {e.image_url ? (
-                    <img src={e.image_url} alt="" className="w-full h-full object-cover" />
+                  {resolveEnterpriseImage(e) ? (
+                    <img src={resolveEnterpriseImage(e)!} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <Store size={24} className="text-brand/30" />
                   )}
@@ -356,8 +357,8 @@ export function HomePage() {
                 className="flex items-center gap-3 p-3 bg-surface border border-line rounded-2xl hover:shadow-md transition"
               >
                 <div className="w-[52px] h-[52px] rounded-[14px] bg-brand-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                  {ent.image_url ? (
-                    <img src={ent.image_url} alt="" className="w-full h-full object-cover" />
+                  {resolveEnterpriseImage(ent) ? (
+                    <img src={resolveEnterpriseImage(ent)!} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <Store size={20} className="text-brand/30" />
                   )}
@@ -393,8 +394,8 @@ export function HomePage() {
                 className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/30 transition-all duration-200"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
-                  {p.image_url || p.images_urls?.[0] ? (
-                    <img src={p.image_url || p.images_urls?.[0]} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {resolveImageUrl(p) ? (
+                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <Package size={28} className="text-brand/20" />
                   )}

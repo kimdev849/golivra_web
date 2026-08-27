@@ -3,6 +3,7 @@ import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
 import { Search, Star, X, UtensilsCrossed, ShoppingBag, Store, MapPin, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
+import { resolveEnterpriseImage } from "../lib/images";
 
 type FilterType = "all" | "restaurant" | "boutique";
 
@@ -140,8 +141,8 @@ export function ExplorePage() {
             >
               {/* Image */}
               <div className="w-[72px] h-[72px] rounded-xl bg-brand-50 flex-shrink-0 overflow-hidden">
-                {e.image_url ? (
-                  <img src={e.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                {resolveEnterpriseImage(e) ? (
+                  <img src={resolveEnterpriseImage(e)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : e.type === "restaurant" ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <UtensilsCrossed size={22} className="text-brand/30" />

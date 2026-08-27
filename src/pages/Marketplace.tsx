@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Star, Clock, Truck, MapPin, Package, AlertTriangle, Store, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
 
 function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + " FCFA"; }
 
@@ -138,8 +139,8 @@ export function MarketplacePage() {
 
       {/* Cover */}
       <div className="w-full h-48 bg-brand-50 rounded-2xl overflow-hidden">
-        {ent.image_url || ent.banniere_url ? (
-          <img src={ent.banniere_url || ent.image_url} alt="" className="w-full h-full object-cover" />
+        {resolveEnterpriseImage(ent) ? (
+          <img src={resolveEnterpriseImage(ent)!} alt="" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-brand/20 text-6xl font-bold">
             {(ent.nom || "?")[0]}
@@ -237,8 +238,8 @@ export function MarketplacePage() {
                 className="group bg-surface rounded-xl overflow-hidden border border-line hover:shadow-lg hover:border-brand/30 transition-all duration-200"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
-                  {p.image_url ? (
-                    <img src={p.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {resolveImageUrl(p) ? (
+                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <Package size={24} className="text-brand/20" />
                   )}

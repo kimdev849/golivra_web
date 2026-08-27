@@ -8,6 +8,7 @@ import {
   Check, AlertTriangle, ImageIcon, Clock, ChevronRight, Tag,
 } from "lucide-react";
 import { useState, useMemo } from "react";
+import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
 import { toast } from "sonner";
 import { GalleryViewer } from "../components/GalleryViewer";
 import { toggleFavoriteProduct, isFavoriteProduct } from "../lib/favorites";
@@ -245,7 +246,7 @@ export function ProductPage() {
         {/* Vendor badge */}
         <Link to={`/marketplace/${product.entreprise_id}`} className="flex items-center gap-3 p-3 bg-surface border border-line rounded-xl hover:shadow-md transition">
           <div className="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center overflow-hidden">
-            {product.enterprise_image_url ? <img src={product.enterprise_image_url} alt="" className="w-full h-full object-cover" /> : <EnterpriseIcon size={20} className="text-brand" />}
+            {resolveEnterpriseImage(product) ? <img src={resolveEnterpriseImage(product)!} alt="" className="w-full h-full object-cover" /> : <EnterpriseIcon size={20} className="text-brand" />}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-txt truncate">{product.enterprise_nom || "Vendeur"}</p>
