@@ -77,7 +77,7 @@ export function ProfilePage() {
     } catch { /* ignore */ }
     authLogout();
     toast.success("Déconnecté");
-    navigate("/auth", { replace: true });
+    navigate("/", { replace: true });
   };
 
   // ── Guest view: not connected ──

@@ -15,26 +15,20 @@ export function apiUrl(path: string): string {
 
 // ─── Token management (localStorage on web) ──────────────────────────────────
 
+import { safeGetItem, safeSetItem, safeRemoveItem } from './safe-storage';
+
 const TOKEN_KEY = 'golivra_session_token';
 
 export function getSessionToken(): string | null {
-  try {
-    return localStorage.getItem(TOKEN_KEY);
-  } catch {
-    return null;
-  }
+  return safeGetItem(TOKEN_KEY);
 }
 
 export function setSessionToken(token: string): void {
-  try {
-    localStorage.setItem(TOKEN_KEY, token);
-  } catch { /* ignore */ }
+  safeSetItem(TOKEN_KEY, token);
 }
 
 export function clearSessionToken(): void {
-  try {
-    localStorage.removeItem(TOKEN_KEY);
-  } catch { /* ignore */ }
+  safeRemoveItem(TOKEN_KEY);
 }
 
 // ─── UX copy (matches mobile ux-copy.ts) ─────────────────────────────────────

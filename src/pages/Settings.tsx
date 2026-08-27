@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch, getSessionToken } from "../lib/api";
+import { safeGetItem, safeSetItem } from "../lib/safe-storage";
 import { useAuthStore } from "../store";
 import {
   Bell, ChevronLeft, ChevronRight, CreditCard, Info, KeyRound, Mail,
@@ -36,14 +37,14 @@ function applyTheme(theme: string) {
       root.classList.remove("dark");
     }
   }
-  localStorage.setItem("golivra_theme", theme);
+  safeSetItem("golivra_theme", theme);
 }
 
 /** Apply text scale to <html> immediately */
 function applyTextScale(scale: string) {
   const sizes: Record<string, string> = { small: "14px", medium: "16px", large: "18px" };
   document.documentElement.style.fontSize = sizes[scale] || "16px";
-  localStorage.setItem("golivra_text_scale", scale);
+  safeSetItem("golivra_text_scale", scale);
 }
 
 export function SettingsPage() {
@@ -51,8 +52,8 @@ export function SettingsPage() {
   const { user } = useAuthStore();
   const token = getSessionToken();
 
-  const [theme, setTheme] = useState<string>(() => localStorage.getItem("golivra_theme") || "light");
-  const [textScale, setTextScale] = useState<string>(() => localStorage.getItem("golivra_text_scale") || "medium");
+  const [theme, setTheme] = useState<string>(() => safeGetItem("golivra_theme") || "light");
+  const [textScale, setTextScale] = useState<string>(() => safeGetItem("golivra_text_scale") || "medium");
   const [darkModeShortcut, setDarkModeShortcut] = useState(false);
   const [notifPush, setNotifPush] = useState(true);
   const [notifEmail, setNotifEmail] = useState(true);

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock, Moon, Smartphone, Sun, UserPlus } from "lucide-react";
+import { safeSetItem } from "../lib/safe-storage";
 import { useAuthStore, homePathForRole } from "../store";
 import { apiFetch, setSessionToken } from "../lib/api";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ function applyTheme(t: string) {
   else if (t === "light") root.classList.remove("dark");
   else if (window.matchMedia("(prefers-color-scheme: dark)").matches) root.classList.add("dark");
   else root.classList.remove("dark");
-  localStorage.setItem("golivra_theme", t);
+  safeSetItem("golivra_theme", t);
 }
 
 export function AuthPage() {

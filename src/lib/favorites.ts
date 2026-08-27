@@ -1,4 +1,5 @@
 import { getSessionToken } from './api';
+import { safeGetItem, safeSetItem } from './safe-storage';
 import { fetchFavorites, fetchFavoriteProducts, syncFavoritesRemote, toggleFavoriteProductRemote, toggleFavoriteRemote } from './favorites-api';
 
 const STORAGE_KEY = 'golivra_client_favorites_v1';
@@ -8,7 +9,7 @@ export type FavoriteProductRef = { produit_id: string; produit_kind: 'plat' | 'a
 
 function readIds(): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = safeGetItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed.filter((x: unknown) => typeof x === 'string') : [];
@@ -16,12 +17,12 @@ function readIds(): string[] {
 }
 
 function writeIds(ids: string[]): void {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ids)); } catch { /* ignore */ }
+  try { safeSetItem(STORAGE_KEY, JSON.stringify(ids)); } catch { /* ignore */ }
 }
 
 function readProductRefs(): FavoriteProductRef[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_PRODUCTS);
+    const raw = safeGetItem(STORAGE_KEY_PRODUCTS);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed.filter((x: unknown) =>
@@ -31,7 +32,7 @@ function readProductRefs(): FavoriteProductRef[] {
 }
 
 function writeProductRefs(refs: FavoriteProductRef[]): void {
-  try { localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(refs)); } catch { /* ignore */ }
+  try { safeSetItem(STORAGE_KEY_PRODUCTS, JSON.stringify(refs)); } catch { /* ignore */ }
 }
 
 export function getFavoriteEnterpriseIds(): string[] {

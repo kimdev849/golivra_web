@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
+import { safeGetItem, safeSetItem } from "../lib/safe-storage";
 import { Link, useNavigate } from "react-router-dom";
 import { EnterprisePublic } from "../lib/types";
 import { useAuthStore, useCartStore } from "../store";
@@ -62,18 +63,18 @@ export function HomePage() {
   // Show splash ONLY for first-time non-authenticated visitors
   const [showSplash] = useState(() => {
     if (isAuthenticated) return false;
-    return !localStorage.getItem("onboarding_done");
+    return !safeGetItem("onboarding_done");
   });
   if (showSplash) {
     return (
       <SplashOverlay
         onDiscover={() => {
-          localStorage.setItem("onboarding_done", "true");
+          safeSetItem("onboarding_done", "true");
           // Ne pas naviguer : on reste sur la page d'accueil
           window.location.reload();
         }}
         onLogin={() => {
-          localStorage.setItem("onboarding_done", "true");
+          safeSetItem("onboarding_done", "true");
           navigate("/auth", { replace: true });
         }}
       />

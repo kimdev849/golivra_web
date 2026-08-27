@@ -1,4 +1,5 @@
 import type { CartLine, CartSegment, CartState } from './types';
+import { safeGetItem, safeSetItem, safeRemoveItem } from './safe-storage';
 
 const CART_KEY = 'golivra_cart_v1';
 
@@ -19,7 +20,7 @@ export function dedupeLines(lines: CartLine[]): CartLine[] {
 
 export function loadLocalCart(): CartState {
   try {
-    const raw = localStorage.getItem(CART_KEY);
+    const raw = safeGetItem(CART_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CartState;
     if (!parsed?.segments?.length) return null;
@@ -29,11 +30,11 @@ export function loadLocalCart(): CartState {
 
 export function saveLocalCart(cart: CartState): void {
   try {
-    if (!cart?.segments?.length) { localStorage.removeItem(CART_KEY); return; }
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    if (!cart?.segments?.length) { safeRemoveItem(CART_KEY); return; }
+    safeSetItem(CART_KEY, JSON.stringify(cart));
   } catch { /* ignore */ }
 }
 
 export function clearCart(): void {
-  try { localStorage.removeItem(CART_KEY); } catch { /* ignore */ }
+  try { safeRemoveItem(CART_KEY); } catch { /* ignore */ }
 }
