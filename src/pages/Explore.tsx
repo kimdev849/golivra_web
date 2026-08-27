@@ -2,15 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
 import { Search, Star, X, UtensilsCrossed, ShoppingBag, Store, MapPin, Clock } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type FilterType = "all" | "restaurant" | "boutique";
 
 function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + " FCFA"; }
 
+type SortType = "popular" | "rated" | "recent";
+
 export function ExplorePage() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState<FilterType>("all");
+  const [sort, setSort] = useState<SortType>("popular");
 
   const { data: enterprises = [], isLoading } = useQuery({
     queryKey: ["explore-enterprises", type, search],
@@ -24,11 +27,20 @@ export function ExplorePage() {
     refetchInterval: 120_000, // recalcul ouvert/fermé toutes les 2 min
   });
 
-  const list = Array.isArray(enterprises) ? enterprises : [];
+  const rawList = Array.isArray(enterprises) ? enterprises : [];
+
+  // Sort
+  const list = useMemo(() => {
+    const copy = [...rawList];
+    if (sort === "popular") copy.sort((a: any, b: any) => (b.note_moyenne ?? 0) - (a.note_moyenne ?? 0) || (b.nb_avis ?? 0) - (a.nb_avis ?? 0));
+    if (sort === "rated") copy.sort((a: any, b: any) => (b.note_moyenne ?? 0) - (a.note_moyenne ?? 0) || (b.nb_avis ?? 0) - (a.nb_avis ?? 0));
+    if (sort === "recent") copy.sort((a: any, b: any) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime());
+    return copy;
+  }, [rawList, sort]);
 
   // Stats
-  const restaurantCount = list.filter((e: any) => e.type === "restaurant").length;
-  const boutiqueCount = list.filter((e: any) => e.type === "boutique").length;
+  const restaurantCount = rawList.filter((e: any) => e.type === "restaurant").length;
+  const boutiqueCount = rawList.filter((e: any) => e.type === "boutique").length;
 
   return (
     <div className="space-y-4">
@@ -77,6 +89,27 @@ export function ExplorePage() {
                 ({count})
               </span>
             )}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Sort row ── */}
+      <div className="flex gap-2">
+        {([
+          ["popular", "Plus populaires"],
+          ["rated", "Mieux notés"],
+          ["recent", "Plus récents"],
+        ] as const).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setSort(key)}
+            className={`px-4 py-2 rounded-full text-xs font-bold border transition ${
+              sort === key
+                ? "bg-brand text-white border-brand"
+                : "bg-surface text-txt border-line hover:bg-brand-50"
+            }`}
+          >
+            {label}
           </button>
         ))}
       </div>
