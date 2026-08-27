@@ -66,7 +66,12 @@ export function HomePage() {
   if (showSplash) {
     return (
       <SplashOverlay
-        onAuth={() => {
+        onDiscover={() => {
+          localStorage.setItem("onboarding_done", "true");
+          // Ne pas naviguer : on reste sur la page d'accueil
+          window.location.reload();
+        }}
+        onLogin={() => {
           localStorage.setItem("onboarding_done", "true");
           navigate("/auth", { replace: true });
         }}
@@ -492,7 +497,7 @@ function ActiveOrderWidget() {
 
 const GOLIVRA_ORANGE = "#F58A07";
 
-function SplashOverlay({ onAuth }: { onAuth: () => void }) {
+function SplashOverlay({ onDiscover, onLogin }: { onDiscover: () => void; onLogin: () => void }) {
   return (
     <div className="min-h-screen w-full relative bg-black overflow-hidden">
       <img
@@ -519,37 +524,32 @@ function SplashOverlay({ onAuth }: { onAuth: () => void }) {
           className="text-white text-center font-bold leading-snug max-w-sm"
           style={{ fontSize: "clamp(1.35rem, 4vw, 1.65rem)", textShadow: "0 1px 6px rgba(0,0,0,0.55)" }}
         >
-          Commandez des plats et produits à Brazzaville, livrés chez vous
+          Découvrez vos restaurants, boutiques et produits préférés à Brazzaville
         </h1>
         <p className="text-white/80 text-center text-sm max-w-xs leading-relaxed">
-          Restaurants, boutiques, livraison rapide. Payez par Mobile Money.
+          Commandez en un clin d'œil. Payez par Mobile Money.
         </p>
-        <div className="flex gap-3 w-full max-w-md mt-1">
-          <button
-            onClick={onAuth}
-            className="flex-1 text-white font-bold tracking-wide transition-opacity hover:opacity-90 active:opacity-80"
-            style={{
-              backgroundColor: GOLIVRA_ORANGE,
-              minHeight: 54,
-              borderRadius: 999,
-              fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
-              boxShadow: "0 8px 22px rgba(245, 138, 7, 0.42)",
-            }}
-          >
-            Se connecter
-          </button>
-          <button
-            onClick={onAuth}
-            className="flex-1 text-white font-bold tracking-wide border-2 border-white/30 transition-opacity hover:bg-white/10 active:opacity-80"
-            style={{
-              minHeight: 54,
-              borderRadius: 999,
-              fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
-            }}
-          >
-            Découvrir
-          </button>
-        </div>
+        {/* CTA principal : Découvrir */}
+        <button
+          onClick={onDiscover}
+          className="w-full max-w-md text-white font-bold tracking-wide transition-opacity hover:opacity-90 active:opacity-80"
+          style={{
+            backgroundColor: GOLIVRA_ORANGE,
+            minHeight: 54,
+            borderRadius: 999,
+            fontSize: "clamp(0.95rem, 3vw, 1.1rem)",
+            boxShadow: "0 8px 22px rgba(245, 138, 7, 0.42)",
+          }}
+        >
+          Découvrir GoLivra
+        </button>
+        {/* Lien secondaire : J'ai déjà un compte */}
+        <button
+          onClick={onLogin}
+          className="text-white/80 text-sm font-medium hover:text-white transition underline"
+        >
+          Déjà membre ? Se connecter
+        </button>
         <div className="flex items-center gap-4 mt-1 opacity-80">
           <span className="flex items-center gap-1 text-white text-xs"><span className="text-green-400">✓</span> Livraison rapide</span>
           <span className="flex items-center gap-1 text-white text-xs"><span className="text-green-400">✓</span> Mobile Money</span>
