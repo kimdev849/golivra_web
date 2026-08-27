@@ -154,7 +154,7 @@ export function HomePage() {
   }, [handleScroll]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-[1200px] mx-auto">
       {/* ── Sticky header: location + search + filters ── */}
       <div className="sticky top-0 lg:top-14 z-30 bg-surface-muted/95 backdrop-blur-sm -mx-4 px-4 pt-3 pb-2 border-b border-line/50 space-y-3">
         {/* Top bar: location + bell */}
@@ -419,10 +419,10 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50">
-              <div className="w-full aspect-square bg-gray-200" />
+              <div className="w-full aspect-[4/3] bg-gray-200" />
               <div className="p-2.5 space-y-2">
                 <div className="h-3 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
