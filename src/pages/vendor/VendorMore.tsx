@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3, Bell, Building2, ChevronRight, Clock, CreditCard,
-  HelpCircle, MapPin, Package, Settings, Truck, User, Wallet,
+  HelpCircle, MapPin, Package, Settings, Share2, Truck, User, Wallet,
 } from "lucide-react";
 import { useVendorCtx } from "./VendorLayout";
 import { useAuthStore } from "../../store";
@@ -158,6 +158,13 @@ export function VendorMore() {
             title="Horaires d'ouverture"
             subtitle="Jours et heures de commande"
             to="/vendor/horaires"
+          />
+          <div className="ml-[72px] h-px bg-line" />
+          <MenuRow
+            icon={<Share2 size={20} className="text-brand" />}
+            title="Partager ma boutique"
+            subtitle="Lien, QR code et partage"
+            to="/vendor/share"
           />
         </div>
       </section>

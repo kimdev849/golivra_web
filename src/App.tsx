@@ -55,6 +55,7 @@ import { VendorStock } from "./pages/vendor/VendorStock";
 import { VendorCreateExternalDelivery } from "./pages/vendor/VendorCreateExternalDelivery";
 import { VendorNotifications } from "./pages/vendor/VendorNotifications";
 import { VendorHelpCenter } from "./pages/vendor/VendorHelpCenter";
+import { VendorShare } from "./pages/vendor/VendorShare";
 
 // Courier
 import { CourierLayout } from "./pages/courier/CourierLayout";
@@ -184,6 +185,7 @@ export default function App() {
         <Route path="stock" element={<VendorStock />} />
         <Route path="create-delivery" element={<VendorCreateExternalDelivery />} />
         <Route path="notifications" element={<VendorNotifications />} />
+        <Route path="share" element={<VendorShare />} />
         <Route path="help-center" element={<VendorHelpCenter />} />
       </Route>
 
