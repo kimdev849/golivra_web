@@ -5,23 +5,23 @@ const ROLES = [
   {
     href: "/signup/client",
     icon: User,
-    title: "Client",
-    subtitle: "Je commande, on me livre partout.",
+    title: "Commander sur GoLivra",
+    subtitle: "Commandez dans vos restaurants et boutiques préférés.",
     iconBg: "bg-accent-500",
     popular: true,
   },
   {
-    href: "/signup/boutique",
-    icon: Store,
-    title: "Boutique",
-    subtitle: "Je vends mes produits en ligne.",
+    href: "/signup/restaurant",
+    icon: UtensilsCrossed,
+    title: "Inscrire mon restaurant",
+    subtitle: "Recevez et gérez vos commandes sur GoLivra.",
     iconBg: "bg-brand-700",
   },
   {
-    href: "/signup/restaurant",
-    icon: UtensilsCrossed,
-    title: "Restaurant",
-    subtitle: "Je sers mes plats, GoLivra les livre.",
+    href: "/signup/boutique",
+    icon: Store,
+    title: "Inscrire ma boutique",
+    subtitle: "Vendez vos produits et gérez vos commandes.",
     iconBg: "bg-brand-700",
   },
 ];
@@ -35,8 +35,8 @@ export function SignupChoosePage() {
           <Link to="/auth" className="inline-block mb-4">
             <img src="/assets/images/logo25292922882.png" alt="GoLivra" className="h-14 mx-auto" />
           </Link>
-          <h1 className="text-[26px] leading-8 font-black text-txt">Créer un compte</h1>
-          <p className="text-sm text-txt-secondary mt-2">Comment souhaitez-vous utiliser GoLivra ?</p>
+          <h1 className="text-[26px] leading-8 font-black text-txt">Que souhaitez-vous faire ?</h1>
+          <p className="text-sm text-txt-secondary mt-2">Choisissez ce qui vous correspond.</p>
         </div>
 
         {/* Role cards */}
