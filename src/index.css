@@ -47,19 +47,19 @@
 .dark {
   --brand: #6ECFA0;
   --brand-deep: #5ABF8E;
-  --brand-50: #162E22;
-  --brand-100: #1A3829;
+  --brand-50: #1A2A22;
+  --brand-100: #1F3529;
   --accent: #FFB940;
   --accent-deep: #E89A1C;
-  --bg: #121916;
-  --bg-alt: #161E1A;
-  --surface: #1A2420;
-  --surface-muted: #1F2C27;
-  --txt: #EAF2ED;
-  --txt-secondary: #B8D0C2;
-  --txt-muted: #7FA393;
-  --border: #2A3D33;
-  --border-strong: #354A3E;
+  --bg: #111314;
+  --bg-alt: #151819;
+  --surface: #1A1D1E;
+  --surface-muted: #212526;
+  --txt: #F0F0F0;
+  --txt-secondary: #C8CCD0;
+  --txt-muted: #8A9199;
+  --border: #2C3034;
+  --border-strong: #3A3F43;
   --error: #FB7185;
   --error-soft: #2A1518;
   --warning: #FBBF24;
@@ -68,7 +68,7 @@
   --success-soft: #122A1C;
   --info: #60A5FA;
   --info-soft: #111E36;
-  --splash-bg: #0A1210;
+  --splash-bg: #0A0C0D;
 }
 
 /* ── Base reset ──────────────────────────────────────────────────────────── */
@@ -163,12 +163,12 @@ input:focus, textarea:focus, select:focus {
 .dark .bg-white { background-color: var(--surface) !important; }
 .dark .bg-gray-50 { background-color: #1A2420 !important; }
 .dark .bg-gray-100 { background-color: var(--surface-muted) !important; }
-.dark .bg-gray-200 { background-color: #253029 !important; }
+.dark .bg-gray-200 { background-color: #2A2E30 !important; }
 .dark .border-gray-200 { border-color: var(--border) !important; }
 .dark .text-gray-600 { color: var(--txt-muted) !important; }
 .dark .text-gray-500 { color: var(--txt-muted) !important; }
 .dark .text-gray-400 { color: var(--txt-muted) !important; }
-.dark .text-gray-300 { color: #5A7A6A !important; }
+.dark .text-gray-300 { color: #6A7178 !important; }
 .dark .text-gray-900 { color: var(--txt) !important; }
 .dark .bg-green-50 { background-color: var(--success-soft) !important; }
 .dark .bg-amber-50 { background-color: var(--warning-soft) !important; }
@@ -189,5 +189,5 @@ input:focus, textarea:focus, select:focus {
 .dark .border-red-200\/60 { border-color: color-mix(in srgb, var(--error) 15%, transparent) !important; }
 .dark .border-blue-200\/60 { border-color: color-mix(in srgb, var(--info) 15%, transparent) !important; }
 .dark .bg-splash-bg { background-color: var(--splash-bg) !important; }
-.dark img { filter: brightness(0.92); }
-.dark img[src*="logo"] { filter: brightness(1.1) saturate(1.1); }
+.dark img { filter: brightness(0.95); }
+.dark img[src*="logo"] { filter: brightness(1.1) saturate(1.05); }
