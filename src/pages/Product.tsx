@@ -8,6 +8,7 @@ import {
   Check, AlertTriangle, ImageIcon, Clock, ChevronRight, Tag,
 } from "lucide-react";
 import { useState, useMemo } from "react";
+import { useAuthStore } from "../store";
 import { resolveImageUrl, resolveEnterpriseImage, resolveUrl } from "../lib/images";
 import { toast } from "sonner";
 import { GalleryViewer } from "../components/GalleryViewer";
@@ -74,6 +75,7 @@ export function ProductPage() {
   const [note, setNote] = useState("");
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const { isAuthenticated } = useAuthStore();
   const [isFav, setIsFav] = useState(false);
 
   const { data: product, isLoading, error } = useQuery<ProductPublic | null>({
@@ -124,15 +126,17 @@ export function ProductPage() {
   const tropTard = ent && ent.peut_commander_maintenant === false;
   const orderable = !isClosed && !tropTard;
 
-  // Check favorite on load
+  // Check favorite on load — only if authenticated
   useMemo(() => {
     if (!product) return;
+    if (!isAuthenticated) { setIsFav(false); return; }
     const kind: "plat" | "article" = (product as any).kind === "article" ? "article" : "plat";
     setIsFav(isFavoriteProduct(product.id, kind));
-  }, [product?.id]);
+  }, [product?.id, isAuthenticated]);
 
   const handleToggleFav = async () => {
     if (!product) return;
+    if (!isAuthenticated) { toast.error("Connectez-vous pour ajouter aux favoris."); navigate("/auth"); return; }
     const kind: "plat" | "article" = (product as any).kind === "article" ? "article" : "plat";
     const wasFav = isFav;
     setIsFav(!wasFav);
