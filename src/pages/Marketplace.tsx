@@ -239,7 +239,7 @@ export function MarketplacePage() {
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   {resolveImageUrl(p) ? (
-                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                   ) : (
                     <Package size={24} className="text-brand/20" />
                   )}
