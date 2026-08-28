@@ -99,7 +99,7 @@ export function HomePage() {
   });
 
   // ── Fetch product feed ──
-  const feedParams = category === "plat" ? "&kind=plat" : category === "article" ? "&kind=article" : category === "promo" ? "&promo=true" : "";
+  const feedParams = category === "plat" ? "&type=plat" : category === "article" ? "&type=article" : category === "promo" ? "&promo=true" : "";
   const { data: products = [], isLoading: loadingProducts } = useQuery({
     queryKey: ["home-feed", category],
     queryFn: () => apiFetch(`/api/products/feed?limit=48&offset=0${feedParams}`),

@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiFetch, getSessionToken } from "../lib/api";
+import { resolveUrl } from "../lib/images";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   ArrowLeft, Bike, CheckCircle2, ChefHat, Clock, MapPin, Package,
@@ -325,7 +326,7 @@ export function OrderTrackingPage() {
           </div>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center overflow-hidden">
-              {o.livreur.image_url ? <img src={o.livreur.image_url} alt="" className="w-full h-full object-cover" /> : <span className="text-brand text-xl font-black">{o.livreur.nom?.[0]}</span>}
+              {o.livreur.image_url ? <img src={resolveUrl(o.livreur.image_url)} alt="" className="w-full h-full object-cover" /> : <span className="text-brand text-xl font-black">{o.livreur.nom?.[0]}</span>}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-txt">{o.livreur.nom}</p>

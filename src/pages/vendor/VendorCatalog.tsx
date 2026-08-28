@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Eye, EyeOff, Package } from "lucide-react";
 import { apiFetch, getSessionToken } from "../../lib/api";
+import { resolveImageUrl } from "../../lib/images";
 import { toast } from "sonner";
 
 function formatFcfa(n: number | string) { return `${Number(n).toLocaleString("fr-FR")} FCFA`; }
@@ -56,7 +57,7 @@ export function VendorCatalog() {
           {products.map((p) => (
             <div key={p.id} className={`bg-white rounded-xl border p-3 flex items-center gap-3 ${p.est_disponible ? "border-gray-100" : "border-gray-200 opacity-60"}`}>
               <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                {p.image_url ? <img src={p.image_url} alt={p.nom} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-300"><Package className="w-5 h-5" /></div>}
+                {resolveImageUrl(p) ? <img src={resolveImageUrl(p)!} alt={p.nom} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-300"><Package className="w-5 h-5" /></div>}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">{p.nom}</p>

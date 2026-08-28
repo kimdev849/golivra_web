@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch, getSessionToken, logoutRemote, friendlyErrorMessage } from "../lib/api";
+import { resolveUrl } from "../lib/images";
 import { useAuthStore, useCartStore } from "../store";
 import {
   Bell, CalendarDays, Camera, Check, ChevronRight, ClipboardList, Clock,
@@ -13,6 +14,7 @@ function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + 
 
 export function ProfilePage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user, logout: authLogout } = useAuthStore();
   const itemCount = useCartStore((s) => s.itemCount);
 
@@ -76,6 +78,8 @@ export function ProfilePage() {
       if (token) await logoutRemote(token);
     } catch { /* ignore */ }
     authLogout();
+    // Clear all react-query caches so no stale user data is shown
+    queryClient.clear();
     toast.success("Déconnecté");
     navigate("/", { replace: true });
   };
@@ -145,8 +149,8 @@ export function ProfilePage() {
       <div className="flex items-center gap-4">
         <Link to="/profile/edit" className="relative flex-shrink-0">
           <div className="w-[92px] h-[92px] rounded-full bg-brand-50 flex items-center justify-center overflow-hidden">
-            {m?.imageUrl || m?.image_url ? (
-              <img src={m.imageUrl || m.image_url} alt="" className="w-full h-full object-cover" />
+            {(m?.imageUrl || m?.image_url) ? (
+              <img src={resolveUrl(m.imageUrl || m.image_url)} alt="" className="w-full h-full object-cover" />
             ) : (
               <User size={42} className="text-brand-deep" />
             )}

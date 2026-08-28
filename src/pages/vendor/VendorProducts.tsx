@@ -4,6 +4,7 @@ import {
   Package, Plus, Search, Star, X, AlertCircle, UtensilsCrossed,
 } from "lucide-react";
 import { apiFetch, getSessionToken } from "../../lib/api";
+import { resolveImageUrl } from "../../lib/images";
 import { useVendorCtx } from "./VendorLayout";
 
 type ProductTab = "all" | "on" | "off";
@@ -33,8 +34,9 @@ function promoPercent(p: any): number | null {
 }
 
 function productThumb(p: any): string | null {
-  if (p.image_url) return p.image_url;
-  if (p.images_urls?.length > 0) return p.images_urls[0];
+  const resolved = resolveImageUrl(p);
+  if (resolved) return resolved;
+  // Fallback: camelCase variants from other sources
   if (p.imageUrl) return p.imageUrl;
   if (p.imagesUrls?.length > 0) return p.imagesUrls[0];
   return null;

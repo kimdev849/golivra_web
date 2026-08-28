@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../lib/api";
+import { resolveImageUrl } from "../../lib/images";
 import { useState } from "react";
 import { Package, Plus, Trash2, Search, Edit } from "lucide-react";
 import { toast } from "sonner";
@@ -46,8 +47,8 @@ export function VendorStock() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center overflow-hidden">
-                  {p.image_url ? (
-                    <img src={p.image_url} alt="" className="w-full h-full object-cover" />
+                  {resolveImageUrl(p) ? (
+                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <Package className="w-5 h-5 text-brand" />
                   )}

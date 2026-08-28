@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3, Bell, Building2, ChevronRight, Clock, CreditCard,
   HelpCircle, MapPin, Package, Settings, Share2, Truck, User, Wallet,
 } from "lucide-react";
 import { useVendorCtx } from "./VendorLayout";
 import { useAuthStore } from "../../store";
-import { apiFetch } from "../../lib/api";
+import { apiFetch, getSessionToken, logoutRemote } from "../../lib/api";
 
 function MenuRow({ icon, title, subtitle, to, danger, badge }: {
   icon: React.ReactNode;
@@ -43,6 +43,7 @@ export function VendorMore() {
   const navigate = useNavigate();
   const { shop } = useVendorCtx();
   const logout = useAuthStore((s) => s.logout);
+  const queryClient = useQueryClient();
 
   const { data: notifData } = useQuery<{ unread_count: number }>({
     queryKey: ["vendor-notif-unread"],
@@ -53,10 +54,15 @@ export function VendorMore() {
   const isOnline = shop?.enLigne === true;
   const commerceType = shop?.type === "restaurant" ? "restaurant" : "boutique";
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+      try {
+        const token = getSessionToken();
+        if (token) await logoutRemote(token);
+      } catch { /* ignore */ }
       logout();
-      navigate("/auth", { replace: true });
+      queryClient.clear();
+      navigate("/", { replace: true });
     }
   };
 

@@ -4,6 +4,7 @@ import { Heart, Store, ShoppingBag, ChevronLeft } from "lucide-react";
 import { getFavoriteEnterpriseIds, getFavoriteProducts, toggleFavoriteEnterpriseId, toggleFavoriteProduct } from "../lib/favorites";
 import { fetchFavorites, fetchFavoriteProducts } from "../lib/favorites-api";
 import { getSessionToken, apiFetch } from "../lib/api";
+import { resolveEnterpriseImage, resolveImageUrl } from "../lib/images";
 import { toast } from "sonner";
 
 function formatFcfa(n: number | string) { return `${Number(n).toLocaleString("fr-FR")} FCFA`; }
@@ -174,8 +175,8 @@ export function FavoritesPage() {
             {enterprises.map((e: any) => (
               <div key={e.id} className="rounded-xl border overflow-hidden flex" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
                 <Link to={`/marketplace/${e.id}`} className="w-24 h-24 flex-shrink-0" style={{ background: "var(--surface-muted)" }}>
-                  {e.image_url ? (
-                    <img src={e.image_url} alt={e.nom ?? ""} className="w-full h-full object-cover" />
+                  {resolveEnterpriseImage(e) ? (
+                    <img src={resolveEnterpriseImage(e)!} alt={e.nom ?? ""} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center" style={{ color: "var(--txt-muted)", opacity: 0.3 }}><Store className="w-6 h-6" /></div>
                   )}
@@ -209,8 +210,8 @@ export function FavoritesPage() {
             {products.map((p: any) => (
               <div key={p.id} className="rounded-xl border overflow-hidden" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
                 <Link to={`/product/${p.id}`} className="aspect-square block" style={{ background: "var(--surface-muted)" }}>
-                  {p.image_url ? (
-                    <img src={p.image_url} alt={p.nom ?? ""} className="w-full h-full object-cover" />
+                  {resolveImageUrl(p) ? (
+                    <img src={resolveImageUrl(p)!} alt={p.nom ?? ""} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center" style={{ color: "var(--txt-muted)", opacity: 0.3 }}><ShoppingBag className="w-8 h-8" /></div>
                   )}
