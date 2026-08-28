@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useAuthStore } from "../store";
+import { useGuardedCallback } from "../lib/use-guarded-callback";
 import { resolveImageUrl, resolveEnterpriseImage, resolveUrl } from "../lib/images";
 import { toast } from "sonner";
 import { GalleryViewer } from "../components/GalleryViewer";
@@ -134,7 +135,7 @@ export function ProductPage() {
     setIsFav(isFavoriteProduct(product.id, kind));
   }, [product?.id, isAuthenticated]);
 
-  const handleToggleFav = async () => {
+  const handleToggleFav = useGuardedCallback(async () => {
     if (!product) return;
     if (!isAuthenticated) { toast.error("Connectez-vous pour ajouter aux favoris."); navigate("/auth"); return; }
     const kind: "plat" | "article" = (product as any).kind === "article" ? "article" : "plat";
@@ -148,9 +149,9 @@ export function ProductPage() {
       setIsFav(wasFav);
       toast.error("Erreur lors de la mise à jour des favoris.");
     }
-  };
+  });
 
-  const onAddToCart = () => {
+  const onAddToCart = useGuardedCallback(() => {
     if (!product) return;
     if (!orderable) { toast.error(ent?.message_fermeture || "Commerce fermé pour le moment."); return; }
     addItem(
@@ -158,7 +159,7 @@ export function ProductPage() {
       { productId: product.id, nom: product.nom || "Produit", prixUnitaire: unitPrice, quantite: 1 }
     );
     toast.success("Ajouté au panier", { action: { label: "Voir le panier", onClick: () => navigate("/cart") } });
-  };
+  });
 
   const EnterpriseIcon = product?.enterprise_type === "restaurant" ? UtensilsCrossed : Store;
   const condition = product ? getConditionLabel(product) : null;

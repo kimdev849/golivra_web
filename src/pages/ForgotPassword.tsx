@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Check, ChevronLeft, KeyRound, Lock, Smartphone } from "lucide-react";
 import { apiFetch } from "../lib/api";
+import { useGuardedCallback } from "../lib/use-guarded-callback";
 
 type Step = "phone" | "otp" | "done";
 
@@ -18,7 +19,7 @@ export function ForgotPasswordPage() {
 
   const stepIndex = step === "phone" ? 1 : step === "otp" ? 2 : 3;
 
-  const handleRequestOtp = async () => {
+  const handleRequestOtp = useGuardedCallback(async () => {
     setError(null);
     setFieldErrors({});
     if (!phone || phone.replace(/\s/g, "").length < 9) {
@@ -38,9 +39,9 @@ export function ForgotPasswordPage() {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
-  const handleReset = async () => {
+  const handleReset = useGuardedCallback(async () => {
     setError(null);
     setFieldErrors({});
     const errs: Record<string, string> = {};
@@ -62,7 +63,7 @@ export function ForgotPasswordPage() {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
   const stepLabels = ["Téléphone", "Code", "Terminé"];
 

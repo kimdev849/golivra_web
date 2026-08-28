@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useGuardedCallback } from "../lib/use-guarded-callback";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock, Moon, Smartphone, Sun, UserPlus } from "lucide-react";
 import { safeSetItem } from "../lib/safe-storage";
@@ -30,7 +31,7 @@ export function AuthPage() {
 
   const canSubmit = phone.replace(/\s/g, "").length >= 9 && password.length >= 6 && !loading;
 
-  const handleLogin = async () => {
+  const handleLogin = useGuardedCallback(async () => {
     setError(null);
     setFieldErrors({});
     setLoading(true);
@@ -52,7 +53,7 @@ export function AuthPage() {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "var(--bg)" }}>

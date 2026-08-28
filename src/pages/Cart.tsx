@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { sanitizeText, validateAddress, validateTextField } from "../lib/validation";
 import { fetchPublicPricing, deliveryFeeForQuartier, type PublicPricing } from "../lib/pricing";
+import { useGuardedCallback } from "../lib/use-guarded-callback";
 
 function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + " FCFA"; }
 
@@ -67,7 +68,7 @@ export function CartPage() {
     setShowZonePicker(false);
   };
 
-  const submitOrder = async () => {
+  const submitOrder = useGuardedCallback(async () => {
     if (!cart || !hasItems) return;
     const newErrors: typeof errors = {};
     const quartierV = validateTextField(address.quartier, "Le quartier", 80);
@@ -82,9 +83,9 @@ export function CartPage() {
     if (!session?.token) { toast.error("Connectez-vous pour passer commande."); navigate("/auth"); return; }
     // Afficher récapitulatif avant envoi (C2)
     setShowConfirm(true);
-  };
+  });
 
-  const confirmAndSend = async () => {
+  const confirmAndSend = useGuardedCallback(async () => {
     if (!cart || !hasItems) return;
     setShowConfirm(false);
     if (!session?.token) { toast.error("Connectez-vous pour passer commande."); navigate("/auth"); return; }
@@ -126,7 +127,7 @@ export function CartPage() {
     } finally {
       setSubmitting(false);
     }
-  };
+  });
 
   if (!hasItems) {
     return (

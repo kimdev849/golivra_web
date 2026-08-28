@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useGuardedCallback } from "../../lib/use-guarded-callback";
 import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight, ChevronDown, Eye, EyeOff, Lock, MapPin,
@@ -203,7 +204,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
   const canSendOtp = !isSubmitting && !otpSent && Boolean(phoneE164) && password.length >= 6 && (forcedProfile === "vendeur" || Boolean(fullName.trim()));
   const canVerifyOtp = !isSubmitting && otpSent && otp.trim().length >= 4;
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = useGuardedCallback(async () => {
     setError(null);
     const v = validateAll();
     if (v) return;
@@ -214,9 +215,9 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
       setOtpSent(true);
     } catch (e) { setError(e instanceof Error ? e.message : "Impossible d'envoyer le code."); }
     finally { setIsSubmitting(false); }
-  };
+  });
 
-  const handleVerifyAndRegister = async () => {
+  const handleVerifyAndRegister = useGuardedCallback(async () => {
     setError(null);
     const r = vOtp(otp);
     if (!r.ok) { setFieldErrors({ otp: r.m }); return; }
@@ -259,7 +260,7 @@ export function SignupForm({ variant, forcedProfile }: { variant: SignupVariant;
       if (/déjà enregistré|deja enregistre/i.test(msg)) setError("Ce numéro est déjà inscrit. Connectez-vous.");
       else setError(friendlyErrorMessage(e, "La création du compte a échoué."));
     } finally { setIsSubmitting(false); }
-  };
+  });
 
   const headerDesc = variant === "restaurant" ? "Type de compte : Restaurant" : variant === "boutique" ? "Type de compte : Boutique" : "Type de compte : Client";
   const HeaderIcon = isVendor ? (commerceKind === "restaurant" ? UtensilsCrossed : Store) : User;
