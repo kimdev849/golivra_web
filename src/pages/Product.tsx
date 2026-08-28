@@ -8,7 +8,7 @@ import {
   Check, AlertTriangle, ImageIcon, Clock, ChevronRight, Tag,
 } from "lucide-react";
 import { useState, useMemo } from "react";
-import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
+import { resolveImageUrl, resolveEnterpriseImage, resolveUrl } from "../lib/images";
 import { toast } from "sonner";
 import { GalleryViewer } from "../components/GalleryViewer";
 import { toggleFavoriteProduct, isFavoriteProduct } from "../lib/favorites";
@@ -51,9 +51,9 @@ async function fetchProductByIdSmart(productId: string, enterpriseId?: string): 
 function getGalleryImages(p: ProductPublic): string[] {
   const images: string[] = [];
   if ((p as any).images_urls && Array.isArray((p as any).images_urls)) {
-    for (const url of (p as any).images_urls) { if (url) images.push(url); }
+    for (const url of (p as any).images_urls) { if (url) images.push(resolveUrl(String(url))); }
   }
-  if (images.length === 0 && p.image_url) images.push(p.image_url);
+  if (images.length === 0 && p.image_url) images.push(resolveUrl(String(p.image_url)));
   return images;
 }
 
@@ -195,7 +195,7 @@ export function ProductPage() {
         <button onClick={() => galleryImages.length > 0 && setGalleryOpen(true)} className="block w-full">
           <div className="w-full aspect-[4/3] max-h-[340px] bg-brand-50 overflow-hidden">
             {galleryImages[selectedGalleryIndex] ? (
-              <img src={galleryImages[selectedGalleryIndex]} alt={product.nom || ""} className="w-full h-full object-cover" />
+              <img src={galleryImages[selectedGalleryIndex]} alt={product.nom || ""} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-brand/20"><ImageIcon size={48} /></div>
             )}

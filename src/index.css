@@ -156,7 +156,7 @@ input:focus, textarea:focus, select:focus {
 .dark .bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
 
 /* ── Generic dark mode overrides for hardcoded Tailwind classes ────────────── */
-.dark .bg-white { background-color: var(--surface) !important; }
+.dark .bg-white, .dark .bg-white\/95, .dark .bg-white\/90, .dark .bg-white\/80 { background-color: var(--surface) !important; }
 .dark .bg-gray-50 { background-color: #1C1F21 !important; }
 .dark .bg-gray-100 { background-color: var(--surface-muted) !important; }
 .dark .bg-gray-200 { background-color: #2A2E30 !important; }
@@ -187,3 +187,4 @@ input:focus, textarea:focus, select:focus {
 .dark .bg-splash-bg { background-color: var(--splash-bg) !important; }
 .dark img { filter: brightness(0.97); }
 .dark img[src*="logo"] { filter: brightness(1.08) saturate(1.05); }
+.dark .border-t { border-color: var(--border) !important; }
