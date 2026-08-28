@@ -133,29 +133,16 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* ── Dark mode Tailwind utility overrides ─────────────────────────────────── */
-/* Override Tailwind's static color classes to use CSS variables.
-   These MUST be outside @layer to beat Tailwind's compiled utilities. */
-.dark .bg-surface { background-color: var(--surface) !important; }
-.dark .bg-surface-muted { background-color: var(--surface-muted) !important; }
-.dark .bg-surface-alt { background-color: var(--bg-alt) !important; }
-.dark .text-txt { color: var(--txt) !important; }
-.dark .text-txt-secondary { color: var(--txt-secondary) !important; }
-.dark .text-txt-muted { color: var(--txt-muted) !important; }
-.dark .border-line { border-color: var(--border) !important; }
-.dark .border-line-strong { border-color: var(--border-strong) !important; }
-.dark .text-error { color: var(--error) !important; }
+/* Custom color classes (text-txt, bg-brand, etc.) now use CSS variables
+   directly in tailwind.config.js, so they adapt automatically.
+   Only override hardcoded Tailwind colors here. */
 .dark .bg-error\/10 { background-color: color-mix(in srgb, var(--error) 10%, transparent) !important; }
 .dark .bg-error\/5 { background-color: color-mix(in srgb, var(--error) 5%, transparent) !important; }
-.dark .text-brand-deep { color: var(--brand-deep) !important; }
-.dark .bg-brand-50 { background-color: var(--brand-50) !important; }
-.dark .bg-brand-100 { background-color: var(--brand-100) !important; }
-.dark .text-brand { color: var(--brand) !important; }
-.dark .bg-brand { background-color: var(--brand) !important; }
-.dark .border-brand { border-color: var(--brand) !important; }
-.dark .text-accent-deep { color: var(--accent-deep) !important; }
 .dark .bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+.dark .bg-brand-200\/60 { background-color: color-mix(in srgb, var(--brand) 15%, transparent) !important; }
 
 /* ── Generic dark mode overrides for hardcoded Tailwind classes ────────────── */
+/* Hardcoded Tailwind colors that need dark mode overrides */
 .dark .bg-white, .dark .bg-white\/95, .dark .bg-white\/90, .dark .bg-white\/80 { background-color: var(--surface) !important; }
 .dark .bg-gray-50 { background-color: #1C1F21 !important; }
 .dark .bg-gray-100 { background-color: var(--surface-muted) !important; }
@@ -179,8 +166,6 @@ input:focus, textarea:focus, select:focus {
 .dark .text-red-500 { color: var(--error) !important; }
 .dark .text-blue-600 { color: var(--info) !important; }
 .dark .text-purple-600 { color: #B49CFF !important; }
-.dark .bg-brand-50 { background-color: var(--brand-50) !important; }
-.dark .border-brand-200\/60 { border-color: color-mix(in srgb, var(--brand) 15%, transparent) !important; }
 .dark .border-amber-200\/60 { border-color: color-mix(in srgb, var(--warning) 15%, transparent) !important; }
 .dark .border-red-200\/60 { border-color: color-mix(in srgb, var(--error) 15%, transparent) !important; }
 .dark .border-blue-200\/60 { border-color: color-mix(in srgb, var(--info) 15%, transparent) !important; }

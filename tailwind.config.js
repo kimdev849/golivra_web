@@ -1,22 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // GoLivra brand — vert profond comme golivra_mobile
+        // GoLivra brand — CSS vars for automatic dark mode
         brand: {
-          50: "#EAF4EE",
-          100: "#D6E6DC",
+          50: "var(--brand-50)",
+          100: "var(--brand-100)",
           200: "#B8D9C8",
           300: "#8FC4AA",
           400: "#5EAA85",
-          500: "#0B6B45",
+          500: "var(--brand)",
           600: "#0A5E3C",
-          700: "#0C4F36",
+          700: "var(--brand-deep)",
           800: "#083E2A",
           900: "#062A1B",
-          DEFAULT: "#0B6B45",
+          DEFAULT: "var(--brand)",
         },
         // Accent jaune/orange du logo
         accent: {
@@ -24,32 +25,32 @@ export default {
           100: "#FFE8B8",
           200: "#FFD78A",
           300: "#FFC96B",
-          400: "#FFB940",
-          500: "#F5A524",
-          600: "#E89A1C",
-          700: "#D27A09",
+          400: "var(--accent)",
+          500: "var(--accent)",
+          600: "var(--accent-deep)",
+          700: "var(--accent-deep)",
           800: "#B56608",
           900: "#8A4E06",
-          DEFAULT: "#F5A524",
+          DEFAULT: "var(--accent)",
         },
         onAccent: "#1A1A1A",
-        // Surface / background
-        surface: "#FFFFFF",
-        "surface-muted": "#F6FAF7",
-        "surface-alt": "#F4F6F5",
+        // Surface / background — use CSS vars so dark mode works automatically
+        surface: "var(--surface)",
+        "surface-muted": "var(--surface-muted)",
+        "surface-alt": "var(--bg-alt)",
         // Text
-        "txt": "#11181C",
-        "txt-secondary": "#355245",
-        "txt-muted": "#6A8578",
+        "txt": "var(--txt)",
+        "txt-secondary": "var(--txt-secondary)",
+        "txt-muted": "var(--txt-muted)",
         // Borders
-        "line": "#E8F2EC",
-        "line-strong": "#D6E6DC",
+        "line": "var(--border)",
+        "line-strong": "var(--border-strong)",
         // Error
-        error: "#B42318",
-        "error-soft": "#FEF3F2",
+        error: "var(--error)",
+        "error-soft": "var(--error-soft)",
         // Success
-        success: "#0B6B45",
-        "success-soft": "#ECFDF3",
+        success: "var(--success)",
+        "success-soft": "var(--success-soft)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
