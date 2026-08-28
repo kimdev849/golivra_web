@@ -47,19 +47,19 @@
 .dark {
   --brand: #6ECFA0;
   --brand-deep: #5ABF8E;
-  --brand-50: #1A2A22;
-  --brand-100: #1F3529;
+  --brand-50: #1E2123;
+  --brand-100: #262A2D;
   --accent: #FFB940;
   --accent-deep: #E89A1C;
-  --bg: #111314;
-  --bg-alt: #151819;
-  --surface: #1A1D1E;
-  --surface-muted: #212526;
-  --txt: #F0F0F0;
-  --txt-secondary: #C8CCD0;
-  --txt-muted: #8A9199;
-  --border: #2C3034;
-  --border-strong: #3A3F43;
+  --bg: #101113;
+  --bg-alt: #141618;
+  --surface: #181A1D;
+  --surface-muted: #1F2225;
+  --txt: #F5F5F5;
+  --txt-secondary: #BEC4CA;
+  --txt-muted: #7C838A;
+  --border: #2A2E32;
+  --border-strong: #383D42;
   --error: #FB7185;
   --error-soft: #2A1518;
   --warning: #FBBF24;
@@ -68,7 +68,7 @@
   --success-soft: #122A1C;
   --info: #60A5FA;
   --info-soft: #111E36;
-  --splash-bg: #0A0C0D;
+  --splash-bg: #0A0B0C;
 }
 
 /* ── Base reset ──────────────────────────────────────────────────────────── */
@@ -133,35 +133,31 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* ── Dark mode Tailwind utility overrides ─────────────────────────────────── */
-/* Override Tailwind's static color classes to use CSS variables */
-@layer utilities {
-  .bg-surface { background-color: var(--surface) !important; }
-  .bg-surface-muted { background-color: var(--surface-muted) !important; }
-  .bg-surface-alt { background-color: var(--bg-alt) !important; }
-  .text-txt { color: var(--txt) !important; }
-  .text-txt-secondary { color: var(--txt-secondary) !important; }
-  .text-txt-muted { color: var(--txt-muted) !important; }
-  .border-line { border-color: var(--border) !important; }
-  .border-line-strong { border-color: var(--border-strong) !important; }
-  .text-error { color: var(--error) !important; }
-  .bg-error\/10 { background-color: color-mix(in srgb, var(--error) 10%, transparent) !important; }
-  .bg-error\/5 { background-color: color-mix(in srgb, var(--error) 5%, transparent) !important; }
-
-  /* Brand overrides for dark */
-  .text-brand-deep { color: var(--brand-deep) !important; }
-  .bg-brand-50 { background-color: var(--brand-50) !important; }
-  .text-brand { color: var(--brand) !important; }
-  .bg-brand { background-color: var(--brand) !important; }
-  .border-brand { border-color: var(--brand) !important; }
-
-  /* Accent overrides */
-  .text-accent-deep { color: var(--accent-deep) !important; }
-  .bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
-}
+/* Override Tailwind's static color classes to use CSS variables.
+   These MUST be outside @layer to beat Tailwind's compiled utilities. */
+.dark .bg-surface { background-color: var(--surface) !important; }
+.dark .bg-surface-muted { background-color: var(--surface-muted) !important; }
+.dark .bg-surface-alt { background-color: var(--bg-alt) !important; }
+.dark .text-txt { color: var(--txt) !important; }
+.dark .text-txt-secondary { color: var(--txt-secondary) !important; }
+.dark .text-txt-muted { color: var(--txt-muted) !important; }
+.dark .border-line { border-color: var(--border) !important; }
+.dark .border-line-strong { border-color: var(--border-strong) !important; }
+.dark .text-error { color: var(--error) !important; }
+.dark .bg-error\/10 { background-color: color-mix(in srgb, var(--error) 10%, transparent) !important; }
+.dark .bg-error\/5 { background-color: color-mix(in srgb, var(--error) 5%, transparent) !important; }
+.dark .text-brand-deep { color: var(--brand-deep) !important; }
+.dark .bg-brand-50 { background-color: var(--brand-50) !important; }
+.dark .bg-brand-100 { background-color: var(--brand-100) !important; }
+.dark .text-brand { color: var(--brand) !important; }
+.dark .bg-brand { background-color: var(--brand) !important; }
+.dark .border-brand { border-color: var(--brand) !important; }
+.dark .text-accent-deep { color: var(--accent-deep) !important; }
+.dark .bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
 
 /* ── Generic dark mode overrides for hardcoded Tailwind classes ────────────── */
 .dark .bg-white { background-color: var(--surface) !important; }
-.dark .bg-gray-50 { background-color: #1A2420 !important; }
+.dark .bg-gray-50 { background-color: #1C1F21 !important; }
 .dark .bg-gray-100 { background-color: var(--surface-muted) !important; }
 .dark .bg-gray-200 { background-color: #2A2E30 !important; }
 .dark .border-gray-200 { border-color: var(--border) !important; }
@@ -189,5 +185,5 @@ input:focus, textarea:focus, select:focus {
 .dark .border-red-200\/60 { border-color: color-mix(in srgb, var(--error) 15%, transparent) !important; }
 .dark .border-blue-200\/60 { border-color: color-mix(in srgb, var(--info) 15%, transparent) !important; }
 .dark .bg-splash-bg { background-color: var(--splash-bg) !important; }
-.dark img { filter: brightness(0.95); }
-.dark img[src*="logo"] { filter: brightness(1.1) saturate(1.05); }
+.dark img { filter: brightness(0.97); }
+.dark img[src*="logo"] { filter: brightness(1.08) saturate(1.05); }
