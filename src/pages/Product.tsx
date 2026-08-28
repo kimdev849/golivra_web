@@ -200,7 +200,7 @@ export function ProductPage() {
         <button onClick={() => galleryImages.length > 0 && setGalleryOpen(true)} className="block w-full">
           <div className="w-full aspect-[4/3] max-h-[340px] bg-brand-50 overflow-hidden">
             {galleryImages[selectedGalleryIndex] ? (
-              <img src={galleryImages[selectedGalleryIndex]} alt={product.nom || ""} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              <img src={galleryImages[selectedGalleryIndex]} alt={product.nom || ""} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-brand/20"><ImageIcon size={48} /></div>
             )}

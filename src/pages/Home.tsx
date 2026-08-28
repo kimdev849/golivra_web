@@ -12,6 +12,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import { ArrowUp } from "lucide-react";
 import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
+import { ProductCardImage } from "../components/ProductCardImage";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -395,11 +396,7 @@ export function HomePage() {
                 className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/30 transition-all duration-200"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
-                  {resolveImageUrl(p) ? (
-                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                  ) : (
-                    <Package size={28} className="text-brand/20" />
-                  )}
+                  <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {pct != null && (
                     <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
                       -{pct}%

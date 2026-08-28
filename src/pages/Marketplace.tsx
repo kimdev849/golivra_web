@@ -3,6 +3,7 @@ import { apiFetch } from "../lib/api";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Star, Clock, Truck, MapPin, Package, AlertTriangle, Store, UtensilsCrossed, ShoppingBag } from "lucide-react";
 import { resolveImageUrl, resolveEnterpriseImage } from "../lib/images";
+import { ProductCardImage } from "../components/ProductCardImage";
 
 function formatFcfa(n: number) { return Math.round(n).toLocaleString("fr-FR") + " FCFA"; }
 
@@ -238,11 +239,7 @@ export function MarketplacePage() {
                 className="group bg-surface rounded-xl overflow-hidden border border-line hover:shadow-lg hover:border-brand/30 transition-all duration-200"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
-                  {resolveImageUrl(p) ? (
-                    <img src={resolveImageUrl(p)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                  ) : (
-                    <Package size={24} className="text-brand/20" />
-                  )}
+                  <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
                     <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
                       -{Math.round((1 - Number(p.prix_promo) / Number(p.prix)) * 100)}%
