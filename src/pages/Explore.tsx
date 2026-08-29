@@ -132,7 +132,7 @@ export function ExplorePage() {
           <p className="text-sm mt-1">Essayez un autre terme de recherche.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
           {list.map((e: any) => (
             <Link
               key={e.id}

@@ -308,7 +308,7 @@ export function HomePage() {
               Voir plus <ChevronRight size={14} strokeWidth={2.5} />
             </Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {discoverEnterprises.map((e) => (
               <Link
                 key={e.id}
@@ -351,7 +351,7 @@ export function HomePage() {
           <h2 className="text-lg font-extrabold text-txt mb-3">
             {category === "restaurant" ? "Restaurants" : "Boutiques"}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {displayEnterprises.map((ent) => (
               <Link
                 key={ent.id}
@@ -386,7 +386,7 @@ export function HomePage() {
 
       {/* ── Product grid — RESPONSIVE: 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
@@ -423,7 +423,7 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50">
               <div className="w-full aspect-[4/3] bg-gray-200" />

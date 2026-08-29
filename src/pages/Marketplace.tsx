@@ -99,7 +99,7 @@ export function MarketplacePage() {
           <div className="h-3 bg-gray-200 rounded w-1/2" />
           <div className="h-3 bg-gray-200 rounded w-2/3" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden">
               <div className="w-full aspect-[4/3] bg-gray-200" />
@@ -231,7 +231,7 @@ export function MarketplacePage() {
             <p className="text-sm">Aucun produit disponible</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
             {productList.map((p: any) => (
               <Link
                 key={p.id}
