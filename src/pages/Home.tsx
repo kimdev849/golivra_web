@@ -162,9 +162,9 @@ export function HomePage() {
   }, [handleScroll]);
 
   return (
-    <div className="space-y-4 overflow-x-hidden">
+    <div className="space-y-4">
       {/* ── Sticky header: location + search + filters ── */}
-      <div className="sticky top-0 lg:top-14 z-30 bg-surface-muted/95 backdrop-blur-sm -mx-4 px-4 pt-3 pb-2 border-b border-line/50 space-y-3">
+      <div className="sticky top-0 lg:top-14 z-30 bg-surface-muted/95 backdrop-blur-sm pt-3 pb-2 border-b border-line/50 space-y-3">
         {/* Top bar: location + bell */}
         <div className="flex items-center justify-between">
           <Link to="/addresses" className="flex items-center gap-1 text-txt hover:opacity-80 transition">
@@ -224,7 +224,7 @@ export function HomePage() {
 
         {/* ── Sort row (like mobile renderSortRow) ── */}
         {(category === "restaurant" || category === "boutique") && (
-          <div className="flex gap-2 mt-2 overflow-x-auto no-scrollbar">
+          <div className="flex flex-wrap gap-2 mt-2">
             {(
               category === "restaurant" || category === "boutique"
                 ? [{ key: "popular" as SortKey, label: "Plus populaires" }, { key: "recent" as SortKey, label: "Plus récents" }]
@@ -246,7 +246,7 @@ export function HomePage() {
           </div>
         )}
         {(category === "plat" || category === "article" || category === "all" || category === "promo") && (
-          <div className="flex gap-2 mt-2 overflow-x-auto no-scrollbar">
+          <div className="flex flex-wrap gap-2 mt-2">
             {[{ key: "price_low" as SortKey, label: "Prix les plus bas" }, { key: "price_high" as SortKey, label: "Prix les plus chers" }].map((o) => (
               <button
                 key={o.key}
