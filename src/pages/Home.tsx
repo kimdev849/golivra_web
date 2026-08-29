@@ -162,7 +162,7 @@ export function HomePage() {
   }, [handleScroll]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden">
       {/* ── Sticky header: location + search + filters ── */}
       <div className="sticky top-0 lg:top-14 z-30 bg-surface-muted/95 backdrop-blur-sm -mx-4 px-4 pt-3 pb-2 border-b border-line/50 space-y-3">
         {/* Top bar: location + bell */}
@@ -202,7 +202,7 @@ export function HomePage() {
         </div>
 
         {/* Filter chips (pill style, matching mobile) */}
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex gap-2 flex-wrap pb-1">
           {FOOD_CATEGORIES.map((c) => {
             const active = category === c.key;
             return (
@@ -308,7 +308,7 @@ export function HomePage() {
               Voir plus <ChevronRight size={14} strokeWidth={2.5} />
             </Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {discoverEnterprises.map((e) => (
               <Link
                 key={e.id}
@@ -351,7 +351,7 @@ export function HomePage() {
           <h2 className="text-lg font-extrabold text-txt mb-3">
             {category === "restaurant" ? "Restaurants" : "Boutiques"}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {displayEnterprises.map((ent) => (
               <Link
                 key={ent.id}
@@ -384,9 +384,9 @@ export function HomePage() {
         </section>
       )}
 
-      {/* ── Product grid — RESPONSIVE: 2 cols mobile / 3 cols tablet / 4-5 cols desktop ── */}
+      {/* ── Product grid — RESPONSIVE: 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
@@ -423,7 +423,7 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50">
               <div className="w-full aspect-[4/3] bg-gray-200" />
