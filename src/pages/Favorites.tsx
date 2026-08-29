@@ -171,7 +171,7 @@ export function FavoritesPage() {
             <p className="text-sm" style={{ color: "var(--txt-muted)" }}>Chargement des commerces…</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {enterprises.map((e: any) => (
               <div key={e.id} className="rounded-xl border overflow-hidden flex" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
                 <Link to={`/marketplace/${e.id}`} className="w-24 h-24 flex-shrink-0" style={{ background: "var(--surface-muted)" }}>
@@ -206,7 +206,7 @@ export function FavoritesPage() {
             <p className="text-sm" style={{ color: "var(--txt-muted)" }}>Chargement des produits…</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {products.map((p: any) => (
               <div key={p.id} className="rounded-xl border overflow-hidden" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
                 <Link to={`/product/${p.id}`} className="aspect-square block" style={{ background: "var(--surface-muted)" }}>
