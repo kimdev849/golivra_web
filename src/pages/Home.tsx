@@ -378,9 +378,9 @@ export function HomePage() {
         </section>
       )}
 
-      {/* ── Product grid — compact cards: 2 cols mobile / 3 tablet / 4 desktop / 5 xl ── */}
+      {/* ── Product grid — compact: 2 cols mobile / 3 tablet / 4 desktop / 5 xl ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
@@ -389,7 +389,7 @@ export function HomePage() {
                 to={`/product/${p.id}?from=${p.enterprise_type === 'restaurant' ? 'resto' : 'boutique'}`}
                 className="group bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-line/50 hover:border-brand/20 transition-all duration-200"
               >
-                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                <div className="relative w-full h-32 sm:h-36 lg:h-40 bg-brand-50 overflow-hidden">
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {pct != null && (
                     <span className="absolute top-1.5 left-1.5 bg-error text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">
@@ -415,10 +415,10 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-xl overflow-hidden animate-pulse border border-line/50">
-              <div className="w-full aspect-square bg-gray-200" />
+              <div className="w-full h-32 sm:h-36 lg:h-40 bg-gray-200" />
               <div className="p-2.5 space-y-1.5">
                 <div className="h-2.5 bg-gray-200 rounded w-3/4" />
                 <div className="h-2.5 bg-gray-200 rounded w-1/2" />

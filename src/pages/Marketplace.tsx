@@ -99,10 +99,10 @@ export function MarketplacePage() {
           <div className="h-3 bg-gray-200 rounded w-1/2" />
           <div className="h-3 bg-gray-200 rounded w-2/3" />
         </div>
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden animate-pulse">
-              <div className="w-full aspect-square bg-gray-200" />
+              <div className="w-full h-32 sm:h-36 lg:h-40 bg-gray-200" />
               <div className="p-2.5 space-y-1.5">
                 <div className="h-2.5 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/3 mt-1" />
@@ -231,14 +231,14 @@ export function MarketplacePage() {
             <p className="text-sm">Aucun produit disponible</p>
           </div>
         ) : (
-          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
             {productList.map((p: any) => (
               <Link
                 key={p.id}
                 to={`/product/${p.id}?enterprise=${enterpriseId}`}
                 className="group bg-surface rounded-xl overflow-hidden border border-line/50 hover:shadow-md hover:border-brand/20 transition-all duration-200"
               >
-                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                <div className="relative w-full h-32 sm:h-36 lg:h-40 bg-brand-50 overflow-hidden">
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
                     <span className="absolute top-1.5 left-1.5 bg-error text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">
