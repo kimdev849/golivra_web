@@ -232,7 +232,7 @@ export function HomePage() {
         </div>
 
         {/* ── DESKTOP layout (compact horizontal) ── */}
-        <div className="hidden lg:flex items-center gap-3 px-6 py-2.5">
+        <div className="hidden lg:flex items-center gap-3 px-4 lg:px-6 xl:px-8 py-2.5">
           {/* Search bar — takes most space */}
           <div className="flex-1 flex items-center gap-2 bg-surface border border-line rounded-xl px-4 py-2.5">
             <Search size={16} className="text-txt-muted flex-shrink-0" />
@@ -293,7 +293,7 @@ export function HomePage() {
 
       {/* ── À DÉCOUVRIR (enterprises) ── */}
       {!searchActive && category === "all" && discoverEnterprises.length > 0 && (
-        <section className="bg-surface-muted/50 -mx-4 lg:-mx-6 xl:-mx-8 px-4 lg:px-6 xl:px-8 py-5 rounded-2xl">
+        <section className="bg-surface-muted/50 py-5 rounded-2xl">
           <div className="max-w-[1200px] mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-extrabold text-txt">À découvrir</h2>

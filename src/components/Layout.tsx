@@ -105,7 +105,7 @@ export function Layout() {
       </header>
       )}
 
-      <main className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 xl:px-8 py-4 pb-24 lg:pb-6">
+      <main className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 xl:px-8 py-4 pb-24 lg:pb-6 overflow-hidden">
         <Outlet />
       </main>
 
