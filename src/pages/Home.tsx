@@ -232,20 +232,20 @@ export function HomePage() {
         </div>
 
         {/* ── DESKTOP layout (compact horizontal) ── */}
-        <div className="hidden lg:flex items-center gap-3 px-4 lg:px-6 xl:px-8 py-2.5">
+        <div className="hidden lg:flex items-center gap-3 px-4 lg:px-6 xl:px-8 py-2.5 min-w-0 overflow-hidden">
           {/* Search bar — takes most space */}
-          <div className="flex-1 flex items-center gap-2 bg-surface border border-line rounded-xl px-4 py-2.5">
+          <div className="flex-1 flex items-center gap-2 bg-surface border border-line rounded-xl px-4 py-2.5 min-w-0">
             <Search size={16} className="text-txt-muted flex-shrink-0" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher un plat, un produit, un restaurant…" className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted min-w-0" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher…" className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted min-w-0" />
             {search.length > 0 && (<button onClick={() => setSearch("")}><X size={14} className="text-txt-muted" /></button>)}
           </div>
-          {/* Filter chips — horizontal, compact */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Filter chips — scrollable if too many */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-shrink min-w-0">
             {FOOD_CATEGORIES.map((c) => {
               const active = category === c.key;
               return (
-                <button key={c.key} onClick={() => setCategory(c.key)} className={`flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition ${active ? "bg-brand text-white border-brand shadow-sm" : "bg-surface text-txt border-line hover:bg-brand-50"}`}>
-                  <c.Icon size={13} strokeWidth={active ? 2.4 : 2} />{c.label}
+                <button key={c.key} onClick={() => setCategory(c.key)} className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full border text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition ${active ? "bg-brand text-white border-brand shadow-sm" : "bg-surface text-txt border-line hover:bg-brand-50"}`}>
+                  <c.Icon size={12} strokeWidth={active ? 2.4 : 2} />{c.label}
                 </button>
               );
             })}

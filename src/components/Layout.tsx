@@ -29,7 +29,7 @@ export function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-muted">
+    <div className="min-h-screen bg-surface-muted overflow-x-hidden">
       {/* ── Header desktop — always shown except fullscreen ── */}
       {!noDesktopHeader && (
       <header className="hidden lg:block sticky top-0 z-50 border-b shadow-sm" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
