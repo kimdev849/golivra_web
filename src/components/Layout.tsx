@@ -33,7 +33,7 @@ export function Layout() {
       {/* ── Header desktop — always shown except fullscreen ── */}
       {!noDesktopHeader && (
       <header className="hidden lg:block sticky top-0 z-50 border-b shadow-sm" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-        <div className="w-full max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="w-full max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <img src="/assets/images/logo.png" alt="GoLivra" className="h-10 w-auto" />
           </Link>
@@ -105,7 +105,7 @@ export function Layout() {
       </header>
       )}
 
-      <main className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 xl:px-8 py-4 pb-24 lg:pb-6 overflow-hidden">
+      <main className="w-full max-w-[1200px] mx-auto px-4 lg:px-6 xl:px-8 py-4 pb-24 lg:pb-6 overflow-x-hidden">
         <Outlet />
       </main>
 

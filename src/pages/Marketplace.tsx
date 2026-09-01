@@ -98,18 +98,17 @@ export function MarketplacePage() {
           <div className="h-5 bg-gray-200 rounded w-3/4" />
           <div className="h-3 bg-gray-200 rounded w-1/2" />
           <div className="h-3 bg-gray-200 rounded w-2/3" />
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden animate-pulse">
-              <div className="w-full h-32 sm:h-36 lg:h-40 bg-gray-200" />
-              <div className="p-2.5 space-y-1.5">
-                <div className="h-2.5 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 rounded w-1/3 mt-1" />
+        </div>        <div className="product-grid">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden animate-pulse">
+                <div className="w-full aspect-square bg-gray-200" style={{ maxHeight: 160 }} />
+                <div className="p-2.5 space-y-1.5">
+                  <div className="h-2.5 bg-gray-200 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 rounded w-1/3 mt-1" />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
       </div>
     );
   }
@@ -133,7 +132,7 @@ export function MarketplacePage() {
   }
 
   return (
-    <div className="w-full px-4 py-6 space-y-5 max-w-[1100px] mx-auto">
+    <div className="w-full px-4 py-6 space-y-5 max-w-[1100px] mx-auto page-contained">
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-txt-muted hover:text-txt transition">
         <ArrowLeft size={16} /> <span className="text-sm font-medium">Retour</span>
       </button>
@@ -231,14 +230,14 @@ export function MarketplacePage() {
             <p className="text-sm">Aucun produit disponible</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+          <div className="product-grid">
             {productList.map((p: any) => (
               <Link
                 key={p.id}
                 to={`/product/${p.id}?enterprise=${enterpriseId}`}
                 className="group bg-surface rounded-xl overflow-hidden border border-line/50 hover:shadow-md hover:border-brand/20 transition-all duration-200"
               >
-                <div className="relative w-full h-32 sm:h-36 lg:h-40 bg-brand-50 overflow-hidden">
+                <div className="relative w-full aspect-square bg-brand-50 overflow-hidden" style={{ maxHeight: 160 }}>
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
                     <span className="absolute top-1.5 left-1.5 bg-error text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">
@@ -247,10 +246,10 @@ export function MarketplacePage() {
                   )}
                 </div>
                 <div className="p-2.5">
-                  <p className="text-xs font-bold text-txt truncate leading-tight">{p.nom}</p>
-                  <span className="text-xs font-extrabold text-brand mt-1 block">{formatFcfa(Number(p.prix_promo ?? p.prix))}</span>
+                  <p className="text-[11px] font-bold text-txt truncate leading-tight">{p.nom}</p>
+                  <span className="text-[11px] font-extrabold text-brand mt-1 block">{formatFcfa(Number(p.prix_promo ?? p.prix))}</span>
                   {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
-                    <span className="text-[10px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
+                    <span className="text-[9px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
                   )}
                 </div>
               </Link>

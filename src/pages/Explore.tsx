@@ -44,7 +44,7 @@ export function ExplorePage() {
   const boutiqueCount = rawList.filter((e: any) => e.type === "boutique").length;
 
   return (
-    <div className="space-y-4 overflow-x-hidden">
+    <div className="space-y-4 page-contained">
       {/* ── Page title ── */}
       <div>
         <h1 className="text-xl font-extrabold text-txt">Explorer</h1>
@@ -132,7 +132,7 @@ export function ExplorePage() {
           <p className="text-sm mt-1">Essayez un autre terme de recherche.</p>
         </div>
       ) : (
-        <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="enterprise-grid">
           {list.map((e: any) => (
             <Link
               key={e.id}

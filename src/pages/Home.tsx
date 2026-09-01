@@ -190,9 +190,9 @@ export function HomePage() {
   }, [handleScroll]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 page-contained">
       {/* ── Sticky header: location + search + filters ── */}
-      <div className="sticky top-0 lg:top-[66px] z-30 bg-surface-muted/95 backdrop-blur-sm border-b border-line/50">
+      <div className="sticky top-0 lg:top-[66px] z-30 bg-surface-muted/95 backdrop-blur-sm border-b border-line/50 overflow-hidden">
         {/* ── MOBILE layout (vertical stack) ── */}
         <div className="lg:hidden pt-3 pb-2 space-y-3 px-0">
           {/* Top bar: location + bell */}
@@ -262,7 +262,7 @@ export function HomePage() {
 
       {/* ── Campaign banner ── */}
       {!searchActive && category === "all" && campaigns.length > 0 && (
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <section className="enterprise-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
           {campaigns.map((c) => (
             <div
               key={c.id}
@@ -301,7 +301,7 @@ export function HomePage() {
               Voir plus <ChevronRight size={14} strokeWidth={2.5} />
             </Link>
           </div>
-          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="discover-grid">
             {discoverEnterprises.map((e) => (
               <Link
                 key={e.id}
@@ -345,7 +345,7 @@ export function HomePage() {
           <h2 className="text-xl font-extrabold text-txt mb-4">
             {category === "restaurant" ? "Restaurants" : "Boutiques"}
           </h2>
-          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="enterprise-grid">
             {displayEnterprises.map((ent) => (
               <Link
                 key={ent.id}
@@ -378,9 +378,9 @@ export function HomePage() {
         </section>
       )}
 
-      {/* ── Product grid — compact: 2 cols mobile / 3 tablet / 4 desktop / 5 xl ── */}
+      {/* ── Product grid — auto-fill compact cards ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+        <div className="product-grid">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
@@ -389,7 +389,7 @@ export function HomePage() {
                 to={`/product/${p.id}?from=${p.enterprise_type === 'restaurant' ? 'resto' : 'boutique'}`}
                 className="group bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-line/50 hover:border-brand/20 transition-all duration-200"
               >
-                <div className="relative w-full h-32 sm:h-36 lg:h-40 bg-brand-50 overflow-hidden">
+                <div className="relative w-full aspect-square bg-brand-50 overflow-hidden" style={{ maxHeight: 160 }}>
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {pct != null && (
                     <span className="absolute top-1.5 left-1.5 bg-error text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">
@@ -398,13 +398,13 @@ export function HomePage() {
                   )}
                 </div>
                 <div className="p-2.5">
-                  <p className="text-xs font-bold text-txt truncate leading-tight">{p.nom || "Produit"}</p>
+                  <p className="text-[11px] font-bold text-txt truncate leading-tight">{p.nom || "Produit"}</p>
                   {p.enterprise_nom && <p className="text-[10px] text-txt-muted truncate mt-0.5">{p.enterprise_nom}</p>}
-                  <span className="text-xs font-extrabold text-brand mt-1 block">
+                  <span className="text-[11px] font-extrabold text-brand mt-1 block">
                     {formatFcfa(Number(p.prix_promo ?? p.prix))}
                   </span>
                   {isPromoProduct(p) && (
-                    <span className="text-[10px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
+                    <span className="text-[9px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
                   )}
                 </div>
               </Link>
@@ -415,10 +415,10 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
+        <div className="product-grid">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-xl overflow-hidden animate-pulse border border-line/50">
-              <div className="w-full h-32 sm:h-36 lg:h-40 bg-gray-200" />
+              <div className="w-full aspect-square bg-gray-200" style={{ maxHeight: 160 }} />
               <div className="p-2.5 space-y-1.5">
                 <div className="h-2.5 bg-gray-200 rounded w-3/4" />
                 <div className="h-2.5 bg-gray-200 rounded w-1/2" />
