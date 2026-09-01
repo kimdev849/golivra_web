@@ -98,7 +98,7 @@ export function MarketplacePage() {
           <div className="h-5 bg-gray-200 rounded w-3/4" />
           <div className="h-3 bg-gray-200 rounded w-1/2" />
           <div className="h-3 bg-gray-200 rounded w-2/3" />
-        </div>        <div className="product-grid">
+        </div>        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden animate-pulse">
                 <div className="w-full aspect-square bg-gray-200" style={{ maxHeight: 160 }} />
@@ -230,7 +230,7 @@ export function MarketplacePage() {
             <p className="text-sm">Aucun produit disponible</p>
           </div>
         ) : (
-          <div className="product-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
             {productList.map((p: any) => (
               <Link
                 key={p.id}

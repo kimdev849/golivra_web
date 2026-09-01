@@ -262,7 +262,7 @@ export function HomePage() {
 
       {/* ── Campaign banner ── */}
       {!searchActive && category === "all" && campaigns.length > 0 && (
-        <section className="enterprise-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '12px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
           {campaigns.map((c) => (
             <div
               key={c.id}
@@ -301,7 +301,7 @@ export function HomePage() {
               Voir plus <ChevronRight size={14} strokeWidth={2.5} />
             </Link>
           </div>
-          <div className="discover-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
             {discoverEnterprises.map((e) => (
               <Link
                 key={e.id}
@@ -345,7 +345,7 @@ export function HomePage() {
           <h2 className="text-xl font-extrabold text-txt mb-4">
             {category === "restaurant" ? "Restaurants" : "Boutiques"}
           </h2>
-          <div className="enterprise-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
             {displayEnterprises.map((ent) => (
               <Link
                 key={ent.id}
@@ -378,9 +378,9 @@ export function HomePage() {
         </section>
       )}
 
-      {/* ── Product grid — auto-fill compact cards ── */}
+      {/* ── Product grid — inline CSS grid, no dependency on external classes ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="product-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
@@ -415,7 +415,7 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="product-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-surface rounded-xl overflow-hidden animate-pulse border border-line/50">
               <div className="w-full aspect-square bg-gray-200" style={{ maxHeight: 160 }} />

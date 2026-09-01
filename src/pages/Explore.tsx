@@ -132,7 +132,7 @@ export function ExplorePage() {
           <p className="text-sm mt-1">Essayez un autre terme de recherche.</p>
         </div>
       ) : (
-        <div className="enterprise-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px', width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
           {list.map((e: any) => (
             <Link
               key={e.id}
