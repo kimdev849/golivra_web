@@ -378,36 +378,34 @@ export function HomePage() {
         </section>
       )}
 
-      {/* ── Product grid — RESPONSIVE: 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
+      {/* ── Product grid — compact cards: 2 cols mobile / 3 tablet / 4 desktop / 5 xl ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 max-w-[1200px] mx-auto">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
               <Link
                 key={p.id}
                 to={`/product/${p.id}?from=${p.enterprise_type === 'restaurant' ? 'resto' : 'boutique'}`}
-                className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/20 transition-all duration-200 flex flex-col"
+                className="group bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-line/50 hover:border-brand/20 transition-all duration-200"
               >
-                <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
+                <div className="w-full aspect-square bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {pct != null && (
-                    <span className="absolute top-2 left-2 bg-error text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
+                    <span className="absolute top-1.5 left-1.5 bg-error text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full">
                       -{pct}%
                     </span>
                   )}
                 </div>
-                <div className="p-3 flex flex-col flex-1">
-                  <p className="text-[13px] font-bold text-txt truncate leading-tight min-h-[18px]">{p.nom || "Produit"}</p>
-                  {p.enterprise_nom && <p className="text-[11px] text-txt-muted truncate mt-0.5 min-h-[14px]">{p.enterprise_nom}</p>}
-                  <div className="flex items-center gap-1.5 mt-auto pt-1.5">
-                    <span className="text-sm font-extrabold text-brand">
-                      {formatFcfa(Number(p.prix_promo ?? p.prix))}
-                    </span>
-                    {isPromoProduct(p) && (
-                      <span className="text-[11px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
-                    )}
-                  </div>
+                <div className="p-2.5">
+                  <p className="text-xs font-bold text-txt truncate leading-tight">{p.nom || "Produit"}</p>
+                  {p.enterprise_nom && <p className="text-[10px] text-txt-muted truncate mt-0.5">{p.enterprise_nom}</p>}
+                  <span className="text-xs font-extrabold text-brand mt-1 block">
+                    {formatFcfa(Number(p.prix_promo ?? p.prix))}
+                  </span>
+                  {isPromoProduct(p) && (
+                    <span className="text-[10px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
+                  )}
                 </div>
               </Link>
             );
@@ -417,14 +415,14 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 max-w-[1200px] mx-auto">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 lg:gap-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50 flex flex-col">
-              <div className="w-full aspect-[4/3] bg-gray-200" />
-              <div className="p-3 space-y-2 flex-1">
-                <div className="h-3 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 rounded w-1/2" />
-                <div className="h-4 bg-gray-200 rounded w-1/3 mt-2" />
+            <div key={i} className="bg-surface rounded-xl overflow-hidden animate-pulse border border-line/50">
+              <div className="w-full aspect-square bg-gray-200" />
+              <div className="p-2.5 space-y-1.5">
+                <div className="h-2.5 bg-gray-200 rounded w-3/4" />
+                <div className="h-2.5 bg-gray-200 rounded w-1/2" />
+                <div className="h-3 bg-gray-200 rounded w-1/3 mt-1" />
               </div>
             </div>
           ))}
