@@ -132,24 +132,24 @@ export function ExplorePage() {
           <p className="text-sm mt-1">Essayez un autre terme de recherche.</p>
         </div>
       ) : (
-        <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {list.map((e: any) => (
             <Link
               key={e.id}
               to={`/marketplace/${e.id}`}
-              className="group flex gap-3 bg-surface border border-line rounded-2xl p-3.5 hover:shadow-lg hover:border-brand/30 transition-all duration-200"
+              className="group flex gap-3.5 bg-surface border border-line/50 rounded-2xl p-4 hover:shadow-lg hover:border-brand/20 transition-all duration-200"
             >
               {/* Image */}
-              <div className="w-[72px] h-[72px] rounded-xl bg-brand-50 flex-shrink-0 overflow-hidden">
+              <div className="w-16 h-16 rounded-2xl bg-brand-50 flex-shrink-0 overflow-hidden">
                 {resolveEnterpriseImage(e) ? (
                   <img src={resolveEnterpriseImage(e)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : e.type === "restaurant" ? (
                   <div className="w-full h-full flex items-center justify-center">
-                    <UtensilsCrossed size={22} className="text-brand/30" />
+                    <UtensilsCrossed size={24} className="text-brand/30" />
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <ShoppingBag size={22} className="text-brand/30" />
+                    <ShoppingBag size={24} className="text-brand/30" />
                   </div>
                 )}
               </div>
@@ -168,7 +168,7 @@ export function ExplorePage() {
                 <div className="flex items-center gap-2.5 mt-1.5">
                   {e.note_moyenne != null && e.note_moyenne > 0 && (
                     <span className="flex items-center gap-0.5 text-xs font-bold">
-                      <Star size={11} className="fill-[var(--accent)] text-[var(--accent)]" />
+                      <Star size={12} className="fill-[var(--accent)] text-[var(--accent)]" />
                       <span className="text-txt">{Number(e.note_moyenne).toFixed(1)}</span>
                       {e.nb_avis && <span className="text-txt-muted font-normal">({e.nb_avis})</span>}
                     </span>

@@ -55,6 +55,34 @@ function promoPercent(p: any): number | null {
   return pct > 0 ? pct : null;
 }
 
+// ─── Sort Row ─────────────────────────────────────────────────────────────
+
+function SortRow({ category, sort, setSort, compact }: { category: FilterTab; sort: SortKey; setSort: (s: SortKey) => void; compact?: boolean }) {
+  const options: { key: SortKey; label: string }[] =
+    category === "restaurant" || category === "boutique"
+      ? [{ key: "popular", label: "Populaires" }, { key: "recent", label: "Récents" }]
+      : [{ key: "price_low", label: "Prix ↑" }, { key: "price_high", label: "Prix ↓" }];
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {options.map((o) => (
+        <button
+          key={o.key}
+          onClick={() => setSort(o.key)}
+          className={`${compact ? "px-2.5 py-1 text-[11px]" : "px-3.5 py-1.5 text-[12px]"} rounded-full font-semibold border transition whitespace-nowrap`}
+          style={{
+            background: sort === o.key ? "var(--brand)" : "var(--surface)",
+            color: sort === o.key ? "#FFF" : "var(--txt-secondary)",
+            borderColor: sort === o.key ? "var(--brand)" : "var(--border)",
+          }}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ─── Component ─────────────────────────────────────────────────────────────
 
 export function HomePage() {
@@ -164,105 +192,69 @@ export function HomePage() {
   return (
     <div className="space-y-4">
       {/* ── Sticky header: location + search + filters ── */}
-      <div className="sticky top-0 lg:top-14 z-30 bg-surface-muted/95 backdrop-blur-sm pt-3 pb-2 border-b border-line/50 space-y-3">
-        {/* Top bar: location + bell */}
-        <div className="flex items-center justify-between">
-          <Link to="/addresses" className="flex items-center gap-1 text-txt hover:opacity-80 transition">
-            <MapPin size={16} className="text-brand" strokeWidth={2.5} />
-            <span className="text-base font-bold">Brazzaville</span>
-            <span className="text-txt-muted">›</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            {isAuthenticated && (
-              <Link
-                to="/notifications"
-                className="relative w-10 h-10 rounded-full border border-line bg-surface flex items-center justify-center hover:bg-brand-50 transition"
-              >
-                <Bell size={18} className="text-txt" />
-              </Link>
-            )}
+      <div className="sticky top-0 lg:top-[66px] z-30 bg-surface-muted/95 backdrop-blur-sm border-b border-line/50">
+        {/* ── MOBILE layout (vertical stack) ── */}
+        <div className="lg:hidden pt-3 pb-2 space-y-3 px-0">
+          {/* Top bar: location + bell */}
+          <div className="flex items-center justify-between">
+            <Link to="/addresses" className="flex items-center gap-1 text-txt hover:opacity-80 transition">
+              <MapPin size={16} className="text-brand" strokeWidth={2.5} />
+              <span className="text-base font-bold">Brazzaville</span>
+              <span className="text-txt-muted">›</span>
+            </Link>
+            <div className="flex items-center gap-2">
+              {isAuthenticated && (
+                <Link to="/notifications" className="relative w-10 h-10 rounded-full border border-line bg-surface flex items-center justify-center hover:bg-brand-50 transition">
+                  <Bell size={18} className="text-txt" />
+                </Link>
+              )}
+            </div>
           </div>
+          {/* Search bar */}
+          <div className="flex items-center gap-2 bg-surface-muted border border-line rounded-[14px] px-4 py-3">
+            <Search size={17} className="text-txt-muted" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher un plat, un produit, un restaurant…" className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted" />
+            {search.length > 0 && (<button onClick={() => setSearch("")}><X size={16} className="text-txt-muted" /></button>)}
+          </div>
+          {/* Filter chips */}
+          <div className="flex gap-2 flex-wrap pb-1">
+            {FOOD_CATEGORIES.map((c) => {
+              const active = category === c.key;
+              return (
+                <button key={c.key} onClick={() => setCategory(c.key)} className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-[13px] font-medium whitespace-nowrap transition ${active ? "bg-brand text-white border-brand shadow-sm" : "bg-surface text-txt border-line hover:bg-brand-50"}`}>
+                  <c.Icon size={14} strokeWidth={active ? 2.4 : 2} />{c.label}
+                </button>
+              );
+            })}
+          </div>
+          {/* Sort row */}
+          <SortRow category={category} sort={sort} setSort={setSort} />
         </div>
 
-        {/* Search bar */}
-        <div className="flex items-center gap-2 bg-surface-muted border border-line rounded-[14px] px-4 py-3">
-          <Search size={17} className="text-txt-muted" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un plat, un produit, un restaurant…"
-            className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted"
-          />
-          {search.length > 0 && (
-            <button onClick={() => setSearch("")}>
-              <X size={16} className="text-txt-muted" />
-            </button>
-          )}
-        </div>
-
-        {/* Filter chips (pill style, matching mobile) */}
-        <div className="flex gap-2 flex-wrap pb-1">
-          {FOOD_CATEGORIES.map((c) => {
-            const active = category === c.key;
-            return (
-              <button
-                key={c.key}
-                onClick={() => setCategory(c.key)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-[13px] font-medium whitespace-nowrap transition ${
-                  active
-                    ? "bg-brand text-white border-brand shadow-sm"
-                    : "bg-surface text-txt border-line hover:bg-brand-50"
-                }`}
-              >
-                <c.Icon size={14} strokeWidth={active ? 2.4 : 2} />
-                {c.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ── Sort row (like mobile renderSortRow) ── */}
-        {(category === "restaurant" || category === "boutique") && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {(
-              category === "restaurant" || category === "boutique"
-                ? [{ key: "popular" as SortKey, label: "Plus populaires" }, { key: "recent" as SortKey, label: "Plus récents" }]
-                : [{ key: "price_low" as SortKey, label: "Prix les plus bas" }, { key: "price_high" as SortKey, label: "Prix les plus chers" }]
-            ).map((o) => (
-              <button
-                key={o.key}
-                onClick={() => setSort(o.key)}
-                className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold border transition"
-                style={{
-                  background: sort === o.key ? "var(--brand)" : "var(--surface)",
-                  color: sort === o.key ? "#FFF" : "var(--txt-secondary)",
-                  borderColor: sort === o.key ? "var(--brand)" : "var(--border)",
-                }}
-              >
-                {o.label}
-              </button>
-            ))}
+        {/* ── DESKTOP layout (compact horizontal) ── */}
+        <div className="hidden lg:flex items-center gap-3 px-6 py-2.5">
+          {/* Search bar — takes most space */}
+          <div className="flex-1 flex items-center gap-2 bg-surface border border-line rounded-xl px-4 py-2.5">
+            <Search size={16} className="text-txt-muted flex-shrink-0" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher un plat, un produit, un restaurant…" className="flex-1 bg-transparent text-sm text-txt placeholder-txt-muted min-w-0" />
+            {search.length > 0 && (<button onClick={() => setSearch("")}><X size={14} className="text-txt-muted" /></button>)}
           </div>
-        )}
-        {(category === "plat" || category === "article" || category === "all" || category === "promo") && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {[{ key: "price_low" as SortKey, label: "Prix les plus bas" }, { key: "price_high" as SortKey, label: "Prix les plus chers" }].map((o) => (
-              <button
-                key={o.key}
-                onClick={() => setSort(o.key)}
-                className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold border transition"
-                style={{
-                  background: sort === o.key ? "var(--brand)" : "var(--surface)",
-                  color: sort === o.key ? "#FFF" : "var(--txt-secondary)",
-                  borderColor: sort === o.key ? "var(--brand)" : "var(--border)",
-                }}
-              >
-                {o.label}
-              </button>
-            ))}
+          {/* Filter chips — horizontal, compact */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {FOOD_CATEGORIES.map((c) => {
+              const active = category === c.key;
+              return (
+                <button key={c.key} onClick={() => setCategory(c.key)} className={`flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-medium whitespace-nowrap transition ${active ? "bg-brand text-white border-brand shadow-sm" : "bg-surface text-txt border-line hover:bg-brand-50"}`}>
+                  <c.Icon size={13} strokeWidth={active ? 2.4 : 2} />{c.label}
+                </button>
+              );
+            })}
           </div>
-        )}
+          {/* Sort — compact */}
+          <div className="flex-shrink-0">
+            <SortRow category={category} sort={sort} setSort={setSort} compact />
+          </div>
+        </div>
       </div>
 
       {/* ── Active order widget ── */}
@@ -301,39 +293,41 @@ export function HomePage() {
 
       {/* ── À DÉCOUVRIR (enterprises) ── */}
       {!searchActive && category === "all" && discoverEnterprises.length > 0 && (
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-extrabold text-txt">À découvrir</h2>
+        <section className="bg-surface-muted/50 -mx-4 lg:-mx-6 xl:-mx-8 px-4 lg:px-6 xl:px-8 py-5 rounded-2xl">
+          <div className="max-w-[1200px] mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-extrabold text-txt">À découvrir</h2>
             <Link to="/explore" className="flex items-center gap-0.5 text-xs font-semibold text-brand">
               Voir plus <ChevronRight size={14} strokeWidth={2.5} />
             </Link>
           </div>
-          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {discoverEnterprises.map((e) => (
               <Link
                 key={e.id}
                 to={`/marketplace/${e.id}`}
-                className="bg-surface rounded-2xl overflow-hidden shadow-sm border border-line hover:shadow-md transition"
+                className="bg-surface rounded-2xl overflow-hidden shadow-sm border border-line hover:shadow-lg hover:border-brand/20 transition-all duration-200 group"
               >
-                <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden">
+                <div className="w-full aspect-[16/10] bg-brand-50 flex items-center justify-center overflow-hidden">
                   {resolveEnterpriseImage(e) ? (
-                    <img src={resolveEnterpriseImage(e)!} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    <img src={resolveEnterpriseImage(e)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
-                    <Store size={24} className="text-brand/30" />
+                    <Store size={28} className="text-brand/30" />
                   )}
                 </div>
-                <div className="p-2.5">
-                  <p className="text-xs font-bold text-txt truncate">{e.nom}</p>
+                <div className="p-3">
+                  <p className="text-sm font-bold text-txt truncate leading-tight">{e.nom}</p>
                   {e.note_moyenne != null && e.note_moyenne > 0 && (
-                    <div className="flex items-center gap-1 mt-1">
-                      <Star size={11} className="text-accent fill-accent" />
-                      <span className="text-[11px] font-bold text-txt">{e.note_moyenne.toFixed(1)}</span>
-                      {e.nb_avis && <span className="text-[11px] text-txt-muted">({e.nb_avis})</span>}
+                    <div className="flex items-center gap-1 mt-1.5">
+                      <Star size={12} className="text-accent fill-accent" />
+                      <span className="text-xs font-bold text-txt">{e.note_moyenne.toFixed(1)}</span>
+                      {e.nb_avis && <span className="text-xs text-txt-muted">({e.nb_avis})</span>}
                     </div>
                   )}
                 </div>
               </Link>
             ))}
+          </div>
           </div>
         </section>
       )}
@@ -341,28 +335,28 @@ export function HomePage() {
       {/* ── RECOMMANDÉS POUR VOUS ── */}
       {!searchActive && category === "all" && displayProducts.length > 0 && (
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-extrabold text-txt">Recommandés pour vous</h2>
+          <h2 className="text-xl font-extrabold text-txt">Recommandés pour vous</h2>
         </div>
       )}
 
       {/* ── Enterprise list (restaurants / boutiques) ── */}
       {!searchActive && (category === "restaurant" || category === "boutique") && (
-        <section>
-          <h2 className="text-lg font-extrabold text-txt mb-3">
+        <section className="max-w-[1200px] mx-auto">
+          <h2 className="text-xl font-extrabold text-txt mb-4">
             {category === "restaurant" ? "Restaurants" : "Boutiques"}
           </h2>
-          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayEnterprises.map((ent) => (
               <Link
                 key={ent.id}
                 to={`/marketplace/${ent.id}`}
-                className="flex items-center gap-3 p-3 bg-surface border border-line rounded-2xl hover:shadow-md transition"
+                className="flex items-center gap-3.5 p-4 bg-surface border border-line rounded-2xl hover:shadow-lg hover:border-brand/20 transition-all duration-200 group"
               >
-                <div className="w-[52px] h-[52px] rounded-[14px] bg-brand-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-brand-50 flex-shrink-0 overflow-hidden flex items-center justify-center">
                   {resolveEnterpriseImage(ent) ? (
-                    <img src={resolveEnterpriseImage(ent)!} alt="" className="w-full h-full object-cover" />
+                    <img src={resolveEnterpriseImage(ent)!} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
-                    <Store size={20} className="text-brand/30" />
+                    <Store size={22} className="text-brand/30" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -372,12 +366,12 @@ export function HomePage() {
                   </p>
                 </div>
                 {ent.note_moyenne != null && ent.note_moyenne > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Star size={12} className="text-accent fill-accent" />
-                    <span className="text-xs font-bold text-txt">{Number(ent.note_moyenne).toFixed(1)}</span>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <Star size={13} className="text-accent fill-accent" />
+                    <span className="text-sm font-bold text-txt">{Number(ent.note_moyenne).toFixed(1)}</span>
                   </div>
                 )}
-                <ChevronRight size={16} className="text-txt-muted" />
+                <ChevronRight size={16} className="text-txt-muted flex-shrink-0" />
               </Link>
             ))}
           </div>
@@ -386,14 +380,14 @@ export function HomePage() {
 
       {/* ── Product grid — RESPONSIVE: 2 cols mobile / 3 cols tablet / 4 cols desktop ── */}
       {showProductGrid && displayProducts.length > 0 && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 max-w-[1200px] mx-auto">
           {displayProducts.map((p: any) => {
             const pct = promoPercent(p);
             return (
               <Link
                 key={p.id}
                 to={`/product/${p.id}?from=${p.enterprise_type === 'restaurant' ? 'resto' : 'boutique'}`}
-                className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/30 transition-all duration-200"
+                className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-line/50 hover:border-brand/20 transition-all duration-200 flex flex-col"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -403,10 +397,10 @@ export function HomePage() {
                     </span>
                   )}
                 </div>
-                <div className="p-2.5 space-y-0.5">
-                  <p className="text-[13px] font-bold text-txt truncate leading-tight">{p.nom || "Produit"}</p>
-                  {p.enterprise_nom && <p className="text-[11px] text-txt-muted truncate">{p.enterprise_nom}</p>}
-                  <div className="flex items-center gap-1.5 mt-1">
+                <div className="p-3 flex flex-col flex-1">
+                  <p className="text-[13px] font-bold text-txt truncate leading-tight min-h-[18px]">{p.nom || "Produit"}</p>
+                  {p.enterprise_nom && <p className="text-[11px] text-txt-muted truncate mt-0.5 min-h-[14px]">{p.enterprise_nom}</p>}
+                  <div className="flex items-center gap-1.5 mt-auto pt-1.5">
                     <span className="text-sm font-extrabold text-brand">
                       {formatFcfa(Number(p.prix_promo ?? p.prix))}
                     </span>
@@ -423,13 +417,14 @@ export function HomePage() {
 
       {/* ── Loading skeleton ── */}
       {loadingProducts && (
-        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 max-w-[1200px] mx-auto">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50">
+            <div key={i} className="bg-surface rounded-2xl overflow-hidden animate-pulse border border-line/50 flex flex-col">
               <div className="w-full aspect-[4/3] bg-gray-200" />
-              <div className="p-2.5 space-y-2">
+              <div className="p-3 space-y-2 flex-1">
                 <div className="h-3 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-gray-200 rounded w-1/3 mt-2" />
               </div>
             </div>
           ))}

@@ -101,11 +101,12 @@ export function MarketplacePage() {
         </div>
         <div className="w-full min-w-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-surface border border-line rounded-xl overflow-hidden">
+            <div key={i} className="bg-surface border border-line rounded-2xl overflow-hidden animate-pulse flex flex-col">
               <div className="w-full aspect-[4/3] bg-gray-200" />
-              <div className="p-2.5 space-y-2">
+              <div className="p-3 space-y-2 flex-1">
                 <div className="h-3 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-gray-200 rounded w-1/3 mt-2" />
               </div>
             </div>
           ))}
@@ -133,7 +134,7 @@ export function MarketplacePage() {
   }
 
   return (
-    <div className="w-full px-4 py-6 space-y-4 max-w-[1000px] mx-auto">
+    <div className="w-full px-4 py-6 space-y-5 max-w-[1100px] mx-auto">
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-txt-muted hover:text-txt transition">
         <ArrowLeft size={16} /> <span className="text-sm font-medium">Retour</span>
       </button>
@@ -220,7 +221,7 @@ export function MarketplacePage() {
 
       {/* Products */}
       <div>
-        <h2 className="text-lg font-extrabold text-txt mb-3">
+        <h2 className="text-xl font-extrabold text-txt mb-4">
           {loadingProds ? (
             <span className="text-txt-muted">Chargement…</span>
           ) : `Produits (${productList.length})`}
@@ -236,7 +237,7 @@ export function MarketplacePage() {
               <Link
                 key={p.id}
                 to={`/product/${p.id}?enterprise=${enterpriseId}`}
-                className="group bg-surface rounded-xl overflow-hidden border border-line hover:shadow-lg hover:border-brand/30 transition-all duration-200"
+                className="group bg-surface rounded-2xl overflow-hidden border border-line/50 hover:shadow-lg hover:border-brand/20 transition-all duration-200 flex flex-col"
               >
                 <div className="w-full aspect-[4/3] bg-brand-50 flex items-center justify-center overflow-hidden relative">
                   <ProductCardImage product={p} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -246,9 +247,9 @@ export function MarketplacePage() {
                     </span>
                   )}
                 </div>
-                <div className="p-2.5">
-                  <p className="text-[13px] font-bold text-txt truncate leading-tight">{p.nom}</p>
-                  <div className="flex items-center gap-1.5 mt-1">
+                <div className="p-3 flex flex-col flex-1">
+                  <p className="text-[13px] font-bold text-txt truncate leading-tight min-h-[18px]">{p.nom}</p>
+                  <div className="flex items-center gap-1.5 mt-auto pt-1.5">
                     <span className="text-sm font-extrabold text-brand">{formatFcfa(Number(p.prix_promo ?? p.prix))}</span>
                     {p.prix_promo != null && Number(p.prix_promo) < Number(p.prix) && (
                       <span className="text-[11px] text-txt-muted line-through">{formatFcfa(Number(p.prix))}</span>
